@@ -16,21 +16,32 @@ class Ball : SKShapeNode {
     
     let radius: CGFloat = 16.0
     
-    var value = 1
-    
-    override convenience init() {
-        self.init(color: SKColor.white)
+    var color = SKColor.white
+    var value = 1 {
+        didSet {
+            render()
+        }
+    }
+
+    static func White() -> Ball {
+        return Ball(value: 0)
     }
     
-    init(color: SKColor) {
+    static func Black() -> Ball {
+        return Ball(value: 11)
+    }
+    
+    override convenience init() {
+        self.init(value: 1)
+    }
+    
+    init(value: Int) {
         super.init()
         
-        zPosition = 1
+        self.value = value
+        render()
         
-        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius, y: -radius),
-                                        size: CGSize(width: radius * 2, height: radius * 2)), transform: nil)
-        strokeColor = SKColor.clear
-        fillColor = color
+        zPosition = 1
         
         physicsBody = SKPhysicsBody(circleOfRadius: radius)
         physicsBody?.restitution = 1
@@ -44,6 +55,43 @@ class Ball : SKShapeNode {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    func render() {
+        switch value {
+        case 0:
+            color = .white
+        case 1:
+            color = .red
+        case 2:
+            color = .green
+        case 3:
+            color = .blue
+        case 4:
+            color = .cyan
+        case 5:
+            color = .magenta
+        case 6:
+            color = .yellow
+        case 7:
+            color = .magenta
+        case 8:
+            color = .orange
+        case 9:
+            color = .purple
+        case 10:
+            color = .brown
+        default:
+            color = .black
+        }
+        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius, y: -radius),
+                                        size: CGSize(width: radius * 2, height: radius * 2)), transform: nil)
+        strokeColor = SKColor.clear
+        fillColor = color
+    }
+    
+    func increase() {
+        value += 1
     }
     
     func shoot(vector: CGVector) {
@@ -61,7 +109,6 @@ class Ball : SKShapeNode {
         var y: CGFloat = 0
         var dx: CGFloat = 0
         var dy: CGFloat = 0
-        print(side)
         switch (side) {
             case 1:
                 x = randomCGFloat(min: -width/2 + radius, max: width/2 - radius)

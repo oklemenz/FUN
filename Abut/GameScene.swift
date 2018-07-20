@@ -21,8 +21,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let background = SKSpriteNode(texture: SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#116316"), color2: CIColor(rgba: "#0d3303")))
 
-    let whiteBall = Ball(color: SKColor.white)
-    let blackBall = Ball(color: SKColor.black)
+    let whiteBall = Ball.White()
+    let blackBall = Ball.Black()
     
     let line = Line()
     let startSpot = StartSpot()
@@ -62,13 +62,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             dx: line.endPoint!.x - line.startPoint!.x,
             dy: line.endPoint!.y - line.startPoint!.y
         )
-        whiteBall.shoot(vector: vector)
+        whiteBall.shoot(vector: vector * 5)
         setStatusShooting()
     }
     
     func rollBall() {
         shootContact = true
-        let ball = Ball(color: .blue)
+        let ball = Ball()
         addChild(ball)
         ball.rollIn()
         setStatusRolling()
@@ -115,9 +115,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.collisionBitMask == CollisionCategoryBall && contact.bodyA != whiteBall &&
-            contact.bodyB.collisionBitMask == CollisionCategoryBall && contact.bodyB != whiteBall {
-            shootContact = true
+        if status == .Shooting {
+            if contact.bodyA.collisionBitMask == CollisionCategoryBall && contact.bodyA != whiteBall &&
+                contact.bodyB.collisionBitMask == CollisionCategoryBall && contact.bodyB != whiteBall {
+                if let ballA = contact.bodyA.node as? Ball,
+                    let ballB = contact.bodyB.node as? Ball {
+                    if ballA.value == ballB.value {
+                        ballA.increase()
+                        ballB.removeFromParent()
+                        shootContact = true
+                    }
+                }
+            }
         }
     }
     
