@@ -27,10 +27,6 @@ class Ball : SKShapeNode {
         return Ball(value: 0)
     }
     
-    static func Black() -> Ball {
-        return Ball(value: 11)
-    }
-    
     override convenience init() {
         self.init(value: 1)
     }
@@ -57,53 +53,47 @@ class Ball : SKShapeNode {
         super.init(coder: aDecoder)
     }
 
+    func increase() {
+        value += 1
+    }
+    
     func render() {
         switch value {
-        case 0:
-            color = .white
-        case 1:
-            color = .red
-        case 2:
-            color = .green
-        case 3:
-            color = .blue
-        case 4:
-            color = .cyan
-        case 5:
-            color = .magenta
-        case 6:
-            color = .yellow
-        case 7:
-            color = .magenta
-        case 8:
-            color = .orange
-        case 9:
-            color = .purple
-        case 10:
-            color = .brown
-        default:
-            color = .black
+            case 1:
+                color = SKColor(r: 255, g: 59, b: 48)
+            case 2:
+                color = SKColor(r: 255, g: 149, b: 0)
+            case 3:
+                color = SKColor(r: 255, g: 204, b: 0)
+            case 4:
+                color = SKColor(r: 76, g: 217, b: 100)
+            case 5:
+                color = SKColor(r: 90, g: 200, b: 250)
+            case 6:
+                color = SKColor(r: 0, g: 122, b: 255)
+            case 7:
+                color = SKColor(r: 88, g: 86, b: 214)
+            case 8:
+                color = SKColor(r: 255, g: 45, b: 85)
+            default:
+                color = .white
         }
         path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius, y: -radius),
                                         size: CGSize(width: radius * 2, height: radius * 2)), transform: nil)
         strokeColor = SKColor.clear
         fillColor = color
     }
-    
-    func increase() {
-        value += 1
-    }
-    
+   
     func shoot(vector: CGVector) {
         physicsBody?.applyImpulse(vector)
     }
     
-    func rollIn() {
+    func roll() {
         let width = UIScreen.main.bounds.width;
         let height = UIScreen.main.bounds.height;
         let side = randomInt(min: 1, max: 4)
-        let fx = randomCGFloat(min: 100, max: 500)
-        let fy = randomCGFloat(min: 100, max: 500)
+        let fx = randomCGFloat(min: 25, max: 100)
+        let fy = randomCGFloat(min: 25, max: 100)
         
         var x: CGFloat = 0
         var y: CGFloat = 0

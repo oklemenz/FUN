@@ -73,6 +73,13 @@ public extension CGPoint {
     public func distanceTo(_ point: CGPoint) -> CGFloat {
         return (self - point).length()
     }
+ 
+    /**
+     * Calculates the middle between two CGPoints
+     */
+    public func middleTo(_ point: CGPoint) -> CGPoint {
+        return (self + point) / 2
+    }
     
     /**
      * Returns the angle in radians of the vector described by the CGPoint.

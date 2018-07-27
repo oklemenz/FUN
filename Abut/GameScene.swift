@@ -12,6 +12,7 @@ import GameplayKit
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     enum GameStatus {
+        case Resting
         case Rolling
         case Aiming
         case Shooting
@@ -22,7 +23,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let background = SKSpriteNode(texture: SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#116316"), color2: CIColor(rgba: "#0d3303")))
 
     let whiteBall = Ball.White()
-    let blackBall = Ball.Black()
     
     let line = Line()
     let startSpot = StartSpot()
@@ -30,13 +30,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     let dice = Dice()
     
-    var status: GameStatus = .Rolling
-    var shootContact = false
+    var status: GameStatus = .Resting
+    var shootContact = 0
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.1
+        // TODO: Replace by thick bounding shapes...
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         physicsBody?.isDynamic = false
         physicsBody?.usesPreciseCollisionDetection = true
@@ -50,11 +51,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         addChild(dice)
         
         addChild(whiteBall)
-        addChild(blackBall)
         addChild(line)
         
-        whiteBall.rollIn()
-        blackBall.rollIn()
+        whiteBall.roll()
+        roll()
     }
     
     func shoot() {
@@ -62,15 +62,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             dx: line.endPoint!.x - line.startPoint!.x,
             dy: line.endPoint!.y - line.startPoint!.y
         )
-        whiteBall.shoot(vector: vector * 5)
+        whiteBall.shoot(vector: vector * 3)
         setStatusShooting()
     }
     
+    func decreaseDice() {
+        dice.decrease()
+        if dice.value <= 0 {
+            let alertController = UIAlertController(title: "Game Over!", message: "You lost the game.", preferredStyle: .alert)
+            let action = UIAlertAction(title: "OK", style: .default) { (action:UIAlertAction) in
+            }
+            alertController.addAction(action)
+            UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    func increaseDice() {
+        dice.increase()
+    }
+    
+    func roll() {
+        let startBall = children.first { (node) -> Bool in
+            if let ball = node as? Ball {
+                return ball.value == 1
+            }
+            return false
+        }
+        if startBall == nil {
+            rollBall()
+        }
+        rollBall()
+    }
+    
     func rollBall() {
-        shootContact = true
+        shootContact = 0
         let ball = Ball()
         addChild(ball)
-        ball.rollIn()
+        ball.roll()
         setStatusRolling()
     }
     
@@ -98,7 +126,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if status != .Aiming {
             line.startPoint = whiteBall.position
             whiteBall.addChild(startSpot)
-            pointTouched(position: CGPoint(x: 0, y: 0))
+            pointTouched(position: line.startPoint! - line.startPoint!.normalized() * 100)
             addChild(endSpot)
             status = .Aiming
         }
@@ -106,12 +134,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setStatusShooting() {
         if status != .Shooting {
-            shootContact = false
+            shootContact = 0
             line.startPoint = nil
             startSpot.removeFromParent()
             endSpot.removeFromParent()
             status = .Shooting
         }
+    }
+    
+    func shootContact(ballA: Ball, ballB: Ball) {
+        ballA.increase()
+        ballB.removeFromParent()
+        shootContact += 1
+        addChild(ContactEffect(context: self, ballA: ballA, ballB: ballB))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -121,9 +156,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 if let ballA = contact.bodyA.node as? Ball,
                     let ballB = contact.bodyB.node as? Ball {
                     if ballA.value == ballB.value {
-                        ballA.increase()
-                        ballB.removeFromParent()
-                        shootContact = true
+                        shootContact(ballA: ballA, ballB: ballB)
                     }
                 }
             }
@@ -152,15 +185,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
    
     override func update(_ currentTime: TimeInterval) {
-        if (whiteBall.physicsBody!.velocity.length() < RestBias) {
+        let child = children.first { (node) -> Bool in
+            if let ball = node as? Ball {
+                return ball.physicsBody!.velocity.length() >= RestBias
+            }
+            return false
+        }
+        if child === nil {
             if status == .Rolling {
+                status = .Resting
+            } else if status == .Resting {
                 setStatusAiming()
             } else if status == .Shooting {
-                if shootContact {
-                    setStatusAiming()
+                if shootContact > 0 {
+                    increaseDice()
                 } else {
-                    rollBall()
+                    decreaseDice()
                 }
+                rollBall()
             }
         }
     }
