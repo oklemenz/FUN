@@ -11,6 +11,8 @@ import GameplayKit
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    let RestBias: CGFloat = 25.0
+    
     enum GameStatus {
         case Resting
         case Rolling
@@ -18,17 +20,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case Shooting
     }
     
-    let RestBias: CGFloat = 25.0
-    
-    let background = SKSpriteNode(texture: SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#116316"), color2: CIColor(rgba: "#0d3303")))
-
-    let whiteBall = Ball.White()
-    
+    let background = Background()
+    let border = Border()
+    let dice = Dice()
     let line = Line()
+    let whiteBall = Ball.White()
     let startSpot = StartSpot()
     let endSpot = EndSpot()
-    
-    let dice = Dice()
     
     var status: GameStatus = .Resting
     var shootContact = 0
@@ -36,23 +34,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
-        physicsWorld.speed = 0.1
-        // TODO: Replace by thick bounding shapes...
-        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
-        physicsBody?.isDynamic = false
-        physicsBody?.usesPreciseCollisionDetection = true
+        physicsWorld.speed = 0.9
         
-        background.zPosition = 0
-        background.position = CGPoint(x: 0, y: 0)
         background.size.width = size.width
         background.size.height = size.height
-        background.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        
         addChild(background)
+        addChild(border)
         addChild(dice)
-        
-        addChild(whiteBall)
         addChild(line)
-        
+        addChild(whiteBall)
+
         whiteBall.roll()
         roll()
     }
@@ -62,7 +54,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             dx: line.endPoint!.x - line.startPoint!.x,
             dy: line.endPoint!.y - line.startPoint!.y
         )
-        whiteBall.shoot(vector: vector * 3)
+        whiteBall.shoot(vector: vector)
         setStatusShooting()
     }
     
@@ -104,7 +96,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func pointTouched(position: CGPoint, began: Bool = false) {
         if let startPoint = line.startPoint {
-            if began && line.endPoint != nil && startPoint.distanceTo(position) <= whiteBall.radius {
+            if began && line.endPoint != nil && startPoint.distanceTo(position) <= 2.5 * whiteBall.radius {
                 shoot()
             } else {
                 line.endPoint = position
@@ -202,7 +194,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 } else {
                     decreaseDice()
                 }
-                rollBall()
+                roll()
             }
         }
     }

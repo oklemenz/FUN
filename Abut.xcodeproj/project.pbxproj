@@ -26,6 +26,8 @@
 		54A0E173210087A2002D629F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E172210087A2002D629F /* CGPoint+Extension.swift */; };
 		54A0E17521008E83002D629F /* DiceEye.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E17421008E83002D629F /* DiceEye.swift */; };
 		54A0E17721009010002D629F /* Dice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E17621009010002D629F /* Dice.swift */; };
+		54A8E014210F31AD0095DF3B /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8E013210F31AD0095DF3B /* Border.swift */; };
+		54A8E016210F37850095DF3B /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8E015210F37850095DF3B /* Background.swift */; };
 		54F0537B20FE1D4C00FF4AA1 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +53,8 @@
 		54A0E172210087A2002D629F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		54A0E17421008E83002D629F /* DiceEye.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEye.swift; sourceTree = "<group>"; };
 		54A0E17621009010002D629F /* Dice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice.swift; sourceTree = "<group>"; };
+		54A8E013210F31AD0095DF3B /* Border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
+		54A8E015210F37850095DF3B /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,6 +91,8 @@
 				540222BC20FDEA02006F25E9 /* AppDelegate.swift */,
 				540222C420FDEA02006F25E9 /* GameViewController.swift */,
 				540222C220FDEA02006F25E9 /* GameScene.swift */,
+				54A8E015210F37850095DF3B /* Background.swift */,
+				54A8E013210F31AD0095DF3B /* Border.swift */,
 				540222D420FDEFA7006F25E9 /* Ball.swift */,
 				542A19F220FE250D006F96C1 /* Line.swift */,
 				54A0E17621009010002D629F /* Dice.swift */,
@@ -186,7 +192,9 @@
 				540222D520FDEFA7006F25E9 /* Ball.swift in Sources */,
 				542A19F520FE2A8B006F96C1 /* SKTexture+Extension.swift in Sources */,
 				54A0E173210087A2002D629F /* CGPoint+Extension.swift in Sources */,
+				54A8E016210F37850095DF3B /* Background.swift in Sources */,
 				540222C320FDEA02006F25E9 /* GameScene.swift in Sources */,
+				54A8E014210F31AD0095DF3B /* Border.swift in Sources */,
 				540222C520FDEA02006F25E9 /* GameViewController.swift in Sources */,
 				542A19F320FE250D006F96C1 /* Line.swift in Sources */,
 				542A19F720FE2DA8006F96C1 /* Color+Extension.swift in Sources */,

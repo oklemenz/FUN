@@ -16,6 +16,7 @@ class ContactEffect: SKNode {
     var ballB: Ball!
     
     var line: SKShapeNode!
+    var cover: SKShapeNode!
     
     init(context: SKNode, ballA: Ball, ballB: Ball) {
         super.init()
@@ -37,13 +38,13 @@ class ContactEffect: SKNode {
             contactEffect.particleLifetime = 1.0
             contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [ballB.color, ballA.color], times: [0.0, 0.5])
             ballA.addChild(contactEffect)
-            run(SKAction.sequence([
+            contactEffect.run(SKAction.sequence([
                 SKAction.wait(forDuration: Double(contactEffect.particleLifetime)),
                 SKAction.run {
                     contactEffect.particleBirthRate = 0
                 },
                 SKAction.wait(forDuration: Double(contactEffect.particleLifetime)),
-                //SKAction.removeFromParent()
+                    SKAction.removeFromParent()
                 ]))
         }
         
@@ -55,27 +56,32 @@ class ContactEffect: SKNode {
         bezierPath.addLine(to: ballA.position + direction * size.length())
         line.zPosition = 1000
         line.path = bezierPath.cgPath
-        line.lineWidth = 10
+        line.lineWidth = 20
+        line.glowWidth = 10
         line.strokeColor = ballA.color
-        self.context.addChild(line)
+        context.addChild(line)
         
-        animateLine(line: line)
+        cover = SKShapeNode(rectOf: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
+        cover.zPosition = 999
+        cover.position = CGPoint(x: 0, y: 0)
+        cover.alpha = 0.45
+        cover.fillColor = ballA.color
+        addChild(cover)
+        
+        animate()
     }
     
-    func animateLine(line: SKShapeNode) {
-        var update:CGFloat = 1.0
-        let action = SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 0.05),
-            SKAction.run {
-                line.lineWidth += update
-                if line.lineWidth > 15 {
-                    update = -1
+    func animate() {
+        let action = SKAction.sequence([
+            SKAction.repeat(SKAction.sequence([
+                SKAction.wait(forDuration: 0.05),
+                SKAction.run {
+                    self.line.lineWidth -= 1
+                    self.cover.alpha -= 0.03
                 }
-                if line.lineWidth == 0 {
-                    self.removeAction(forKey: "pulse")
-                }
-            }
-        ]))
-        line.run(action, withKey: "pulse")
+                ]), count: Int(self.line.lineWidth)),
+            SKAction.removeFromParent()
+        ])
+        run(action, withKey: "pulse")
     }
 }

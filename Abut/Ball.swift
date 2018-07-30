@@ -40,8 +40,8 @@ class Ball : SKShapeNode {
         zPosition = 1
         
         physicsBody = SKPhysicsBody(circleOfRadius: radius)
-        physicsBody?.restitution = 1
-        physicsBody?.linearDamping = 10
+        physicsBody?.restitution = 0.8
+        physicsBody?.linearDamping = 2
         physicsBody?.affectedByGravity = false
         physicsBody?.allowsRotation = false
         physicsBody?.usesPreciseCollisionDetection = true
@@ -92,8 +92,8 @@ class Ball : SKShapeNode {
         let width = UIScreen.main.bounds.width;
         let height = UIScreen.main.bounds.height;
         let side = randomInt(min: 1, max: 4)
-        let fx = randomCGFloat(min: 25, max: 100)
-        let fy = randomCGFloat(min: 25, max: 100)
+        let fx = randomCGFloat(min: 10, max: 100)
+        let fy = randomCGFloat(min: 10, max: 100)
         
         var x: CGFloat = 0
         var y: CGFloat = 0
