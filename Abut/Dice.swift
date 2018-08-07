@@ -14,14 +14,7 @@ class Dice : SKSpriteNode {
     let distance:CGFloat = 60
     
     var eyes: [DiceEye] = []
-    var value = 0 {
-        willSet {
-            previousValue = value
-        }
-        didSet {
-            render(animated: true)
-        }
-    }
+    var value = 0
     var previousValue = 0
     
     init() {
@@ -36,8 +29,10 @@ class Dice : SKSpriteNode {
             addChild(eye)
             eyes.append(eye)
         }
+        
         self.value = 6
         self.previousValue = 6
+        
         place()
     }
     
@@ -46,15 +41,35 @@ class Dice : SKSpriteNode {
     }
     
     func decrease() {
-        if value > 1 {
+        if value >= 1 {
+            previousValue = value
             value -= 1
+            render()
         }
     }
     
     func increase() {
         if value < 6 {
+            previousValue = value
             value += 1
+            render()
         }
+    }
+
+    func countUp() {
+        guard value < 6 else {
+            return
+        }
+        run(SKAction.sequence([
+            SKAction.run {
+                self.value += 1
+                self.render(duration: self.value == 6 ? 0.5 : 0.25)
+            },
+            SKAction.wait(forDuration: self.value == 6 ? 0.5 : 0.25),
+            SKAction.run {
+                self.countUp()
+            }
+            ]))
     }
     
     func place() {
@@ -66,8 +81,7 @@ class Dice : SKSpriteNode {
         eyes[5].position = CGPoint(x: distance, y: distance)
     }
     
-    func render(animated: Bool = false) {
-        let duration = animated ? 0.5 : 0.0
+    func render(duration:Double = 0.5) {
         if value < previousValue {
             switch value {
                 case 0:

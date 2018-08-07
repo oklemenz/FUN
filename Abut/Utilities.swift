@@ -24,3 +24,12 @@ func randomFloat(min: Float, max: Float) -> Float {
 func randomCGFloat(min: CGFloat, max: CGFloat) -> CGFloat {
     return CGFloat(Float(arc4random()) / Float(UINT32_MAX)) * (max - min) + min
 }
+
+var iphoneX = false
+func iPhoneX() {
+    if #available(iOS 11.0, *) {
+        if ((UIApplication.shared.keyWindow?.safeAreaInsets.top)! > CGFloat(0.0)) {
+            iphoneX = true
+        }
+    }
+}

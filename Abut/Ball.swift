@@ -14,16 +14,20 @@ let CollisionCategoryBall: UInt32 = 0x1 << 1
 
 class Ball : SKShapeNode {
     
-    let radius: CGFloat = 16.0
+    let radius: CGFloat = BALL_RADIUS
     
     var color = SKColor.white
-    var value = 1 {
+    var value = 0 {
         didSet {
             render()
         }
     }
 
-    static func White() -> Ball {
+    static var Black: Ball {
+        return Ball(value: -1)
+    }
+    
+    static var White: Ball {
         return Ball(value: 0)
     }
     
@@ -40,7 +44,7 @@ class Ball : SKShapeNode {
         zPosition = 1
         
         physicsBody = SKPhysicsBody(circleOfRadius: radius)
-        physicsBody?.restitution = 0.8
+        physicsBody?.restitution = 0.7
         physicsBody?.linearDamping = 2
         physicsBody?.affectedByGravity = false
         physicsBody?.allowsRotation = false
@@ -58,7 +62,21 @@ class Ball : SKShapeNode {
     }
     
     func render() {
+        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius, y: -radius),
+                                        size: CGSize(width: radius * 2, height: radius * 2)), transform: nil)
+        strokeColor = SKColor.clear
+        color = Ball.colorForValue(value: value)
+        fillColor = color
+        glowWidth = 1
+    }
+   
+    static func colorForValue(value: Int) -> SKColor {
+        var color: SKColor
         switch value {
+            case -1:
+                color = .black
+            case 0:
+                color = .white
             case 1:
                 color = SKColor(r: 255, g: 59, b: 48)
             case 2:
@@ -75,25 +93,50 @@ class Ball : SKShapeNode {
                 color = SKColor(r: 88, g: 86, b: 214)
             case 8:
                 color = SKColor(r: 255, g: 45, b: 85)
+            case 9:
+                // TODO: Color?
+                color = .black
+            case 10:
+                // TODO: Color?
+                color = .black
+            case 11:
+                // TODO: Color?
+                color = .black
+            case 12:
+                // TODO: Color?
+                color = .black
+            case 13:
+                // TODO: Color?
+                color = .black
+            case 14:
+                // TODO: Color?
+                color = .black
+            case 15:
+                // TODO: Color?
+                color = .black
+            case 16:
+                // TODO: Color?
+                color = .black
             default:
-                color = .white
+                // TODO: Color?
+                color = .clear
         }
-        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius, y: -radius),
-                                        size: CGSize(width: radius * 2, height: radius * 2)), transform: nil)
-        strokeColor = SKColor.clear
-        fillColor = color
+        return color
     }
-   
+    
     func shoot(vector: CGVector) {
         physicsBody?.applyImpulse(vector)
     }
     
     func roll() {
-        let width = UIScreen.main.bounds.width;
-        let height = UIScreen.main.bounds.height;
+        let w = UIScreen.main.bounds.width;
+        let w2 = w / 2.0
+        let h = UIScreen.main.bounds.height;
+        let h2 = h / 2.0
         let side = randomInt(min: 1, max: 4)
-        let fx = randomCGFloat(min: 10, max: 100)
-        let fy = randomCGFloat(min: 10, max: 100)
+        let fx = randomCGFloat(min: 5, max: 10)
+        let fy = randomCGFloat(min: 5, max: 10)
+        let distance: CGFloat = 20
         
         var x: CGFloat = 0
         var y: CGFloat = 0
@@ -101,23 +144,23 @@ class Ball : SKShapeNode {
         var dy: CGFloat = 0
         switch (side) {
             case 1:
-                x = randomCGFloat(min: -width/2 + radius, max: width/2 - radius)
-                y = height/2 - radius
+                x = randomCGFloat(min: -w2 + radius + distance, max: w2 - radius - distance)
+                y = h2 - radius - distance
                 dx = x < 0 ? 1 : -1
                 dy = -1
             case 2:
-                x = width/2 - radius
-                y = randomCGFloat(min: -height/2 + radius, max: height/2 - radius)
+                x = w2 - radius - distance
+                y = randomCGFloat(min: -h2 + radius + distance, max: h2 - radius - distance)
                 dx = -1
                 dy = y < 0 ? 1 : -1
             case 3:
-                x = randomCGFloat(min: -width/2 + radius, max: width/2 - radius)
-                y = -height/2 + radius
+                x = randomCGFloat(min: -w2 + radius + distance, max: w2 - radius - distance)
+                y = -h2 + radius + distance
                 dx = x < 0 ? 1 : -1
                 dy = 1
             case 4:
-                x = -width/2 + radius
-                y = randomCGFloat(min: -height/2 + radius, max: height/2 - radius)
+                x = -w2 + radius + distance
+                y = randomCGFloat(min: -h2 + radius + distance, max: h2 - radius - distance)
                 dx = 1
                 dy = y < 0 ? 1 : -1
             default:

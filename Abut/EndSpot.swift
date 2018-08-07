@@ -11,8 +11,8 @@ import SpriteKit
 
 class EndSpot : SKNode {
     
-    let radius: CGFloat = 15.0
-    let pattern: [CGFloat] = [5.0, 5.0]
+    let radius: CGFloat = BALL_RADIUS
+    let pattern: [CGFloat] = [BALL_RADIUS / 3.0, BALL_RADIUS / 3.0]
     
     var ring: SKShapeNode!
     var hLine: SKShapeNode!

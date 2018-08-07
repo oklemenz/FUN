@@ -10,9 +10,9 @@ import Foundation
 import SpriteKit
 
 class StartSpot : SKShapeNode {
-    
-    let radius: CGFloat = 25.0
-    let pattern: [CGFloat] = [10.0, 10.0]
+
+    let radius: CGFloat = BALL_RADIUS * 1.5
+    let pattern: [CGFloat] = [BALL_RADIUS / 2.0, BALL_RADIUS / 2.0]
     
     override convenience init() {
         self.init(color: SKColor.white)
