@@ -150,7 +150,7 @@ class Dice : SKSpriteNode {
     
     subscript(index: Int) -> DiceEye {
         get {
-            return eyes[index];
+            return eyes[index]
         }
     }
 }

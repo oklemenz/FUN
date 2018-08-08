@@ -43,7 +43,7 @@ class Ball : SKShapeNode {
         
         zPosition = 1
         
-        physicsBody = SKPhysicsBody(circleOfRadius: radius)
+        physicsBody = SKPhysicsBody(circleOfRadius: radius + 1)
         physicsBody?.restitution = 0.7
         physicsBody?.linearDamping = 2
         physicsBody?.affectedByGravity = false
@@ -129,14 +129,14 @@ class Ball : SKShapeNode {
     }
     
     func roll() {
-        let w = UIScreen.main.bounds.width;
+        let w = UIScreen.main.bounds.width
         let w2 = w / 2.0
-        let h = UIScreen.main.bounds.height;
+        let h = UIScreen.main.bounds.height - BAR_HEIGHT
         let h2 = h / 2.0
+        let space: CGFloat = 5
         let side = randomInt(min: 1, max: 4)
         let fx = randomCGFloat(min: 5, max: 10)
         let fy = randomCGFloat(min: 5, max: 10)
-        let distance: CGFloat = 20
         
         var x: CGFloat = 0
         var y: CGFloat = 0
@@ -144,23 +144,27 @@ class Ball : SKShapeNode {
         var dy: CGFloat = 0
         switch (side) {
             case 1:
-                x = randomCGFloat(min: -w2 + radius + distance, max: w2 - radius - distance)
-                y = h2 - radius - distance
+                // top
+                x = randomCGFloat(min: -w2 + radius + space, max: w2 - radius - space)
+                y = h2 - radius - space
                 dx = x < 0 ? 1 : -1
                 dy = -1
             case 2:
-                x = w2 - radius - distance
-                y = randomCGFloat(min: -h2 + radius + distance, max: h2 - radius - distance)
+                // right
+                x = w2 - radius - space
+                y = randomCGFloat(min: -h2 + radius + space, max: h2 - radius - space)
                 dx = -1
                 dy = y < 0 ? 1 : -1
             case 3:
-                x = randomCGFloat(min: -w2 + radius + distance, max: w2 - radius - distance)
-                y = -h2 + radius + distance
+                // bottom
+                x = randomCGFloat(min: -w2 + radius + space, max: w2 - radius - space)
+                y = -h2 + radius + space
                 dx = x < 0 ? 1 : -1
                 dy = 1
             case 4:
-                x = -w2 + radius + distance
-                y = randomCGFloat(min: -h2 + radius + distance, max: h2 - radius - distance)
+                // left
+                x = -w2 + radius + space
+                y = randomCGFloat(min: -h2 + radius + space, max: h2 - radius - space)
                 dx = 1
                 dy = y < 0 ? 1 : -1
             default:

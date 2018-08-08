@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-class ContactEffect: SKNode {
+class CollisionEffect: SKNode {
     
     var context: SKNode!
     var ballA: Ball!
@@ -33,7 +33,7 @@ class ContactEffect: SKNode {
     }
     
     func show() {
-        if let contactEffect = SKEmitterNode(fileNamed: "ContactEffect") {
+        if let contactEffect = SKEmitterNode(fileNamed: "CollisionEffect") {
             contactEffect.position = CGPoint(x: 0, y: 0)
             contactEffect.particleLifetime = 1.0
             contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [ballB.color, ballA.color], times: [0.0, 0.5])
@@ -64,9 +64,9 @@ class ContactEffect: SKNode {
         cover = SKShapeNode(rectOf: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         cover.zPosition = 999
         cover.position = CGPoint(x: 0, y: 0)
-        cover.alpha = 0.45
+        cover.alpha = 0.4
         cover.fillColor = ballA.color
-        addChild(cover)
+        context.addChild(cover)
         
         animate()
     }

@@ -66,7 +66,7 @@ func parseHexColor(rgba: String) -> (red: CGFloat, green: CGFloat, blue: CGFloat
                 blue = CGFloat((hexValue & 0x0000FF00) >> 8) / 255.0
                 alpha = CGFloat(hexValue & 0x000000FF) / 255.0
             default:
-                break;
+                break
             }
         }
     }

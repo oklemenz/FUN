@@ -19,15 +19,19 @@
 		542A19F520FE2A8B006F96C1 /* SKTexture+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */; };
 		542A19F720FE2DA8006F96C1 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F620FE2DA8006F96C1 /* Color+Extension.swift */; };
 		542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F820FE2EAC006F96C1 /* StartSpot.swift */; };
-		544F416F210B479300E10B15 /* ContactEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544F416E210B479300E10B15 /* ContactEffect.swift */; };
-		544F4177210B4A6200E10B15 /* ContactEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 544F4176210B4A6200E10B15 /* ContactEffect.sks */; };
+		5449CC28211AF96A00531181 /* BlockedEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5449CC27211AF96A00531181 /* BlockedEffect.sks */; };
+		5449CC2A211B05E200531181 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5449CC29211B05E200531181 /* Board.swift */; };
+		544F416F210B479300E10B15 /* CollisionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544F416E210B479300E10B15 /* CollisionEffect.swift */; };
+		544F4177210B4A6200E10B15 /* CollisionEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 544F4176210B4A6200E10B15 /* CollisionEffect.sks */; };
+		545BA8AD211B253D000362DA /* ExplosionEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 545BA8AC211B253D000362DA /* ExplosionEffect.sks */; };
+		545BA8AF211B2F21000362DA /* SKLabelNode+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */; };
+		545BA8B1211B3681000362DA /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545BA8B0211B3681000362DA /* Label.swift */; };
 		54A0E16F2100756D002D629F /* CGVector+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E16E2100756D002D629F /* CGVector+Extension.swift */; };
 		54A0E171210076E8002D629F /* EndSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E170210076E8002D629F /* EndSpot.swift */; };
 		54A0E173210087A2002D629F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E172210087A2002D629F /* CGPoint+Extension.swift */; };
 		54A0E17521008E83002D629F /* DiceEye.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E17421008E83002D629F /* DiceEye.swift */; };
 		54A0E17721009010002D629F /* Dice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E17621009010002D629F /* Dice.swift */; };
 		54A8E014210F31AD0095DF3B /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8E013210F31AD0095DF3B /* Border.swift */; };
-		54A8E016210F37850095DF3B /* Background.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8E015210F37850095DF3B /* Background.swift */; };
 		54F0537B20FE1D4C00FF4AA1 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,15 +50,19 @@
 		542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTexture+Extension.swift"; sourceTree = "<group>"; };
 		542A19F620FE2DA8006F96C1 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		542A19F820FE2EAC006F96C1 /* StartSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSpot.swift; sourceTree = "<group>"; };
-		544F416E210B479300E10B15 /* ContactEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactEffect.swift; sourceTree = "<group>"; };
-		544F4176210B4A6200E10B15 /* ContactEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ContactEffect.sks; sourceTree = "<group>"; };
+		5449CC27211AF96A00531181 /* BlockedEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BlockedEffect.sks; sourceTree = "<group>"; };
+		5449CC29211B05E200531181 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		544F416E210B479300E10B15 /* CollisionEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionEffect.swift; sourceTree = "<group>"; };
+		544F4176210B4A6200E10B15 /* CollisionEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CollisionEffect.sks; sourceTree = "<group>"; };
+		545BA8AC211B253D000362DA /* ExplosionEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionEffect.sks; sourceTree = "<group>"; };
+		545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKLabelNode+Extension.swift"; sourceTree = "<group>"; };
+		545BA8B0211B3681000362DA /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
 		54A0E16E2100756D002D629F /* CGVector+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGVector+Extension.swift"; sourceTree = "<group>"; };
 		54A0E170210076E8002D629F /* EndSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndSpot.swift; sourceTree = "<group>"; };
 		54A0E172210087A2002D629F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		54A0E17421008E83002D629F /* DiceEye.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEye.swift; sourceTree = "<group>"; };
 		54A0E17621009010002D629F /* Dice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice.swift; sourceTree = "<group>"; };
 		54A8E013210F31AD0095DF3B /* Border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
-		54A8E015210F37850095DF3B /* Background.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Background.swift; sourceTree = "<group>"; };
 		54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -91,22 +99,26 @@
 				540222BC20FDEA02006F25E9 /* AppDelegate.swift */,
 				540222C420FDEA02006F25E9 /* GameViewController.swift */,
 				540222C220FDEA02006F25E9 /* GameScene.swift */,
-				54A8E015210F37850095DF3B /* Background.swift */,
 				54A8E013210F31AD0095DF3B /* Border.swift */,
+				5449CC29211B05E200531181 /* Board.swift */,
 				540222D420FDEFA7006F25E9 /* Ball.swift */,
+				545BA8B0211B3681000362DA /* Label.swift */,
 				542A19F220FE250D006F96C1 /* Line.swift */,
-				54A0E17621009010002D629F /* Dice.swift */,
-				54A0E17421008E83002D629F /* DiceEye.swift */,
 				542A19F820FE2EAC006F96C1 /* StartSpot.swift */,
 				54A0E170210076E8002D629F /* EndSpot.swift */,
-				544F416E210B479300E10B15 /* ContactEffect.swift */,
+				54A0E17621009010002D629F /* Dice.swift */,
+				54A0E17421008E83002D629F /* DiceEye.swift */,
+				544F416E210B479300E10B15 /* CollisionEffect.swift */,
 				54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */,
 				54A0E16E2100756D002D629F /* CGVector+Extension.swift */,
 				54A0E172210087A2002D629F /* CGPoint+Extension.swift */,
 				542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */,
+				545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */,
 				542A19F620FE2DA8006F96C1 /* Color+Extension.swift */,
 				540222BE20FDEA02006F25E9 /* GameScene.sks */,
-				544F4176210B4A6200E10B15 /* ContactEffect.sks */,
+				544F4176210B4A6200E10B15 /* CollisionEffect.sks */,
+				5449CC27211AF96A00531181 /* BlockedEffect.sks */,
+				545BA8AC211B253D000362DA /* ExplosionEffect.sks */,
 				540222C620FDEA02006F25E9 /* Main.storyboard */,
 				540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */,
 				540222C920FDEA03006F25E9 /* Assets.xcassets */,
@@ -174,9 +186,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				540222C820FDEA02006F25E9 /* Main.storyboard in Resources */,
+				5449CC28211AF96A00531181 /* BlockedEffect.sks in Resources */,
+				545BA8AD211B253D000362DA /* ExplosionEffect.sks in Resources */,
 				540222BF20FDEA02006F25E9 /* GameScene.sks in Resources */,
 				540222CA20FDEA03006F25E9 /* Assets.xcassets in Resources */,
-				544F4177210B4A6200E10B15 /* ContactEffect.sks in Resources */,
+				544F4177210B4A6200E10B15 /* CollisionEffect.sks in Resources */,
 				540222CD20FDEA03006F25E9 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -188,14 +202,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				544F416F210B479300E10B15 /* ContactEffect.swift in Sources */,
+				544F416F210B479300E10B15 /* CollisionEffect.swift in Sources */,
 				540222D520FDEFA7006F25E9 /* Ball.swift in Sources */,
 				542A19F520FE2A8B006F96C1 /* SKTexture+Extension.swift in Sources */,
 				54A0E173210087A2002D629F /* CGPoint+Extension.swift in Sources */,
-				54A8E016210F37850095DF3B /* Background.swift in Sources */,
 				540222C320FDEA02006F25E9 /* GameScene.swift in Sources */,
 				54A8E014210F31AD0095DF3B /* Border.swift in Sources */,
+				545BA8AF211B2F21000362DA /* SKLabelNode+Extension.swift in Sources */,
 				540222C520FDEA02006F25E9 /* GameViewController.swift in Sources */,
+				5449CC2A211B05E200531181 /* Board.swift in Sources */,
+				545BA8B1211B3681000362DA /* Label.swift in Sources */,
 				542A19F320FE250D006F96C1 /* Line.swift in Sources */,
 				542A19F720FE2DA8006F96C1 /* Color+Extension.swift in Sources */,
 				54A0E171210076E8002D629F /* EndSpot.swift in Sources */,
