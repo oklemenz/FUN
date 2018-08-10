@@ -12,16 +12,28 @@ import SpriteKit
 class StatusBar : SKNode {
     
     var score: Label!
-    var scoreValue: Int = 888888 { // < 1000000
+    var scoreValue: Int = 0 { // < 1000000
         didSet {
             score.text = "\(scoreValue)"
+            if scoreValue > highscoreValue {
+                highscoreValue = scoreValue
+            }
         }
     }
     
+    // TODO: Crown Icon
     var highscore: Label!
-    var highscoreValue: Int = 888888 { // < 1000000
+    var highscoreValue: Int = 0 { // < 1000000
         didSet {
             highscore.text = "\(highscoreValue)"
+        }
+    }
+    
+    // TODO: Rocket Icon
+    var multiplier: Label!
+    var multiplierValue: Int = 1 {
+        didSet {
+            multiplier.text = multiplierValue > 1 ? "\(multiplierValue)x" : ""
         }
     }
     
@@ -41,7 +53,12 @@ class StatusBar : SKNode {
         highscore = Label(text: "\(highscoreValue)")
         highscore.fontSize = .s
         highscore.position = CGPoint(x: w2 - 55, y: BAR_HEIGHT / 2 + 0)
-        addChild(highscore  )
+        addChild(highscore)
+        
+        multiplier = Label(text: "")
+        multiplier.fontSize = .s
+        multiplier.position = CGPoint(x: -w2 + 55, y: BAR_HEIGHT / 2 + 0)
+        addChild(multiplier)
     }
     
     required init?(coder aDecoder: NSCoder) {

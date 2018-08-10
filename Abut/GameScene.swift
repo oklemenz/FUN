@@ -18,13 +18,16 @@ let CORNER_RADIUS: CGFloat = 40.0
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
-class GameScene: SKScene, SKPhysicsContactDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate {
     
+    var background: SKShapeNode!
     let statusBar = StatusBar()
     let board = Board()
     let border = Border()
     
     override func didMove(to view: SKView) {
+        board.delegate = self
+        
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.9
@@ -34,19 +37,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
         
-        let texture = SKTexture(size: size.width, color1: CIColor(color: Ball.colorForValue(value: 1)), color2: CIColor(rgba: "#000000"))
-        let background = SKShapeNode(rect: CGRect(x: -w2, y: h2 - BAR_HEIGHT - CORNER_RADIUS, width: w, height: BAR_HEIGHT + CORNER_RADIUS), cornerRadius: CORNER_RADIUS)
+        background = SKShapeNode(rect: CGRect(x: -w2, y: h2 - BAR_HEIGHT - CORNER_RADIUS, width: w, height: BAR_HEIGHT + CORNER_RADIUS), cornerRadius: CORNER_RADIUS)
+
         background.strokeColor = .clear
         background.fillColor = .white
-        background.fillTexture = texture
         background.alpha = 0.5
         background.zPosition = 0
+        didUpdateColor(color: Ball.colorForValue(value: 1))
         addChild(background)
         
         addChild(statusBar)        
         addChild(board)
         addChild(border)
-        board.border = border
 
         run(SKAction.sequence([
             SKAction.wait(forDuration: 1.0),
@@ -125,4 +127,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         board.update()
     }
+    
+    func didCollideBall(value: Int, multiplier: Int) {
+        // TODO: Animate up value label to score
+        statusBar.scoreValue += value * board.multiplier
+    }
+    
+    func didUpdateColor(color: UIColor) {
+        border.color = color
+        background.fillTexture = SKTexture(size: size.width, color1: CIColor(color: color), color2: CIColor(rgba: "#000000"))
+    }
+
+    func didUpdateMultiplier(multiplier: Int) {
+        // TODO: Zoom in Combo label...
+        statusBar.multiplierValue = multiplier
+    }    
 }

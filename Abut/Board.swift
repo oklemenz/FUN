@@ -9,6 +9,12 @@
 import Foundation
 import SpriteKit
 
+protocol BoardDelegate: class {
+    func didCollideBall(value: Int, multiplier: Int)
+    func didUpdateColor(color: UIColor)
+    func didUpdateMultiplier(multiplier: Int)
+}
+
 class Board : SKNode {
 
     let RestBias: CGFloat = 25.0
@@ -22,11 +28,7 @@ class Board : SKNode {
     }
     
     var background: SKShapeNode!
-    var border: Border? {
-        didSet {
-            updateBorder()
-        }
-    }
+    weak var delegate: BoardDelegate?
     
     let dice = Dice()
     let line = Line()
@@ -37,6 +39,7 @@ class Board : SKNode {
     var status: GameStatus = .Resting
     var highestColorValue = 0
     var highestColorCollisionContact = 0
+    var multiplier = 1
     
     override init() {
         super.init()
@@ -95,7 +98,7 @@ class Board : SKNode {
         if dice.value > 1 {
             dice.decrease()
         } else {
-            // TODO: Explode one of the hightest colored balls
+            // TODO: Remove one of the hightest colored balls + Explosion
             rollBall(Ball.Black)
             dice.countUp()
         }
@@ -116,7 +119,7 @@ class Board : SKNode {
             rollBall(Ball())
         }
         rollBall(Ball())
-        updateBorder()
+        updateColor()
     }
     
     func rollBall(_ ball: Ball) {
@@ -232,7 +235,7 @@ class Board : SKNode {
     
     func collisionDetected(ballA: Ball, ballB: Ball) {
         if ballA.value == Ball.Black.value {
-            // TODO: Black ball => add a black non-movebale square
+            // TODO: Black ball => add a black non-movebale square + smoke
         } else {
             if ballA.value == highestColorValue {
                 highestColorCollisionContact += 1
@@ -241,14 +244,28 @@ class Board : SKNode {
             ballA.increase()
             ballB.removeFromParent()
             addChild(CollisionEffect(context: self.parent!, ballA: ballA, ballB: ballB))
-            updateBorder()
+            updateCollide(value: ballA.value)
+            updateColor()
+            updateMultiplier()
         }
     }
+
+    func updateCollide(value: Int) {
+        delegate?.didCollideBall(value: value, multiplier: multiplier)
+    }
     
-    func updateBorder() {
-        if let border = border {
-            border.color = Ball.colorForValue(value: determineHighestColorValue())
-        }
+    func updateColor() {
+        delegate?.didUpdateColor(color: Ball.colorForValue(value: determineHighestColorValue()))
+    }
+    
+    func updateMultiplier() {
+        multiplier += 1
+        delegate?.didUpdateMultiplier(multiplier: multiplier)
+    }
+    
+    func resetMultiplier() {
+        multiplier = 1
+        delegate?.didUpdateMultiplier(multiplier: multiplier)
     }
     
     func pointTouched(position: CGPoint, began: Bool = false) {
@@ -279,6 +296,7 @@ class Board : SKNode {
             } else if status == .Shooting {
                 if highestColorCollisionContact == 0 {
                     decreaseDice()
+                    resetMultiplier()
                 }
                 roll()
             }
