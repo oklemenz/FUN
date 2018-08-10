@@ -10,38 +10,44 @@ import SpriteKit
 import GameplayKit
 import AudioToolbox
 
-let BALL_RADIUS: CGFloat = 16.0
+// Screen sizes
+let NOTCH_WIDTH: CGFloat = 209.0
+let NOTCH_HEIGHT: CGFloat = 30.0
+let SIDE_WIDTH: CGFloat = 83.0
 let CORNER_RADIUS: CGFloat = 40.0
-let BAR_HEIGHT: CGFloat = 80.0
+let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
+let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
+    let statusBar = StatusBar()
     let board = Board()
     let border = Border()
-    
-    var score: Label!
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.9
         
-        let texture = SKTexture(size: size.width, color1: CIColor(rgba: "#444444"), color2: CIColor(rgba: "#000000"))
-        let background = SKSpriteNode(texture: texture, color: UIColor.white, size: texture.size())
+        let w = UIScreen.main.bounds.width
+        let w2 = w / 2.0
+        let h = UIScreen.main.bounds.height
+        let h2 = h / 2.0
+        
+        let texture = SKTexture(size: size.width, color1: CIColor(color: Ball.colorForValue(value: 1)), color2: CIColor(rgba: "#000000"))
+        let background = SKShapeNode(rect: CGRect(x: -w2, y: h2 - BAR_HEIGHT - CORNER_RADIUS, width: w, height: BAR_HEIGHT + CORNER_RADIUS), cornerRadius: CORNER_RADIUS)
+        background.strokeColor = .clear
+        background.fillColor = .white
+        background.fillTexture = texture
+        background.alpha = 0.5
         background.zPosition = 0
-        background.position = CGPoint(x: 0, y: (size.height - BAR_HEIGHT - CORNER_RADIUS) / 2.0)
-        background.size.width = size.width
-        background.size.height = BAR_HEIGHT + CORNER_RADIUS
         addChild(background)
         
+        addChild(statusBar)        
         addChild(board)
         addChild(border)
         board.border = border
-        
-        score = Label(text: "0")
-        score.position = CGPoint(x: 0, y: UIScreen.main.bounds.height / 2 - BAR_HEIGHT / 2 - 40)
-        addChild(score)
-        
+
         run(SKAction.sequence([
             SKAction.wait(forDuration: 1.0),
             SKAction.run {

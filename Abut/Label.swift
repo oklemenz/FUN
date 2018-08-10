@@ -11,12 +11,43 @@ import SpriteKit
 
 class Label : SKNode {
     
-    let width: CGFloat = 10.0
+    enum Size : CGFloat {
+        case xxs = 15
+        case xs = 20
+        case s = 25
+        case m = 30
+        case l = 35
+        case xl = 40
+        case xxl = 45
+    }
     
-    var label: SKLabelNode!
-    var outline: SKLabelNode!
+    private var label: SKLabelNode!
+    private var outline: SKLabelNode!
+    
+    var fontName = "FredokaOne-Regular" { // ArialRoundedMTBold
+        didSet {
+            render()
+        }
+    }
+    var fontSize: Size = .l {
+        didSet {
+            render()
+        }
+    }
+    
+    var width: CGFloat = 10.0 {
+        didSet {
+            render()
+        }
+    }
     
     var text: String = "" {
+        didSet {
+            render()
+        }
+    }
+    
+    var horizontalAlignmentMode: SKLabelHorizontalAlignmentMode = .center {
         didSet {
             render()
         }
@@ -33,25 +64,25 @@ class Label : SKNode {
     }
     
     func setup() {
-        outline = SKLabelNode(fontNamed: "ArialRoundedMTBold")
+        outline = SKLabelNode(fontNamed: fontName)
         outline.zPosition = 10000
-        outline.fontColor = .white
-        outline.fontSize = 35
         addChild(outline)
-        
-        label = SKLabelNode(fontNamed: "ArialRoundedMTBold")
+        label = SKLabelNode(fontNamed: fontName)
         label.zPosition = 10001
-        label.position = CGPoint(x: 0, y: width - 1)
-        label.fontSize = 35
-        label.fontColor = .white
         outline.addChild(label)
-        
         render()
     }
     
     func render() {
         outline.text = text
+        outline.horizontalAlignmentMode = horizontalAlignmentMode
+        outline.fontColor = .white
+        outline.fontSize = fontSize.rawValue
         outline.addStroke(color: .black, width: width)
         label.text = text
+        label.horizontalAlignmentMode = horizontalAlignmentMode
+        label.position = CGPoint(x: 0, y: width - 1)
+        label.fontColor = .white
+        label.fontSize = fontSize.rawValue
     }
 }

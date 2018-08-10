@@ -21,7 +21,7 @@ class Board : SKNode {
         case Shooting
     }
     
-    var background: SKSpriteNode!
+    var background: SKShapeNode!
     var border: Border? {
         didSet {
             updateBorder()
@@ -41,9 +41,9 @@ class Board : SKNode {
     override init() {
         super.init()
        
-        let w:CGFloat = UIScreen.main.bounds.width
+        let w = UIScreen.main.bounds.width
         let w2 = w / 2.0
-        let h:CGFloat = UIScreen.main.bounds.height - BAR_HEIGHT
+        let h = UIScreen.main.bounds.height - BAR_HEIGHT
         let h2 = h / 2.0
         
         let physicsPath = UIBezierPath(roundedRect: CGRect(x: -w2, y: -h2, width: w, height: h), cornerRadius: CORNER_RADIUS)
@@ -54,12 +54,11 @@ class Board : SKNode {
         
         position = CGPoint(x: 0, y: -BAR_HEIGHT / 2)
         
-        // TODO: Use rounded rect with texture
         let texture = SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#116316"), color2: CIColor(rgba: "#0d3303"))
-        background = SKSpriteNode(texture: texture, color: UIColor.white, size: texture.size())
+        background = SKShapeNode(rect: CGRect(x: -w2, y: -h2, width: w, height: h), cornerRadius: CORNER_RADIUS)
+        background.fillColor = .white
+        background.fillTexture = texture
         background.zPosition = 0.1
-        background.size.width = w
-        background.size.height = h
         addChild(background)
         addChild(dice)
         addChild(line)
@@ -264,6 +263,7 @@ class Board : SKNode {
     }
     
     func update() {
+        assertBallsInBoard()
         line.startPoint = whiteBall.position
         let child = children.first { (node) -> Bool in
             if let ball = node as? Ball {
@@ -281,6 +281,21 @@ class Board : SKNode {
                     decreaseDice()
                 }
                 roll()
+            }
+        }
+    }
+    
+    func assertBallsInBoard() {
+        let w = UIScreen.main.bounds.width
+        let w2 = w / 2.0
+        let h = UIScreen.main.bounds.height
+        let h2 = h / 2.0
+        children.forEach { (node) in
+            if let ball = node as? Ball {
+                if ball.position.x < -w2 || ball.position.x > w2 ||
+                    ball.position.y < -h2 || ball.position.y > h2 {
+                    ball.roll()
+                }
             }
         }
     }

@@ -26,6 +26,8 @@
 		545BA8AD211B253D000362DA /* ExplosionEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 545BA8AC211B253D000362DA /* ExplosionEffect.sks */; };
 		545BA8AF211B2F21000362DA /* SKLabelNode+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */; };
 		545BA8B1211B3681000362DA /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545BA8B0211B3681000362DA /* Label.swift */; };
+		547653DE211D6B15000405E3 /* FredokaOne-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 547653DD211D6B15000405E3 /* FredokaOne-Regular.ttf */; };
+		547653E0211D95C6000405E3 /* StatusBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 547653DF211D95C6000405E3 /* StatusBar.swift */; };
 		54A0E16F2100756D002D629F /* CGVector+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E16E2100756D002D629F /* CGVector+Extension.swift */; };
 		54A0E171210076E8002D629F /* EndSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E170210076E8002D629F /* EndSpot.swift */; };
 		54A0E173210087A2002D629F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E172210087A2002D629F /* CGPoint+Extension.swift */; };
@@ -57,6 +59,8 @@
 		545BA8AC211B253D000362DA /* ExplosionEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ExplosionEffect.sks; sourceTree = "<group>"; };
 		545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKLabelNode+Extension.swift"; sourceTree = "<group>"; };
 		545BA8B0211B3681000362DA /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		547653DD211D6B15000405E3 /* FredokaOne-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "FredokaOne-Regular.ttf"; path = "fonts/FredokaOne-Regular.ttf"; sourceTree = "<group>"; };
+		547653DF211D95C6000405E3 /* StatusBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBar.swift; sourceTree = "<group>"; };
 		54A0E16E2100756D002D629F /* CGVector+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGVector+Extension.swift"; sourceTree = "<group>"; };
 		54A0E170210076E8002D629F /* EndSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndSpot.swift; sourceTree = "<group>"; };
 		54A0E172210087A2002D629F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
@@ -99,8 +103,9 @@
 				540222BC20FDEA02006F25E9 /* AppDelegate.swift */,
 				540222C420FDEA02006F25E9 /* GameViewController.swift */,
 				540222C220FDEA02006F25E9 /* GameScene.swift */,
-				54A8E013210F31AD0095DF3B /* Border.swift */,
+				547653DF211D95C6000405E3 /* StatusBar.swift */,
 				5449CC29211B05E200531181 /* Board.swift */,
+				54A8E013210F31AD0095DF3B /* Border.swift */,
 				540222D420FDEFA7006F25E9 /* Ball.swift */,
 				545BA8B0211B3681000362DA /* Label.swift */,
 				542A19F220FE250D006F96C1 /* Line.swift */,
@@ -119,6 +124,7 @@
 				544F4176210B4A6200E10B15 /* CollisionEffect.sks */,
 				5449CC27211AF96A00531181 /* BlockedEffect.sks */,
 				545BA8AC211B253D000362DA /* ExplosionEffect.sks */,
+				547653DD211D6B15000405E3 /* FredokaOne-Regular.ttf */,
 				540222C620FDEA02006F25E9 /* Main.storyboard */,
 				540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */,
 				540222C920FDEA03006F25E9 /* Assets.xcassets */,
@@ -192,6 +198,7 @@
 				540222CA20FDEA03006F25E9 /* Assets.xcassets in Resources */,
 				544F4177210B4A6200E10B15 /* CollisionEffect.sks in Resources */,
 				540222CD20FDEA03006F25E9 /* LaunchScreen.storyboard in Resources */,
+				547653DE211D6B15000405E3 /* FredokaOne-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +224,7 @@
 				54A0E171210076E8002D629F /* EndSpot.swift in Sources */,
 				54A0E17721009010002D629F /* Dice.swift in Sources */,
 				54A0E16F2100756D002D629F /* CGVector+Extension.swift in Sources */,
+				547653E0211D95C6000405E3 /* StatusBar.swift in Sources */,
 				54F0537B20FE1D4C00FF4AA1 /* Utilities.swift in Sources */,
 				542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */,
 				54A0E17521008E83002D629F /* DiceEye.swift in Sources */,
