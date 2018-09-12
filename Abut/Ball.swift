@@ -11,6 +11,7 @@ import SpriteKit
 
 let CollisionCategoryDefault: UInt32 = 0x1 << 0
 let CollisionCategoryBall: UInt32 = 0x1 << 1
+let CollisionCategoryBlock: UInt32 = 0x1 << 2
 
 class Ball : SKShapeNode {
     
@@ -43,7 +44,7 @@ class Ball : SKShapeNode {
         
         zPosition = 1
         
-        physicsBody = SKPhysicsBody(circleOfRadius: radius + 1)
+        physicsBody = SKPhysicsBody(circleOfRadius: radius)
         physicsBody?.restitution = 0.7
         physicsBody?.linearDamping = 2
         physicsBody?.affectedByGravity = false
@@ -173,5 +174,20 @@ class Ball : SKShapeNode {
         }
         position = CGPoint(x: x, y: y)
         shoot(vector: CGVector(dx: dx * fx, dy: dy * fy))
+    }
+    
+    func save() -> [String:Any] {
+        var data: [String:Any] = [:]
+        data["x"] = position.x
+        data["y"] = position.y
+        data["v"] = value
+        return data
+    }
+    
+    static func load(data: [String:Any]) -> Ball {
+        let ball = Ball()
+        ball.position = CGPoint(x: data["x"] as! CGFloat, y: data["y"] as! CGFloat)
+        ball.value = data["v"] as! Int
+        return ball
     }
 }

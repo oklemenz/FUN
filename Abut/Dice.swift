@@ -21,7 +21,7 @@ class Dice : SKSpriteNode {
         let texture = SKTexture(imageNamed: "dice")
         super.init(texture: texture, color: UIColor.white, size: texture.size())
         
-        zPosition = 0.5
+        zPosition = 0.95
         
         for _ in 0..<6 {
             let eye = DiceEye()
@@ -73,12 +73,80 @@ class Dice : SKSpriteNode {
     }
     
     func place() {
-        eyes[0].position = CGPoint(x: -distance, y: -distance)
-        eyes[1].position = CGPoint(x: -distance, y: 0.0)
-        eyes[2].position = CGPoint(x: -distance, y: distance)
-        eyes[3].position = CGPoint(x: distance, y: -distance)
-        eyes[4].position = CGPoint(x: distance, y: 0.0)
-        eyes[5].position = CGPoint(x: distance, y: distance)
+        switch value {
+            case 0:
+                eyes[0].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[0].alpha = 0.0
+                eyes[1].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[1].alpha = 0.0
+                eyes[2].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[2].alpha = 0.0
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[3].alpha = 0.0
+                eyes[4].position = CGPoint(x: distance, y: 0)
+                eyes[4].alpha = 0.0
+                eyes[5].position = CGPoint(x: distance, y: distance)
+                eyes[5].alpha = 0.0
+            case 1:
+                eyes[0].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[0].alpha = 0.0
+                eyes[1].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[1].alpha = 0.0
+                eyes[2].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[3].alpha = 0.0
+                eyes[4].position = CGPoint(x: distance, y: 0.0)
+                eyes[4].alpha = 0.0
+                eyes[5].position = CGPoint(x: distance, y: distance)
+                eyes[5].alpha = 0.0
+            case 2:
+                eyes[0].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[0].alpha = 0.0
+                eyes[1].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[1].alpha = 0.0
+                eyes[2].position = CGPoint(x: -distance, y: distance)
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[4].position = CGPoint(x: distance, y: 0.0)
+                eyes[4].alpha = 0.0
+                eyes[5].position = CGPoint(x: distance, y: distance)
+                eyes[5].alpha = 0.0
+            case 3:
+                eyes[0].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[1].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[1].alpha = 0.0
+                eyes[2].position = CGPoint(x: -distance, y: distance)
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[4].position = CGPoint(x: distance, y: 0.0)
+                eyes[4].alpha = 0.0
+                eyes[5].position = CGPoint(x: distance, y: distance)
+                eyes[5].alpha = 0.0
+            case 4:
+                eyes[0].position = CGPoint(x: -distance, y: -distance)
+                eyes[1].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[1].alpha = 0.0
+                eyes[2].position = CGPoint(x: -distance, y: distance)
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[4].position = CGPoint(x: distance, y: 0.0)
+                eyes[4].alpha = 0.0
+                eyes[5].position = CGPoint(x: distance, y: distance)
+            case 5:
+                eyes[0].position = CGPoint(x: -distance, y: -distance)
+                eyes[1].position = CGPoint(x: 0.0, y: 0.0)
+                eyes[2].position = CGPoint(x: -distance, y: distance)
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[4].position = CGPoint(x: distance, y: 0.0)
+                eyes[4].alpha = 0.0
+                eyes[5].position = CGPoint(x: distance, y: distance)
+            case 6:
+                eyes[0].position = CGPoint(x: -distance, y: -distance)
+                eyes[1].position = CGPoint(x: -distance, y: 0.0)
+                eyes[2].position = CGPoint(x: -distance, y: distance)
+                eyes[3].position = CGPoint(x: distance, y: -distance)
+                eyes[4].position = CGPoint(x: distance, y: 0.0)
+                eyes[5].position = CGPoint(x: distance, y: distance)
+            default:
+                break
+        }
     }
     
     func render(duration:Double = 0.5) {

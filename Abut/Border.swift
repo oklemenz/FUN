@@ -18,19 +18,18 @@ class Border : SKNode {
         didSet {
             if let color = color {
                 screen.strokeColor = color
-                divider.strokeColor = color
+                board.strokeColor = color
+                screen.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(color: color), color2: CIColor(rgba: "#000000"))
             }
         }
     }
     
     var screen: SKShapeNode!
-    var divider: SKShapeNode!
+    var board: SKShapeNode!
     
     override init() {
         super.init()
-        
-        screenFrame()
-        
+        background()
         top()
         bottom()
         left()
@@ -41,7 +40,7 @@ class Border : SKNode {
         super.init(coder: aDecoder)
     }
 
-    func screenFrame() {
+    func background() {
         let w = UIScreen.main.bounds.width
         let w2 = w / 2.0
         let h = UIScreen.main.bounds.height
@@ -81,27 +80,24 @@ class Border : SKNode {
         screen = SKShapeNode()
         screen.path = screenPath.cgPath
         screen.zPosition = 0.9
-        screen.fillColor = .clear
+        screen.fillColor = .white
         screen.strokeColor = .clear
         screen.lineWidth = l
         screen.glowWidth = 1
         screen.position = CGPoint(x: 0, y: 0)
         addChild(screen)
-
-        let dividerPath = UIBezierPath()
-        dividerPath.addArc(withCenter: CGPoint(x: -w2 + r, y: h2 - BAR_HEIGHT - r), radius: r, startAngle: .pi, endAngle: .pi/2, clockwise: false)
-        dividerPath.addLine(to: CGPoint(x: -n2 - r3, y: h2 - BAR_HEIGHT))
-        dividerPath.addArc(withCenter: CGPoint(x: w2 - r, y: h2 - BAR_HEIGHT - r), radius: r, startAngle: .pi/2, endAngle: 0, clockwise: false)
-        divider = SKShapeNode()
-        divider.path = dividerPath.cgPath
-        divider.zPosition = 0.9
-        divider.fillColor = .clear
-        divider.strokeColor = .clear
-        divider.lineWidth = l2
-        divider.glowWidth = 1
-        divider.position = CGPoint(x: 0, y: 0)
-        addChild(divider)
         
+        board = SKShapeNode(rect: CGRect(x: -w2, y: -h2, width: w, height: h - BAR_HEIGHT), cornerRadius: r)
+        board.zPosition = 0.9
+        board.fillColor = .white
+        board.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#666666"), color2: CIColor(rgba: "#000000"))
+        board.strokeColor = .clear
+        board.lineWidth = l2
+        board.glowWidth = 1
+        board.position = CGPoint(x: 0, y: 0)
+        addChild(board)
+
+        color = Ball.colorForValue(value: 1)
         position = CGPoint(x: 0, y: 0)
     }
     

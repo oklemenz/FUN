@@ -12,6 +12,8 @@ import GameplayKit
 
 class GameViewController: UIViewController {
 
+    var gameScene: GameScene!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,11 +24,14 @@ class GameViewController: UIViewController {
                 scene.scaleMode = .resizeFill
                 // Present the scene
                 view.presentScene(scene)
+                gameScene = scene as! GameScene
             }
             view.ignoresSiblingOrder = true
             view.showsFPS = false
             view.showsNodeCount = false
             view.showsPhysics = false
+            
+            loadContext()
         }
     }
 
@@ -40,5 +45,17 @@ class GameViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool {
         return true
+    }
+    
+    override func prefersHomeIndicatorAutoHidden() -> Bool {
+        return true
+    }
+    
+    func loadContext() {
+        gameScene.loadContext()
+    }
+    
+    func saveContext() {
+        gameScene.saveContext()
     }
 }

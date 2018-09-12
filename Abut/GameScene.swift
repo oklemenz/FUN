@@ -9,6 +9,7 @@
 import SpriteKit
 import GameplayKit
 import AudioToolbox
+import StoreKit
 
 // Screen sizes
 let NOTCH_WIDTH: CGFloat = 209.0
@@ -18,33 +19,25 @@ let CORNER_RADIUS: CGFloat = 40.0
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
-class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate {
     
-    var background: SKShapeNode!
     let statusBar = StatusBar()
     let board = Board()
     let border = Border()
     
+    var menuScene: MenuScene?
+    
+    var loaded = false
+    var pause = false
+    var reviewRequested = false
+    
     override func didMove(to view: SKView) {
+        statusBar.delegate = self
         board.delegate = self
         
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.9
-        
-        let w = UIScreen.main.bounds.width
-        let w2 = w / 2.0
-        let h = UIScreen.main.bounds.height
-        let h2 = h / 2.0
-        
-        background = SKShapeNode(rect: CGRect(x: -w2, y: h2 - BAR_HEIGHT - CORNER_RADIUS, width: w, height: BAR_HEIGHT + CORNER_RADIUS), cornerRadius: CORNER_RADIUS)
-
-        background.strokeColor = .clear
-        background.fillColor = .white
-        background.alpha = 0.5
-        background.zPosition = 0
-        didUpdateColor(color: Ball.colorForValue(value: 1))
-        addChild(background)
         
         addChild(statusBar)        
         addChild(board)
@@ -53,7 +46,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate {
         run(SKAction.sequence([
             SKAction.wait(forDuration: 1.0),
             SKAction.run {
-                self.board.start()
+                if !self.loaded {
+                    self.board.start()
+                }
+            }
+        ]))
+        
+        run(SKAction.sequence([
+            SKAction.wait(forDuration: 5.0 * 60.0),
+            SKAction.run {
+                if !self.reviewRequested {
+                    self.reviewRequested = true
+                    SKStoreReviewController.requestReview()
+                }
             }
         ]))
     }
@@ -87,6 +92,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate {
         UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
+    func didPressPause() {
+        pause = !pause
+        board.isPaused = pause
+        if pause {
+            if menuScene == nil {
+                menuScene = MenuScene(size: self.size)
+            }
+            self.view?.presentScene(menuScene!, transition: SKTransition.fade(withDuration: 1))
+        }
+    }
+    
     func didBegin(_ contact: SKPhysicsContact) {
         board.detectCollision(contact)
     }
@@ -98,7 +114,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if board.status == .Aiming {
             if let touch = touches.first {
-                board.pointTouched(position: touch.location(in: board), began: true)
+                let location = touch.location(in: board)
+                board.pointTouched(position: location, began: true)
             }
         }
     }
@@ -135,11 +152,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate {
     
     func didUpdateColor(color: UIColor) {
         border.color = color
-        background.fillTexture = SKTexture(size: size.width, color1: CIColor(color: color), color2: CIColor(rgba: "#000000"))
     }
 
     func didUpdateMultiplier(multiplier: Int) {
         // TODO: Zoom in Combo label...
         statusBar.multiplierValue = multiplier
-    }    
+    }
+    
+    func loadContext() {
+        if let data = UserDefaults.standard.value(forKey: "data") as? [String:Any] {
+            reviewRequested = data["review"] as! Bool
+            let boardData = data["board"] as! [String:Any]
+            let statusData = data["status"] as! [String:Any]
+            board.load(data: boardData)
+            statusBar.load(data: statusData)
+            loaded = true
+        }
+    }
+    
+    func saveContext() {
+        var data: [String:Any] = [:]
+        data["board"] = board.save()
+        data["status"] = statusBar.save()
+        data["review"] = reviewRequested
+        UserDefaults.standard.set(data, forKey: "data")
+        UserDefaults.standard.synchronize()
+    }
 }

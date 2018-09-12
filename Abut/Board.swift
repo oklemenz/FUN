@@ -27,7 +27,6 @@ class Board : SKNode {
         case Shooting
     }
     
-    var background: SKShapeNode!
     weak var delegate: BoardDelegate?
     
     let dice = Dice()
@@ -37,7 +36,7 @@ class Board : SKNode {
     let endSpot = EndSpot()
 
     var status: GameStatus = .Resting
-    var highestColorValue = 0
+    var highestColorValue = 1
     var highestColorCollisionContact = 0
     var multiplier = 1
     
@@ -57,16 +56,12 @@ class Board : SKNode {
         
         position = CGPoint(x: 0, y: -BAR_HEIGHT / 2)
         
-        let texture = SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#116316"), color2: CIColor(rgba: "#0d3303"))
-        background = SKShapeNode(rect: CGRect(x: -w2, y: -h2, width: w, height: h), cornerRadius: CORNER_RADIUS)
-        background.fillColor = .white
-        background.fillTexture = texture
-        background.zPosition = 0.1
-        addChild(background)
         addChild(dice)
         addChild(line)
         addChild(endSpot)
         whiteBall.addChild(startSpot)
+        addChild(whiteBall)
+
         line.isHidden = true
         startSpot.isHidden = true
         endSpot.isHidden = true
@@ -79,7 +74,6 @@ class Board : SKNode {
     }
 
     func start() {
-        addChild(whiteBall)
         whiteBall.roll()
         roll()
         status = .Rolling
@@ -94,40 +88,37 @@ class Board : SKNode {
         setStatusShooting()
     }
     
-    func decreaseDice() {
-        if dice.value > 1 {
-            dice.decrease()
-        } else {
-            // TODO: Remove one of the hightest colored balls + Explosion
-            rollBall(Ball.Black)
-            dice.countUp()
-        }
-    }
-    
-    func increaseDice() {
-        dice.increase()
-    }
-    
-    func roll() {
+    func rollStart() {
         let startBall = children.first { (node) -> Bool in
             if let ball = node as? Ball {
                 return ball.value == 1
             }
             return false
         }
+        // TODO: Roll other colored balls?
         if startBall == nil {
             rollBall(Ball())
         }
+    }
+    
+    func roll() {
+        rollStart()
+        // TODO: Roll other colored balls?
         rollBall(Ball())
         updateColor()
     }
     
     func rollBall(_ ball: Ball) {
-        highestColorCollisionContact = 0
-        // TODO: Roll other colored balls?
         addChild(ball)
         ball.roll()
         setStatusRolling()
+        highestColorCollisionContact = 0
+    }
+    
+    func setStatusResting() {
+        if status != .Resting {
+            status = .Resting
+        }
     }
     
     func setStatusRolling() {
@@ -161,7 +152,7 @@ class Board : SKNode {
     }
     
     func determineHighestColorValue() -> Int {
-        highestColorValue = 1
+        var highestColorValue = 1
         var valueMap: [Int: Int] = [:]
         for child in children {
             if let ball = child as? Ball {
@@ -224,7 +215,7 @@ class Board : SKNode {
             ball.physicsBody?.applyImpulse(CGVector(dx: f, dy: 0.0))
         }
         // Top
-        if contact.contactPoint.y + ball.radius > h2 {
+        if contact.contactPoint.y + ball.radius > h2 - BAR_HEIGHT + CORNER_RADIUS {
             ball.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: -f))
         }
         // Bottom
@@ -255,7 +246,8 @@ class Board : SKNode {
     }
     
     func updateColor() {
-        delegate?.didUpdateColor(color: Ball.colorForValue(value: determineHighestColorValue()))
+        highestColorValue = determineHighestColorValue()
+        delegate?.didUpdateColor(color: Ball.colorForValue(value: highestColorValue))
     }
     
     func updateMultiplier() {
@@ -269,10 +261,12 @@ class Board : SKNode {
     }
     
     func pointTouched(position: CGPoint, began: Bool = false) {
+        let h = UIScreen.main.bounds.height
+        let h2 = h / 2.0
         if let startPoint = line.startPoint {
             if began && line.endPoint != nil && startPoint.distanceTo(position) <= whiteBall.radius * 3 {
                 shoot()
-            } else {
+            } else if (position.y < h2 - BAR_HEIGHT + CORNER_RADIUS) {
                 line.endPoint = position
                 endSpot.position = position
             }
@@ -282,24 +276,52 @@ class Board : SKNode {
     func update() {
         assertBallsInBoard()
         line.startPoint = whiteBall.position
-        let child = children.first { (node) -> Bool in
+        let rollingBall = children.first { (node) -> Bool in
             if let ball = node as? Ball {
                 return ball.physicsBody!.velocity.length() >= RestBias
             }
             return false
         }
-        if child === nil {
+        if rollingBall == nil {
             if status == .Rolling {
-                status = .Resting
+                setStatusResting()
             } else if status == .Resting {
                 setStatusAiming()
             } else if status == .Shooting {
-                if highestColorCollisionContact == 0 {
-                    decreaseDice()
-                    resetMultiplier()
-                }
-                roll()
+                updateGameState()
+                setStatusRolling()
             }
+        }
+    }
+    
+    func updateGameState() {
+        if highestColorCollisionContact == 0 {
+            resetMultiplier()
+            if dice.value > 1 {
+                dice.decrease()
+                roll()
+            } else {
+                let ball = children.first { (node) -> Bool in
+                    if let ball = node as? Ball {
+                        return ball.value == highestColorValue
+                    }
+                    return false
+                    } as? Ball
+                if let ball = ball {
+                    ball.removeFromParent()
+                    addChild(ExplosionEffect(context: self.parent!, ball: ball))
+                }
+                run(SKAction.sequence([
+                    SKAction.wait(forDuration: 0.5),
+                    SKAction.run {
+                        self.dice.countUp()
+                        self.rollBall(Ball.Black)
+                        self.roll()
+                    }
+                ]))
+            }
+        } else {
+            roll()
         }
     }
     
@@ -316,5 +338,56 @@ class Board : SKNode {
                 }
             }
         }
+    }
+    
+    func save() -> [String:Any] {
+        var data: [String:Any] = [:]
+        var balls: [[String:Any]] = []
+        var blocks: [[String:Any]] = []
+        children.forEach { (node) in
+            if let ball = node as? Ball {
+                balls.append(ball.save())
+            }
+            if let block = node as? Block {
+                blocks.append(block.save())
+            }
+        }
+        data["balls"] = balls
+        data["blocks"] = blocks
+        data["dice"] = dice.value
+        data["multi"] = multiplier
+        return data
+    }
+    
+    func load(data: [String:Any]) {
+        children.forEach { (node) in
+            if let ball = node as? Ball {
+                if ball.value != whiteBall.value {
+                    ball.removeFromParent()
+                }
+            }
+            if let block = node as? Block {
+                block.removeFromParent()
+            }
+        }
+        let balls = data["balls"] as! [[String: Any]]
+        for ballData in balls {
+            let ball = Ball.load(data: ballData)
+            if ball.value == whiteBall.value {
+                whiteBall.position = ball.position
+            } else {
+                addChild(ball)
+            }
+        }
+        let blocks = data["blocks"] as! [[String: Any]]
+        for blockData in blocks {
+            let block = Block.load(data: blockData)
+            addChild(block)
+        }
+        dice.value = data["dice"] as! Int
+        dice.place()
+        multiplier = data["multi"] as! Int
+        rollStart()
+        setStatusAiming()
     }
 }
