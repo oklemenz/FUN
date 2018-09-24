@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 
 protocol BoardDelegate: class {
-    func didCollideBall(value: Int, multiplier: Int)
+    func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int)
     func didUpdateColor(color: UIColor)
     func didUpdateMultiplier(multiplier: Int)
 }
@@ -60,7 +60,6 @@ class Board : SKNode {
         addChild(line)
         addChild(endSpot)
         whiteBall.addChild(startSpot)
-        addChild(whiteBall)
 
         line.isHidden = true
         startSpot.isHidden = true
@@ -74,6 +73,7 @@ class Board : SKNode {
     }
 
     func start() {
+        addChild(whiteBall)
         whiteBall.roll()
         roll()
         status = .Rolling
@@ -181,7 +181,7 @@ class Board : SKNode {
                 if let ballA = contact.bodyA.node as? Ball,
                     let ballB = contact.bodyB.node as? Ball {
                     if ballA.value == ballB.value {
-                        collisionDetected(ballA: ballA, ballB: ballB)
+                        collisionDetected(contactPoint: contact.contactPoint, ballA: ballA, ballB: ballB)
                     }
                 }
             } else if contact.bodyA.collisionBitMask == CollisionCategoryDefault ||
@@ -224,9 +224,16 @@ class Board : SKNode {
         }
     }
     
-    func collisionDetected(ballA: Ball, ballB: Ball) {
+    func collisionDetected(contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
         if ballA.value == Ball.Black.value {
-            // TODO: Black ball => add a black non-movebale square + smoke
+            ballA.removeFromParent()
+            ballB.removeFromParent()
+            let block = Block()
+            block.position = contactPoint
+            addChild(block)
+            addChild(BlockedEffect(context: self.parent!, contactPoint: contactPoint))
+            updateColor()
+            resetMultiplier()
         } else {
             if ballA.value == highestColorValue {
                 highestColorCollisionContact += 1
@@ -234,15 +241,15 @@ class Board : SKNode {
             }
             ballA.increase()
             ballB.removeFromParent()
-            addChild(CollisionEffect(context: self.parent!, ballA: ballA, ballB: ballB))
-            updateCollide(value: ballA.value)
+            addChild(CollisionEffect(context: self.parent!, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
+            updateCollide(contactPoint: contactPoint, value: ballA.value)
             updateColor()
             updateMultiplier()
         }
     }
 
-    func updateCollide(value: Int) {
-        delegate?.didCollideBall(value: value, multiplier: multiplier)
+    func updateCollide(contactPoint: CGPoint, value: Int) {
+        delegate?.didCollideBall(contactPoint: contactPoint, value: value, multiplier: multiplier)
     }
     
     func updateColor() {
@@ -374,6 +381,9 @@ class Board : SKNode {
         for ballData in balls {
             let ball = Ball.load(data: ballData)
             if ball.value == whiteBall.value {
+                if whiteBall.parent == nil {
+                    addChild(whiteBall)
+                }
                 whiteBall.position = ball.position
             } else {
                 addChild(ball)

@@ -12,10 +12,13 @@ import AudioToolbox
 import StoreKit
 
 // Screen sizes
-let NOTCH_WIDTH: CGFloat = 209.0
-let NOTCH_HEIGHT: CGFloat = 30.0
-let SIDE_WIDTH: CGFloat = 83.0
+let NOTCH_WIDTH: CGFloat = Device.IS_IPHONE_XR ? 230.0 : 209.0
+let NOTCH_HEIGHT: CGFloat = Device.IS_IPHONE_XR ? 33.0 : 30.0
+let NOTCH_RADIUS_1: CGFloat = Device.IS_IPHONE_XR ? 26.0 : 20.0
+let NOTCH_RADIUS_2: CGFloat = 6.0
+
 let CORNER_RADIUS: CGFloat = 40.0
+let BORDER_LINE_WIDTH: CGFloat = 2.5
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
@@ -39,7 +42,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.9
         
-        addChild(statusBar)        
+        addChild(statusBar)
         addChild(board)
         addChild(border)
 
@@ -97,9 +100,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         board.isPaused = pause
         if pause {
             if menuScene == nil {
-                menuScene = MenuScene(size: self.size)
+                menuScene = MenuScene()
+                addChild(menuScene!)
             }
-            self.view?.presentScene(menuScene!, transition: SKTransition.fade(withDuration: 1))
+            menuScene?.alpha = 0.0
+            menuScene?.run(SKAction.fadeIn(withDuration: 0.5))
         }
     }
     
@@ -145,9 +150,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         board.update()
     }
     
-    func didCollideBall(value: Int, multiplier: Int) {
-        // TODO: Animate up value label to score
-        statusBar.scoreValue += value * board.multiplier
+    func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int) {
+        let score = Label()
+        score.text = "\(value)"
+        score.position = CGPoint(x: contactPoint.x, y: contactPoint.y + 20)
+        score.run(SKAction.sequence([
+            SKAction.move(to: statusBar.score.convert(statusBar.score.position, to: self), duration: 1.0),
+            SKAction.run({
+                self.statusBar.score.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.run {
+                        self.statusBar.scoreValue += value * self.board.multiplier
+                    },
+                    SKAction.scale(to: 1.0, duration: 0.25)
+                ]))
+            }),
+            SKAction.removeFromParent()
+        ]))
+        addChild(score)
     }
     
     func didUpdateColor(color: UIColor) {

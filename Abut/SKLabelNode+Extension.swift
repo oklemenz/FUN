@@ -24,7 +24,7 @@ extension SKLabelNode {
         
         let font = UIFont(name: self.fontName!, size: self.fontSize)
         let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: labelText)
-        let attributes:[NSAttributedStringKey:Any] = [.strokeColor: color, .strokeWidth: -width, .font: font!]
+        let attributes:[NSAttributedString.Key:Any] = [.strokeColor: color, .strokeWidth: -width, .font: font!]
         attributedString.addAttributes(attributes, range: NSMakeRange(0, attributedString.length))    
         self.attributedText = attributedString
     }

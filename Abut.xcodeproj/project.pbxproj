@@ -37,6 +37,7 @@
 		54A0E17521008E83002D629F /* DiceEye.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E17421008E83002D629F /* DiceEye.swift */; };
 		54A0E17721009010002D629F /* Dice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A0E17621009010002D629F /* Dice.swift */; };
 		54A8E014210F31AD0095DF3B /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8E013210F31AD0095DF3B /* Border.swift */; };
+		54D64738215935C90027E46D /* BlockedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D64737215935C90027E46D /* BlockedEffect.swift */; };
 		54F0537B20FE1D4C00FF4AA1 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 		54A0E17421008E83002D629F /* DiceEye.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEye.swift; sourceTree = "<group>"; };
 		54A0E17621009010002D629F /* Dice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice.swift; sourceTree = "<group>"; };
 		54A8E013210F31AD0095DF3B /* Border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
+		54D64737215935C90027E46D /* BlockedEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedEffect.swift; sourceTree = "<group>"; };
 		54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -123,6 +125,7 @@
 				54A0E17421008E83002D629F /* DiceEye.swift */,
 				544F416E210B479300E10B15 /* CollisionEffect.swift */,
 				544D93B921465C5F005134BA /* ExplosionEffect.swift */,
+				54D64737215935C90027E46D /* BlockedEffect.swift */,
 				54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */,
 				54A0E16E2100756D002D629F /* CGVector+Extension.swift */,
 				54A0E172210087A2002D629F /* CGPoint+Extension.swift */,
@@ -174,6 +177,7 @@
 				TargetAttributes = {
 					540222B820FDEA02006F25E9 = {
 						CreatedOnToolsVersion = 9.4.1;
+						LastSwiftMigration = 1000;
 					};
 				};
 			};
@@ -241,6 +245,7 @@
 				548D786D2147D05F004885FE /* Block.swift in Sources */,
 				54A0E17521008E83002D629F /* DiceEye.swift in Sources */,
 				540222BD20FDEA02006F25E9 /* AppDelegate.swift in Sources */,
+				54D64738215935C90027E46D /* BlockedEffect.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -393,7 +398,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.oklemenz.Abut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -411,7 +416,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = de.oklemenz.Abut;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

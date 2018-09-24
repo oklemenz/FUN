@@ -12,16 +12,18 @@ import SpriteKit
 class CollisionEffect: SKNode {
     
     var context: SKNode!
+    var contactPoint: CGPoint!
     var ballA: Ball!
     var ballB: Ball!
     
     var line: SKShapeNode!
     var cover: SKShapeNode!
     
-    init(context: SKNode, ballA: Ball, ballB: Ball) {
+    init(context: SKNode, contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
         super.init()
 
         self.context = context
+        self.contactPoint = contactPoint
         self.ballA = ballA
         self.ballB = ballB
 
@@ -52,8 +54,8 @@ class CollisionEffect: SKNode {
         let direction = (ballA.position - ballB.position).normalized()
         line = SKShapeNode()
         let bezierPath = UIBezierPath()
-        bezierPath.move(to: ballA.position - direction * size.length())
-        bezierPath.addLine(to: ballA.position + direction * size.length())
+        bezierPath.move(to: contactPoint - direction * size.length())
+        bezierPath.addLine(to: contactPoint + direction * size.length())
         line.zPosition = 1000
         line.path = bezierPath.cgPath
         line.lineWidth = 20

@@ -24,7 +24,7 @@ class GameViewController: UIViewController {
                 scene.scaleMode = .resizeFill
                 // Present the scene
                 view.presentScene(scene)
-                gameScene = scene as! GameScene
+                gameScene = scene as? GameScene
             }
             view.ignoresSiblingOrder = true
             view.showsFPS = false
@@ -47,7 +47,7 @@ class GameViewController: UIViewController {
         return true
     }
     
-    override func prefersHomeIndicatorAutoHidden() -> Bool {
+    override var prefersHomeIndicatorAutoHidden: Bool {
         return true
     }
     

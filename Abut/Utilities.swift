@@ -35,9 +35,15 @@ struct Device {
     static let SCREEN_MAX_LENGTH   = Int( max(SCREEN_WIDTH, SCREEN_HEIGHT) )
     static let SCREEN_MIN_LENGTH   = Int( min(SCREEN_WIDTH, SCREEN_HEIGHT) )
     
+    static let NATIVE_WIDTH        = Int(UIScreen.main.nativeBounds.width)
+    static let NATIVE_HEIGHT       = Int(UIScreen.main.nativeBounds.height)
+    static let NATIVE_MAX_LENGTH   = Int( max(NATIVE_WIDTH, NATIVE_HEIGHT) )
+    static let NATIVE_MIN_LENGTH   = Int( min(NATIVE_WIDTH, NATIVE_HEIGHT) )
+    
     static let IS_IPHONE_4_OR_LESS = IS_IPHONE && SCREEN_MAX_LENGTH  < 568
     static let IS_IPHONE_5         = IS_IPHONE && SCREEN_MAX_LENGTH == 568
     static let IS_IPHONE_6         = IS_IPHONE && SCREEN_MAX_LENGTH == 667
     static let IS_IPHONE_6P        = IS_IPHONE && SCREEN_MAX_LENGTH == 736
-    static let IS_IPHONE_X         = IS_IPHONE && SCREEN_MAX_LENGTH == 812
+    static let IS_IPHONE_X         = IS_IPHONE && (SCREEN_MAX_LENGTH == 812 || SCREEN_MAX_LENGTH == 896)
+    static let IS_IPHONE_XR        = IS_IPHONE && SCREEN_MAX_LENGTH == 896 && NATIVE_MAX_LENGTH == 1792
 }

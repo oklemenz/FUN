@@ -22,11 +22,22 @@ class StatusBar : SKNode {
         didSet {
             score.text = "\(scoreValue)"
             if scoreValue > highscoreValue {
-                highscoreValue = scoreValue
+                if !newHighscore {
+                    // Play sound
+                    newHighscore = true
+                }
+                highscore.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.run {
+                        self.highscoreValue = self.scoreValue
+                    },
+                    SKAction.scale(to: 1.0, duration: 0.25)
+                ]))
             }
         }
     }
     
+    var newHighscore = false
     var highscore: Label!
     var highscoreValue: Int = 0 { // < 1000000
         didSet {
@@ -56,7 +67,7 @@ class StatusBar : SKNode {
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
 
-        position = CGPoint(x: 0, y: h2 - BAR_HEIGHT - CORNER_RADIUS)
+        position = CGPoint(x: 0, y: h2 - BAR_HEIGHT - CORNER_RADIUS + (Device.IS_IPHONE_X ? 0 : 15))
 
         score = Label(text: "\(scoreValue)")
         score.position = CGPoint(x: 0, y: BAR_HEIGHT / 2)
@@ -68,9 +79,9 @@ class StatusBar : SKNode {
         addChild(highscore)
         
         highscoreIcon = SKSpriteNode(imageNamed: "crown")
-        highscoreIcon.position = CGPoint(x: w2 - 50, y: BAR_HEIGHT / 2 + 42)
-        highscoreIcon.xScale = 0.5
-        highscoreIcon.yScale = 0.5
+        highscoreIcon.position = CGPoint(x: w2 - 50, y: BAR_HEIGHT / 2 + 40)
+        highscoreIcon.xScale = 0.75
+        highscoreIcon.yScale = 0.75
         highscoreIcon.zPosition = 10000
         addChild(highscoreIcon)
         
@@ -80,9 +91,9 @@ class StatusBar : SKNode {
         addChild(multiplier)
         
         multiplierIcon = SKSpriteNode(imageNamed: "rocket")
-        multiplierIcon.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 42)
-        multiplierIcon.xScale = 0.5
-        multiplierIcon.yScale = 0.5
+        multiplierIcon.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 40)
+        multiplierIcon.xScale = 0.75
+        multiplierIcon.yScale = 0.75
         multiplierIcon.zPosition = 10000
         multiplierIcon.isHidden = true
         addChild(multiplierIcon)
@@ -113,6 +124,7 @@ class StatusBar : SKNode {
         var data: [String:Any] = [:]
         data["score"] = scoreValue
         data["highscore"] = highscoreValue
+        data["newHighscore"] = newHighscore
         data["multi"] = multiplierValue
         return data
     }
@@ -120,6 +132,13 @@ class StatusBar : SKNode {
     func load(data: [String:Any]) {
         scoreValue = data["score"] as! Int
         highscoreValue = data["highscore"] as! Int
+        newHighscore = data["newHighscore"] as! Bool
         multiplierValue = data["multi"] as! Int
+    }
+    
+    func reset() {
+        scoreValue = 0
+        newHighscore = false
+        multiplierValue = 1
     }
 }
