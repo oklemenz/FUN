@@ -47,9 +47,9 @@ class StatusBar : SKNode {
     var highscoreIcon: SKSpriteNode!
     
     var multiplier: Label!
-    var multiplierValue: Int = 1 {
+    var multiplierValue: Int = 0 {
         didSet {
-            multiplier.text = multiplierValue > 1 ? "\(multiplierValue)x" : ""
+            multiplier.text = multiplierValue > 1 ? "x\(multiplierValue)" : ""
             multiplierIcon.isHidden = multiplierValue <= 1
         }
     }
@@ -139,6 +139,6 @@ class StatusBar : SKNode {
     func reset() {
         scoreValue = 0
         newHighscore = false
-        multiplierValue = 1
+        multiplierValue = 0
     }
 }

@@ -22,11 +22,21 @@ let BORDER_LINE_WIDTH: CGFloat = 2.5
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
-class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate {
+protocol GameDelegate: class {
+    func openGameCenter()
+}
+
+class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate, MenuDelegate {
     
     let statusBar = StatusBar()
     let board = Board()
     let border = Border()
+    
+    weak var gameDelegate: GameDelegate?
+    
+    var multiplierGroup: SKNode! = nil
+    var multiplierLabel1: Label! = nil
+    var multiplierLabel2: Label! = nil
     
     var menuScene: MenuScene?
     
@@ -96,11 +106,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didPressPause() {
-        pause = !pause
-        board.isPaused = pause
+        pause = true
+        board.isPaused = true
         if pause {
             if menuScene == nil {
                 menuScene = MenuScene()
+                menuScene!.menuDelegate = self
                 addChild(menuScene!)
             }
             menuScene?.alpha = 0.0
@@ -152,15 +163,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int) {
         let score = Label()
-        score.text = "\(value)"
+        let addValue = value * multiplier > 1 ? multiplier : 1
+        score.text = "\(addValue)"
         score.position = CGPoint(x: contactPoint.x, y: contactPoint.y + 20)
         score.run(SKAction.sequence([
-            SKAction.move(to: statusBar.score.convert(statusBar.score.position, to: self), duration: 1.0),
+            SKAction.move(to: statusBar.score.convert(statusBar.score.position, to: self.board), duration: 0.5),
             SKAction.run({
                 self.statusBar.score.run(SKAction.sequence([
                     SKAction.scale(to: 1.2, duration: 0.25),
                     SKAction.run {
-                        self.statusBar.scoreValue += value * self.board.multiplier
+                        self.statusBar.scoreValue += addValue
                     },
                     SKAction.scale(to: 1.0, duration: 0.25)
                 ]))
@@ -174,9 +186,64 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         border.color = color
     }
 
-    func didUpdateMultiplier(multiplier: Int) {
-        // TODO: Zoom in Combo label...
-        statusBar.multiplierValue = multiplier
+    func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int) {
+        guard multiplier > 1 else {
+            return
+        }
+        if multiplierGroup == nil {
+            multiplierGroup = SKNode()
+            multiplierGroup.position = CGPoint(x: 0, y: 0)
+            multiplierGroup.xScale = 0.0
+            multiplierGroup.yScale = 0.0
+            multiplierLabel1 = Label()
+            multiplierGroup.addChild(multiplierLabel1)
+            multiplierLabel2 = Label()
+            multiplierGroup.addChild(multiplierLabel2)
+            addChild(multiplierGroup!)
+        }
+        let combo = "x\(multiplier) Combo!"
+        if roundMultiplier == 2 {
+            multiplierLabel1.position = CGPoint(x: 0, y: 0)
+            multiplierLabel2.position = CGPoint(x: 0, y: 0)
+            multiplierLabel1.text = combo
+            multiplierLabel2.text = ""
+        } else {
+            multiplierLabel1.position = CGPoint(x: 0, y: 20)
+            multiplierLabel2.position = CGPoint(x: 0, y: -20)
+            if roundMultiplier == 3 {
+                multiplierLabel1.text = "Great!"
+                multiplierLabel2.text = combo
+            } else if roundMultiplier == 4 {
+                multiplierLabel1.text = "Wonderful!"
+                multiplierLabel2.text = combo
+            } else if roundMultiplier == 5 {
+                multiplierLabel1.text = "Fantastic!"
+                multiplierLabel2.text = combo
+            } else {
+                multiplierLabel1.text = "Incredible!"
+                multiplierLabel2.text = combo
+            }
+        }
+        multiplierGroup!.run(SKAction.sequence([
+            SKAction.scale(to: 1.2, duration: 0.5),
+            SKAction.run {
+                self.statusBar.multiplierValue = multiplier
+            },
+            SKAction.scale(to: 1.0, duration: 0.25),
+            SKAction.wait(forDuration: 2.0),
+            SKAction.run {
+                self.multiplierGroup = nil
+                self.multiplierLabel1 = nil
+                self.multiplierLabel2 = nil
+            },
+            SKAction.scale(to: 1.2, duration: 0.25),
+            SKAction.scale(to: 0.0, duration: 0.25),
+            SKAction.removeFromParent()
+            ]))
+    }
+    
+    func didResetMultiplier() {
+        self.statusBar.multiplierValue = 0
     }
     
     func loadContext() {
@@ -197,5 +264,31 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         data["review"] = reviewRequested
         UserDefaults.standard.set(data, forKey: "data")
         UserDefaults.standard.synchronize()
+    }
+    
+    func resetContext() {
+        board.reset()
+        statusBar.reset()
+    }
+    
+    func didPressResume() {
+        pause = false
+        board.isPaused = false
+    }
+    
+    func didPressGameCenter() {
+        gameDelegate?.openGameCenter()
+    }
+    
+    func didPressRestart() {
+        resetContext()
+    }
+    
+    func didPressSound() {
+        // TODO: Toggle Sound
+    }
+    
+    func didPressShare() {
+        // TODO: Create Picture from Board and share
     }
 }

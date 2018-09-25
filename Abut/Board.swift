@@ -12,7 +12,8 @@ import SpriteKit
 protocol BoardDelegate: class {
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int)
     func didUpdateColor(color: UIColor)
-    func didUpdateMultiplier(multiplier: Int)
+    func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int)
+    func didResetMultiplier()
 }
 
 class Board : SKNode {
@@ -38,7 +39,8 @@ class Board : SKNode {
     var status: GameStatus = .Resting
     var highestColorValue = 1
     var highestColorCollisionContact = 0
-    var multiplier = 1
+    var multiplier = 0
+    var roundMultiplier = 0
     
     override init() {
         super.init()
@@ -95,16 +97,14 @@ class Board : SKNode {
             }
             return false
         }
-        // TODO: Roll other colored balls?
         if startBall == nil {
-            rollBall(Ball())
+            rollBall(Ball()) // TODO: Roll other colored balls?
         }
     }
     
     func roll() {
         rollStart()
-        // TODO: Roll other colored balls?
-        rollBall(Ball())
+        rollBall(Ball()) // TODO: Roll other colored balls?
         updateColor()
     }
     
@@ -137,6 +137,7 @@ class Board : SKNode {
             startSpot.isHidden = false
             endSpot.isHidden = false
             pointTouched(position: line.startPoint! - line.startPoint!.normalized() * 100)
+            roundMultiplier = 0
             status = .Aiming
         }
     }
@@ -259,12 +260,14 @@ class Board : SKNode {
     
     func updateMultiplier() {
         multiplier += 1
-        delegate?.didUpdateMultiplier(multiplier: multiplier)
+        roundMultiplier += 1
+        delegate?.didUpdateMultiplier(multiplier: multiplier, roundMultiplier: roundMultiplier)
     }
     
     func resetMultiplier() {
-        multiplier = 1
-        delegate?.didUpdateMultiplier(multiplier: multiplier)
+        multiplier = 0
+        roundMultiplier = 0
+        delegate?.didResetMultiplier()
     }
     
     func pointTouched(position: CGPoint, began: Bool = false) {
@@ -308,28 +311,32 @@ class Board : SKNode {
                 dice.decrease()
                 roll()
             } else {
-                let ball = children.first { (node) -> Bool in
-                    if let ball = node as? Ball {
-                        return ball.value == highestColorValue
-                    }
-                    return false
-                    } as? Ball
-                if let ball = ball {
-                    ball.removeFromParent()
-                    addChild(ExplosionEffect(context: self.parent!, ball: ball))
-                }
-                run(SKAction.sequence([
-                    SKAction.wait(forDuration: 0.5),
-                    SKAction.run {
-                        self.dice.countUp()
-                        self.rollBall(Ball.Black)
-                        self.roll()
-                    }
-                ]))
+                diceZero()
             }
         } else {
             roll()
         }
+    }
+    
+    func diceZero() {
+        let ball = children.first { (node) -> Bool in
+            if let ball = node as? Ball {
+                return ball.value == highestColorValue
+            }
+            return false
+            } as? Ball
+        if let ball = ball {
+            ball.removeFromParent()
+            addChild(ExplosionEffect(context: self.parent!, ball: ball))
+        }
+        run(SKAction.sequence([
+            SKAction.wait(forDuration: 0.5),
+            SKAction.run {
+                self.dice.countUp()
+                self.rollBall(Ball.Black)
+                self.roll()
+            }
+            ]))
     }
     
     func assertBallsInBoard() {
@@ -367,16 +374,7 @@ class Board : SKNode {
     }
     
     func load(data: [String:Any]) {
-        children.forEach { (node) in
-            if let ball = node as? Ball {
-                if ball.value != whiteBall.value {
-                    ball.removeFromParent()
-                }
-            }
-            if let block = node as? Block {
-                block.removeFromParent()
-            }
-        }
+        reset()
         let balls = data["balls"] as! [[String: Any]]
         for ballData in balls {
             let ball = Ball.load(data: ballData)
@@ -399,5 +397,18 @@ class Board : SKNode {
         multiplier = data["multi"] as! Int
         rollStart()
         setStatusAiming()
+    }
+    
+    func reset() {
+        children.forEach { (node) in
+            if let ball = node as? Ball {
+                if ball.value != whiteBall.value {
+                    ball.removeFromParent()
+                }
+            }
+            if let block = node as? Block {
+                block.removeFromParent()
+            }
+        }
     }
 }

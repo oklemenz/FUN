@@ -8,10 +8,15 @@
 
 import UIKit
 import SpriteKit
-import GameplayKit
+import GameKit
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, GKGameCenterControllerDelegate, GameDelegate {
 
+    let LEADERBOARD_ID = "de.oklemenz.abut.Leaderboard"
+    
+    var gcEnabled = false
+    var gcDefaultLeaderBoard = ""
+    
     var gameScene: GameScene!
     
     override func viewDidLoad() {
@@ -25,6 +30,7 @@ class GameViewController: UIViewController {
                 // Present the scene
                 view.presentScene(scene)
                 gameScene = scene as? GameScene
+                gameScene.gameDelegate = self
             }
             view.ignoresSiblingOrder = true
             view.showsFPS = false
@@ -33,6 +39,8 @@ class GameViewController: UIViewController {
             
             loadContext()
         }
+        
+        authenticateLocalPlayer()
     }
 
     override var shouldAutorotate: Bool {
@@ -57,5 +65,62 @@ class GameViewController: UIViewController {
     
     func saveContext() {
         gameScene.saveContext()
+    }
+    
+    func resetContext() {
+        gameScene.resetContext()
+    }
+    
+    // MARK: - Authenticate Local Player
+    func authenticateLocalPlayer() {
+        let localPlayer: GKLocalPlayer = GKLocalPlayer.local
+        localPlayer.authenticateHandler = {(viewController, error) -> Void in
+            if let viewController = viewController {
+                self.present(viewController, animated: true, completion: nil)
+            } else if (localPlayer.isAuthenticated) {
+                self.gcEnabled = true
+                localPlayer.loadDefaultLeaderboardIdentifier(completionHandler: { (leaderboardIdentifer, error) in
+                    if error == nil {
+                        self.gcDefaultLeaderBoard = leaderboardIdentifer!
+                    }
+                })
+            } else {
+                self.gcEnabled = false
+            }
+        }
+    }
+    
+    func submitScoreToGC(score: Int) {
+        if self.gcEnabled {
+            let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_ID)
+            currentScore.value = Int64(score)
+            GKScore.report([currentScore])
+        }
+    }
+    
+    func gameCenterViewControllerDidFinish(_ gameCenterViewController: GKGameCenterViewController) {
+        gameCenterViewController.dismiss(animated: true, completion: nil)
+    }
+    
+    func openGameCenter() {
+        if self.gcEnabled {
+            let viewController = GKGameCenterViewController()
+            viewController.gameCenterDelegate = self
+            viewController.viewState = .leaderboards
+            viewController.leaderboardIdentifier = LEADERBOARD_ID
+            present(viewController, animated: true, completion: nil)
+        }
+    }
+    
+    func openShare(score: Int) {
+        let scoreText = score == 1 ? "\(score) point" : "\(score) points"
+        let text = "Hi, I scored \(scoreText) in the iOS game F.U.N. Here's "
+        // TODO: Generate a image from ball positions using platters
+        let image = UIImage(named: "...")
+        let url = URL(string:"https://itunes.apple.com/us/app/fun/id1332716706?mt=8")!
+        let activityViewController = UIActivityViewController(activityItems: [text , image! , url],
+                                                              applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
     }
 }

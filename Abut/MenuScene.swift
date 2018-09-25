@@ -9,9 +9,19 @@
 import Foundation
 import SpriteKit
 
+protocol MenuDelegate : class {
+    func didPressResume()
+    func didPressGameCenter()
+    func didPressRestart()
+    func didPressSound()
+    func didPressShare()
+}
+
 class MenuScene: SKNode {
     
     var screen: SKShapeNode!
+    
+    weak var menuDelegate: MenuDelegate?
     
     override init() {
         super.init()

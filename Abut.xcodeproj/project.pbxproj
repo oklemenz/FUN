@@ -19,6 +19,7 @@
 		542A19F520FE2A8B006F96C1 /* SKTexture+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */; };
 		542A19F720FE2DA8006F96C1 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F620FE2DA8006F96C1 /* Color+Extension.swift */; };
 		542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F820FE2EAC006F96C1 /* StartSpot.swift */; };
+		5431F53C215A623C00436FCA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5431F53B215A623C00436FCA /* GameKit.framework */; };
 		5449CC28211AF96A00531181 /* BlockedEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5449CC27211AF96A00531181 /* BlockedEffect.sks */; };
 		5449CC2A211B05E200531181 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5449CC29211B05E200531181 /* Board.swift */; };
 		544D93BA21465C5F005134BA /* ExplosionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544D93B921465C5F005134BA /* ExplosionEffect.swift */; };
@@ -56,6 +57,7 @@
 		542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTexture+Extension.swift"; sourceTree = "<group>"; };
 		542A19F620FE2DA8006F96C1 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		542A19F820FE2EAC006F96C1 /* StartSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSpot.swift; sourceTree = "<group>"; };
+		5431F53B215A623C00436FCA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		5449CC27211AF96A00531181 /* BlockedEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BlockedEffect.sks; sourceTree = "<group>"; };
 		5449CC29211B05E200531181 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		544D93B921465C5F005134BA /* ExplosionEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExplosionEffect.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5431F53C215A623C00436FCA /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +97,7 @@
 			children = (
 				540222BB20FDEA02006F25E9 /* Abut */,
 				540222BA20FDEA02006F25E9 /* Products */,
+				5431F53A215A623C00436FCA /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -112,9 +116,9 @@
 				540222C420FDEA02006F25E9 /* GameViewController.swift */,
 				540222C220FDEA02006F25E9 /* GameScene.swift */,
 				544D93BB21469CB5005134BA /* MenuScene.swift */,
-				54A8E013210F31AD0095DF3B /* Border.swift */,
-				547653DF211D95C6000405E3 /* StatusBar.swift */,
 				5449CC29211B05E200531181 /* Board.swift */,
+				547653DF211D95C6000405E3 /* StatusBar.swift */,
+				54A8E013210F31AD0095DF3B /* Border.swift */,
 				540222D420FDEFA7006F25E9 /* Ball.swift */,
 				548D786C2147D05F004885FE /* Block.swift */,
 				545BA8B0211B3681000362DA /* Label.swift */,
@@ -143,6 +147,14 @@
 				540222CE20FDEA03006F25E9 /* Info.plist */,
 			);
 			path = Abut;
+			sourceTree = "<group>";
+		};
+		5431F53A215A623C00436FCA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5431F53B215A623C00436FCA /* GameKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -178,6 +190,11 @@
 					540222B820FDEA02006F25E9 = {
 						CreatedOnToolsVersion = 9.4.1;
 						LastSwiftMigration = 1000;
+						SystemCapabilities = {
+							com.apple.GameCenter.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
