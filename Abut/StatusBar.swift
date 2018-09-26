@@ -46,11 +46,27 @@ class StatusBar : SKNode {
     }
     var highscoreIcon: SKSpriteNode!
     
+    var multiplierGroup: SKNode!
     var multiplier: Label!
     var multiplierValue: Int = 0 {
         didSet {
-            multiplier.text = multiplierValue > 1 ? "x\(multiplierValue)" : ""
-            multiplierIcon.isHidden = multiplierValue <= 1
+            if oldValue < 1 && multiplierValue >= 1 {
+                multiplier.text = "x\(self.multiplierValue)"
+            }
+            if multiplierValue >= 1 {
+                multiplierGroup.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.run {
+                        self.multiplier.text = "x\(self.multiplierValue)"
+                    },
+                    SKAction.scale(to: 1.0, duration: 0.25)
+                    ]))
+            } else {
+                multiplierGroup.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.scale(to: 0.0, duration: 0.25)
+                    ]))
+            }
         }
     }
     var multiplierIcon: SKSpriteNode!
@@ -85,18 +101,23 @@ class StatusBar : SKNode {
         highscoreIcon.zPosition = 10000
         addChild(highscoreIcon)
         
+        multiplierGroup = SKNode()
+        multiplierGroup.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 0)
+        multiplierGroup.xScale = 0.0
+        multiplierGroup.yScale = 0.0
+        
         multiplier = Label(text: "")
+        multiplier.position = CGPoint(x: 0, y: 20)
         multiplier.fontSize = .s
-        multiplier.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 0)
-        addChild(multiplier)
+        multiplierGroup.addChild(multiplier)
         
         multiplierIcon = SKSpriteNode(imageNamed: "rocket")
-        multiplierIcon.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 40)
+        multiplierIcon.position = CGPoint(x: 0, y: -20)
         multiplierIcon.xScale = 0.75
         multiplierIcon.yScale = 0.75
         multiplierIcon.zPosition = 10000
-        multiplierIcon.isHidden = true
-        addChild(multiplierIcon)
+        multiplierGroup.addChild(multiplierIcon)
+        addChild(multiplierGroup)
         
         pauseIcon = SKSpriteNode(imageNamed: "pause")
         pauseIcon.position = CGPoint(x: -w2 + 25, y: BAR_HEIGHT / 2 + 20)
@@ -125,7 +146,7 @@ class StatusBar : SKNode {
         data["score"] = scoreValue
         data["highscore"] = highscoreValue
         data["newHighscore"] = newHighscore
-        data["multi"] = multiplierValue
+        data["multiplier"] = multiplierValue
         return data
     }
     
@@ -133,7 +154,7 @@ class StatusBar : SKNode {
         scoreValue = data["score"] as! Int
         highscoreValue = data["highscore"] as! Int
         newHighscore = data["newHighscore"] as! Bool
-        multiplierValue = data["multi"] as! Int
+        multiplierValue = data["multiplier"] as! Int
     }
     
     func reset() {

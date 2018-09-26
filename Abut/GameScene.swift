@@ -24,6 +24,7 @@ let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
 protocol GameDelegate: class {
     func openGameCenter()
+    func openSharing(score: Int)
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate, MenuDelegate {
@@ -42,7 +43,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     var loaded = false
     var pause = false
-    var reviewRequested = false
+    var sound = true
+    var review = false
     
     override func didMove(to view: SKView) {
         statusBar.delegate = self
@@ -68,8 +70,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         run(SKAction.sequence([
             SKAction.wait(forDuration: 5.0 * 60.0),
             SKAction.run {
-                if !self.reviewRequested {
-                    self.reviewRequested = true
+                if !self.review {
+                    self.review = true
                     SKStoreReviewController.requestReview()
                 }
             }
@@ -107,16 +109,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     func didPressPause() {
         pause = true
-        board.isPaused = true
-        if pause {
-            if menuScene == nil {
-                menuScene = MenuScene()
-                menuScene!.menuDelegate = self
-                addChild(menuScene!)
-            }
+        if menuScene == nil {
+            menuScene = MenuScene()
+            menuScene?.menuDelegate = self
             menuScene?.alpha = 0.0
-            menuScene?.run(SKAction.fadeIn(withDuration: 0.5))
         }
+        menuScene?.soundButton?.state = sound
+        menuScene?.run(SKAction.sequence([
+            SKAction.run {
+                self.addChild(self.menuScene!)
+            },
+            SKAction.fadeIn(withDuration: 0.5)
+            ]))
+    }
+    
+    func didResumePause() {
+        pause = false
+        menuScene?.run(SKAction.sequence([
+            SKAction.fadeOut(withDuration: 0.5),
+            SKAction.run {
+                self.menuScene!.removeFromParent()
+            }]))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -165,9 +178,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         let score = Label()
         let addValue = value * multiplier > 1 ? multiplier : 1
         score.text = "\(addValue)"
-        score.position = CGPoint(x: contactPoint.x, y: contactPoint.y + 20)
+        score.position = CGPoint(x: contactPoint.x, y: contactPoint.y)
+        let targetPosition = statusBar.score.convert(statusBar.score.position, to: self)
         score.run(SKAction.sequence([
-            SKAction.move(to: statusBar.score.convert(statusBar.score.position, to: self.board), duration: 0.5),
+            SKAction.move(to: targetPosition, duration: 0.75),
             SKAction.run({
                 self.statusBar.score.run(SKAction.sequence([
                     SKAction.scale(to: 1.2, duration: 0.25),
@@ -188,11 +202,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
 
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int) {
         guard multiplier > 1 else {
+            if multiplier == 1 {
+               self.statusBar.multiplierValue = multiplier
+            }
             return
         }
         if multiplierGroup == nil {
             multiplierGroup = SKNode()
-            multiplierGroup.position = CGPoint(x: 0, y: 0)
+            multiplierGroup.position = CGPoint(x: 0, y: -BAR_HEIGHT / 2.0)
             multiplierGroup.xScale = 0.0
             multiplierGroup.yScale = 0.0
             multiplierLabel1 = Label()
@@ -202,7 +219,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             addChild(multiplierGroup!)
         }
         let combo = "x\(multiplier) Combo!"
-        if roundMultiplier == 2 {
+        if roundMultiplier <= 1 {
             multiplierLabel1.position = CGPoint(x: 0, y: 0)
             multiplierLabel2.position = CGPoint(x: 0, y: 0)
             multiplierLabel1.text = combo
@@ -210,18 +227,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         } else {
             multiplierLabel1.position = CGPoint(x: 0, y: 20)
             multiplierLabel2.position = CGPoint(x: 0, y: -20)
-            if roundMultiplier == 3 {
-                multiplierLabel1.text = "Great!"
+            if roundMultiplier == 2 {
+                multiplierLabel1.text = ["Great!", "Beautiful!", "Wonderful!"].randomElement()!
                 multiplierLabel2.text = combo
-            } else if roundMultiplier == 4 {
-                multiplierLabel1.text = "Wonderful!"
+            } else if roundMultiplier == 3 {
+                multiplierLabel1.text = ["Amazing!", "Awesome!"].randomElement()!
                 multiplierLabel2.text = combo
-            } else if roundMultiplier == 5 {
-                multiplierLabel1.text = "Fantastic!"
+                shake(duration: 0.5)
+            } else if roundMultiplier >= 4 {
+                multiplierLabel1.text = ["Fantastic!", "Incredible!"].randomElement()!
                 multiplierLabel2.text = combo
-            } else {
-                multiplierLabel1.text = "Incredible!"
-                multiplierLabel2.text = combo
+                shake(duration: 0.5)
+                vibrate()
             }
         }
         multiplierGroup!.run(SKAction.sequence([
@@ -248,11 +265,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     func loadContext() {
         if let data = UserDefaults.standard.value(forKey: "data") as? [String:Any] {
-            reviewRequested = data["review"] as! Bool
             let boardData = data["board"] as! [String:Any]
             let statusData = data["status"] as! [String:Any]
             board.load(data: boardData)
             statusBar.load(data: statusData)
+            review = data["review"] as! Bool
+            sound = data["sound"] as! Bool
             loaded = true
         }
     }
@@ -261,19 +279,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         var data: [String:Any] = [:]
         data["board"] = board.save()
         data["status"] = statusBar.save()
-        data["review"] = reviewRequested
+        data["review"] = review
+        data["sound"] = sound
         UserDefaults.standard.set(data, forKey: "data")
         UserDefaults.standard.synchronize()
     }
     
-    func resetContext() {
-        board.reset()
-        statusBar.reset()
-    }
-    
     func didPressResume() {
-        pause = false
-        board.isPaused = false
+        didResumePause()
     }
     
     func didPressGameCenter() {
@@ -281,14 +294,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didPressRestart() {
-        resetContext()
+        statusBar.reset()
+        board.new()
     }
     
     func didPressSound() {
-        // TODO: Toggle Sound
+        if let menuScene = menuScene {
+            sound = menuScene.soundButton!.state
+        }
     }
     
     func didPressShare() {
-        // TODO: Create Picture from Board and share
+        gameDelegate?.openSharing(score: statusBar.scoreValue)
     }
 }

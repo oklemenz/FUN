@@ -67,11 +67,6 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         gameScene.saveContext()
     }
     
-    func resetContext() {
-        gameScene.resetContext()
-    }
-    
-    // MARK: - Authenticate Local Player
     func authenticateLocalPlayer() {
         let localPlayer: GKLocalPlayer = GKLocalPlayer.local
         localPlayer.authenticateHandler = {(viewController, error) -> Void in
@@ -112,15 +107,29 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         }
     }
     
-    func openShare(score: Int) {
+    func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
-        let text = "Hi, I scored \(scoreText) in the iOS game F.U.N. Here's "
-        // TODO: Generate a image from ball positions using platters
-        let image = UIImage(named: "...")
+        let text = "Hi, I scored \(scoreText) in the iOS game F.U.N."
+        let image = screenshot()
         let url = URL(string:"https://itunes.apple.com/us/app/fun/id1332716706?mt=8")!
-        let activityViewController = UIActivityViewController(activityItems: [text , image! , url],
+        let activityViewController = UIActivityViewController(activityItems: [text , image , url],
                                                               applicationActivities: nil)
         activityViewController.popoverPresentationController?.sourceView = self.view
         self.present(activityViewController, animated: true, completion: nil)
+    }
+    
+    func screenshot() -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, false, UIScreen.main.scale)
+        self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        if (image != nil) {
+            return image!
+        }
+        return UIImage()
+    }
+    
+    func splatterScreenshot() -> UIImage {
+        return UIImage()
     }
 }

@@ -18,7 +18,7 @@ protocol BoardDelegate: class {
 
 class Board : SKNode {
 
-    let RestBias: CGFloat = 25.0
+    let RestBias: CGFloat = 10.0
     
     enum GameStatus {
         case Init
@@ -37,10 +37,20 @@ class Board : SKNode {
     let endSpot = EndSpot()
 
     var status: GameStatus = .Resting
+    var collisionContact = 0
     var highestColorValue = 1
     var highestColorCollisionContact = 0
     var multiplier = 0
     var roundMultiplier = 0
+    
+    var blockSound: SKAction!
+    var contactSound: SKAction!
+    var explosionSound: SKAction!
+    var highscoreSound: SKAction!
+    var laserSound: SKAction!
+    var scoreSound: SKAction!
+    var shootSound: SKAction!
+    var wooshSound: SKAction!
     
     override init() {
         super.init()
@@ -66,6 +76,15 @@ class Board : SKNode {
         line.isHidden = true
         startSpot.isHidden = true
         endSpot.isHidden = true
+    
+        blockSound = SKAction.playSoundFileNamed("block.caf", waitForCompletion: false)
+        contactSound = SKAction.playSoundFileNamed("contact.caf", waitForCompletion: false)
+        explosionSound = SKAction.playSoundFileNamed("explosion.caf", waitForCompletion: false)
+        highscoreSound = SKAction.playSoundFileNamed("highscore.caf", waitForCompletion: false)
+        laserSound = SKAction.playSoundFileNamed("laser.caf", waitForCompletion: false)
+        scoreSound = SKAction.playSoundFileNamed("score.caf", waitForCompletion: false)
+        shootSound = SKAction.playSoundFileNamed("shoot.caf", waitForCompletion: false)
+        wooshSound = SKAction.playSoundFileNamed("woosh.caf", waitForCompletion: false)
         
         status = .Init
     }
@@ -112,6 +131,7 @@ class Board : SKNode {
         addChild(ball)
         ball.roll()
         setStatusRolling()
+        collisionContact = 0
         highestColorCollisionContact = 0
     }
     
@@ -144,6 +164,7 @@ class Board : SKNode {
     
     func setStatusShooting() {
         if status != .Shooting {
+            collisionContact = 0
             highestColorCollisionContact = 0
             line.isHidden = true
             startSpot.isHidden = true
@@ -236,6 +257,7 @@ class Board : SKNode {
             updateColor()
             resetMultiplier()
         } else {
+            collisionContact += 1
             if ballA.value == highestColorValue {
                 highestColorCollisionContact += 1
                 dice.countUp()
@@ -305,8 +327,10 @@ class Board : SKNode {
     }
     
     func updateGameState() {
-        if highestColorCollisionContact == 0 {
+        if collisionContact == 0 {
             resetMultiplier()
+        }
+        if highestColorCollisionContact == 0 {
             if dice.value > 1 {
                 dice.decrease()
                 roll()
@@ -369,7 +393,7 @@ class Board : SKNode {
         data["balls"] = balls
         data["blocks"] = blocks
         data["dice"] = dice.value
-        data["multi"] = multiplier
+        data["multiplier"] = multiplier
         return data
     }
     
@@ -394,7 +418,8 @@ class Board : SKNode {
         }
         dice.value = data["dice"] as! Int
         dice.place()
-        multiplier = data["multi"] as! Int
+        multiplier = data["multiplier"] as! Int
+        roundMultiplier = 0
         rollStart()
         setStatusAiming()
     }
@@ -410,5 +435,15 @@ class Board : SKNode {
                 block.removeFromParent()
             }
         }
+    }
+    
+    func new() {
+        reset()
+        dice.value = 6
+        dice.place()
+        multiplier = 0
+        roundMultiplier = 0
+        rollStart()
+        setStatusAiming()
     }
 }
