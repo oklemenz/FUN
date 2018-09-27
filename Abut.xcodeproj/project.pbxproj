@@ -22,6 +22,7 @@
 		5431F53C215A623C00436FCA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5431F53B215A623C00436FCA /* GameKit.framework */; };
 		5449CC28211AF96A00531181 /* BlockedEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 5449CC27211AF96A00531181 /* BlockedEffect.sks */; };
 		5449CC2A211B05E200531181 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5449CC29211B05E200531181 /* Board.swift */; };
+		544A93ED215D213500D60E51 /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 544A93EC215D213500D60E51 /* sounds */; };
 		544D93BA21465C5F005134BA /* ExplosionEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544D93B921465C5F005134BA /* ExplosionEffect.swift */; };
 		544D93BC21469CB5005134BA /* MenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544D93BB21469CB5005134BA /* MenuScene.swift */; };
 		544E2FC1215BCBC9000DF012 /* ToggleButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 544E2FC0215BCBC9000DF012 /* ToggleButton.swift */; };
@@ -62,6 +63,7 @@
 		5431F53B215A623C00436FCA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		5449CC27211AF96A00531181 /* BlockedEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BlockedEffect.sks; sourceTree = "<group>"; };
 		5449CC29211B05E200531181 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		544A93EC215D213500D60E51 /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		544D93B921465C5F005134BA /* ExplosionEffect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ExplosionEffect.swift; sourceTree = "<group>"; };
 		544D93BB21469CB5005134BA /* MenuScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuScene.swift; sourceTree = "<group>"; };
 		544E2FC0215BCBC9000DF012 /* ToggleButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleButton.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				545BA8AC211B253D000362DA /* ExplosionEffect.sks */,
 				5449CC27211AF96A00531181 /* BlockedEffect.sks */,
 				547653DD211D6B15000405E3 /* FredokaOne-Regular.ttf */,
+				544A93EC215D213500D60E51 /* sounds */,
 				540222C620FDEA02006F25E9 /* Main.storyboard */,
 				540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */,
 				540222C920FDEA03006F25E9 /* Assets.xcassets */,
@@ -232,6 +235,7 @@
 				545BA8AD211B253D000362DA /* ExplosionEffect.sks in Resources */,
 				540222BF20FDEA02006F25E9 /* GameScene.sks in Resources */,
 				540222CA20FDEA03006F25E9 /* Assets.xcassets in Resources */,
+				544A93ED215D213500D60E51 /* sounds in Resources */,
 				544F4177210B4A6200E10B15 /* CollisionEffect.sks in Resources */,
 				540222CD20FDEA03006F25E9 /* LaunchScreen.storyboard in Resources */,
 				547653DE211D6B15000405E3 /* FredokaOne-Regular.ttf in Resources */,

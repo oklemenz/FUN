@@ -32,7 +32,7 @@ class BlockedEffect: SKNode {
     func show() {
         if let contactEffect = SKEmitterNode(fileNamed: "BlockedEffect") {
             contactEffect.position = contactPosition
-            contactEffect.particleLifetime = 0.5
+            contactEffect.particleLifetime = 1.0
             contactEffect.zPosition = 10
             context.addChild(contactEffect)
             contactEffect.run(SKAction.sequence([

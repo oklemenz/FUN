@@ -11,7 +11,7 @@ import SpriteKit
 
 class Block : SKShapeNode {
     
-    let size: CGFloat = BALL_RADIUS
+    let size: CGFloat = 2 * BALL_RADIUS
     
     var color = SKColor.black
     
@@ -33,7 +33,7 @@ class Block : SKShapeNode {
     }
     
     func render() {
-        path = CGPath(rect: CGRect(x: 0, y: 0, width: size, height: size), transform: nil)
+        path = CGPath(rect: CGRect(x: -size / 2.0, y: -size / 2.0, width: size, height: size), transform: nil)
         strokeColor = SKColor.clear
         color = SKColor.black
         fillColor = color

@@ -21,19 +21,6 @@ class StatusBar : SKNode {
     var scoreValue: Int = 0 { // < 1000000
         didSet {
             score.text = "\(scoreValue)"
-            if scoreValue > highscoreValue {
-                if !newHighscore {
-                    // Play sound
-                    newHighscore = true
-                }
-                highscore.run(SKAction.sequence([
-                    SKAction.scale(to: 1.2, duration: 0.25),
-                    SKAction.run {
-                        self.highscoreValue = self.scoreValue
-                    },
-                    SKAction.scale(to: 1.0, duration: 0.25)
-                ]))
-            }
         }
     }
     
@@ -50,23 +37,7 @@ class StatusBar : SKNode {
     var multiplier: Label!
     var multiplierValue: Int = 0 {
         didSet {
-            if oldValue < 1 && multiplierValue >= 1 {
-                multiplier.text = "x\(self.multiplierValue)"
-            }
-            if multiplierValue >= 1 {
-                multiplierGroup.run(SKAction.sequence([
-                    SKAction.scale(to: 1.2, duration: 0.25),
-                    SKAction.run {
-                        self.multiplier.text = "x\(self.multiplierValue)"
-                    },
-                    SKAction.scale(to: 1.0, duration: 0.25)
-                    ]))
-            } else {
-                multiplierGroup.run(SKAction.sequence([
-                    SKAction.scale(to: 1.2, duration: 0.25),
-                    SKAction.scale(to: 0.0, duration: 0.25)
-                    ]))
-            }
+            multiplier.text = "x\(self.multiplierValue)"
         }
     }
     var multiplierIcon: SKSpriteNode!
@@ -102,22 +73,22 @@ class StatusBar : SKNode {
         addChild(highscoreIcon)
         
         multiplierGroup = SKNode()
-        multiplierGroup.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 0)
+        multiplierGroup.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 20)
         multiplierGroup.xScale = 0.0
         multiplierGroup.yScale = 0.0
-        
-        multiplier = Label(text: "")
-        multiplier.position = CGPoint(x: 0, y: 20)
-        multiplier.fontSize = .s
-        multiplierGroup.addChild(multiplier)
+        addChild(multiplierGroup)
         
         multiplierIcon = SKSpriteNode(imageNamed: "rocket")
-        multiplierIcon.position = CGPoint(x: 0, y: -20)
+        multiplierIcon.position = CGPoint(x: 0, y: 20)
         multiplierIcon.xScale = 0.75
         multiplierIcon.yScale = 0.75
         multiplierIcon.zPosition = 10000
         multiplierGroup.addChild(multiplierIcon)
-        addChild(multiplierGroup)
+    
+        multiplier = Label(text: "")
+        multiplier.position = CGPoint(x: 0, y: -20)
+        multiplier.fontSize = .s
+        multiplierGroup.addChild(multiplier)
         
         pauseIcon = SKSpriteNode(imageNamed: "pause")
         pauseIcon.position = CGPoint(x: -w2 + 25, y: BAR_HEIGHT / 2 + 20)
@@ -141,6 +112,82 @@ class StatusBar : SKNode {
         }
     }
     
+    func addScore(_ addValue: Int, animated: Bool = false) {
+        if animated {
+            score.run(SKAction.sequence([
+                SKAction.scale(to: 1.2, duration: 0.25),
+                SKAction.run {
+                    self.scoreValue += addValue
+                    self.run(scoreSound)
+                    self.setHighscore(self.scoreValue, animated: true)
+                },
+                SKAction.scale(to: 1.0, duration: 0.25)
+                ]))
+        } else {
+            self.scoreValue += addValue
+            self.setHighscore(self.scoreValue, animated: false)
+        }
+    }
+    
+    func setHighscore(_ value: Int, animated: Bool = false) {
+        if value > highscoreValue {
+            if !newHighscore {
+                // Play sound
+                newHighscore = true
+            }
+            if animated {
+                highscore.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.run {
+                        self.highscoreValue = value
+                        self.run(highscoreSound)
+                    },
+                    SKAction.scale(to: 1.0, duration: 0.25)
+                    ]))
+            } else {
+                highscoreValue = value
+            }
+        }
+    }
+    
+    func setMultiplier(_ value: Int, animated: Bool = false) {
+        guard value != multiplierValue else {
+            return
+        }
+        if animated {
+            if multiplierValue < 1 && value >= 1 {
+                multiplierValue = value
+            }
+            if value >= 1 {
+                multiplierGroup.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.run {
+                        self.multiplierValue = value
+                    },
+                    SKAction.scale(to: 1.0, duration: 0.25)
+                    ]))
+            } else {
+                multiplierGroup.run(SKAction.sequence([
+                    SKAction.scale(to: 1.2, duration: 0.25),
+                    SKAction.scale(to: 0.0, duration: 0.25),
+                    SKAction.run {
+                        self.multiplierValue = value
+                    },
+                    ]))
+            }
+        } else {
+            if value >= 1 {
+                multiplierValue = value
+                multiplierGroup.xScale = 1.0
+                multiplierGroup.yScale = 1.0
+            } else {
+                multiplierValue = 0
+                multiplierGroup.xScale = 0.0
+                multiplierGroup.yScale = 0.0
+            }
+        }
+    }
+    
     func save() -> [String:Any] {
         var data: [String:Any] = [:]
         data["score"] = scoreValue
@@ -154,12 +201,12 @@ class StatusBar : SKNode {
         scoreValue = data["score"] as! Int
         highscoreValue = data["highscore"] as! Int
         newHighscore = data["newHighscore"] as! Bool
-        multiplierValue = data["multiplier"] as! Int
+        setMultiplier(data["multiplier"] as! Int)
     }
     
     func reset() {
         scoreValue = 0
         newHighscore = false
-        multiplierValue = 0
+        setMultiplier(0)
     }
 }

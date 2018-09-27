@@ -16,6 +16,15 @@ protocol BoardDelegate: class {
     func didResetMultiplier()
 }
 
+var blockSound = SKAction.playSoundFileNamed("sounds/block.caf", waitForCompletion: false)
+var contactSound = SKAction.playSoundFileNamed("sounds/contact.caf", waitForCompletion: false)
+var explosionSound = SKAction.playSoundFileNamed("sounds/explosion.caf", waitForCompletion: false)
+var highscoreSound = SKAction.playSoundFileNamed("sounds/highscore.caf", waitForCompletion: false)
+var laserSound = SKAction.playSoundFileNamed("sounds/laser.caf", waitForCompletion: false)
+var scoreSound = SKAction.playSoundFileNamed("sounds/score.caf", waitForCompletion: false)
+var shootSound = SKAction.playSoundFileNamed("sounds/shoot.caf", waitForCompletion: false)
+var wooshSound = SKAction.playSoundFileNamed("sounds/woosh.caf", waitForCompletion: false)
+
 class Board : SKNode {
 
     let RestBias: CGFloat = 10.0
@@ -43,15 +52,6 @@ class Board : SKNode {
     var multiplier = 0
     var roundMultiplier = 0
     
-    var blockSound: SKAction!
-    var contactSound: SKAction!
-    var explosionSound: SKAction!
-    var highscoreSound: SKAction!
-    var laserSound: SKAction!
-    var scoreSound: SKAction!
-    var shootSound: SKAction!
-    var wooshSound: SKAction!
-    
     override init() {
         super.init()
        
@@ -76,15 +76,6 @@ class Board : SKNode {
         line.isHidden = true
         startSpot.isHidden = true
         endSpot.isHidden = true
-    
-        blockSound = SKAction.playSoundFileNamed("block.caf", waitForCompletion: false)
-        contactSound = SKAction.playSoundFileNamed("contact.caf", waitForCompletion: false)
-        explosionSound = SKAction.playSoundFileNamed("explosion.caf", waitForCompletion: false)
-        highscoreSound = SKAction.playSoundFileNamed("highscore.caf", waitForCompletion: false)
-        laserSound = SKAction.playSoundFileNamed("laser.caf", waitForCompletion: false)
-        scoreSound = SKAction.playSoundFileNamed("score.caf", waitForCompletion: false)
-        shootSound = SKAction.playSoundFileNamed("shoot.caf", waitForCompletion: false)
-        wooshSound = SKAction.playSoundFileNamed("woosh.caf", waitForCompletion: false)
         
         status = .Init
     }
@@ -106,6 +97,8 @@ class Board : SKNode {
             dy: line.endPoint!.y - line.startPoint!.y
         )
         whiteBall.shoot(vector: vector)
+        run(shootSound)
+        run(wooshSound)
         setStatusShooting()
     }
     
@@ -202,12 +195,14 @@ class Board : SKNode {
                 contact.bodyB.collisionBitMask == CollisionCategoryBall && contact.bodyB != whiteBall {
                 if let ballA = contact.bodyA.node as? Ball,
                     let ballB = contact.bodyB.node as? Ball {
+                    run(contactSound)
                     if ballA.value == ballB.value {
                         collisionDetected(contactPoint: contact.contactPoint, ballA: ballA, ballB: ballB)
                     }
                 }
             } else if contact.bodyA.collisionBitMask == CollisionCategoryDefault ||
                 contact.bodyB.collisionBitMask == CollisionCategoryDefault {
+                //run(contactBorderSound)
                 if contact.bodyA.collisionBitMask == CollisionCategoryBall {
                     if let ball = contact.bodyA.node as? Ball {
                         pushBall(ball: ball, contact: contact)
@@ -254,6 +249,7 @@ class Board : SKNode {
             block.position = contactPoint
             addChild(block)
             addChild(BlockedEffect(context: self.parent!, contactPoint: contactPoint))
+            run(blockSound)
             updateColor()
             resetMultiplier()
         } else {
@@ -265,6 +261,7 @@ class Board : SKNode {
             ballA.increase()
             ballB.removeFromParent()
             addChild(CollisionEffect(context: self.parent!, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
+            run(laserSound)
             updateCollide(contactPoint: contactPoint, value: ballA.value)
             updateColor()
             updateMultiplier()
@@ -352,6 +349,7 @@ class Board : SKNode {
         if let ball = ball {
             ball.removeFromParent()
             addChild(ExplosionEffect(context: self.parent!, ball: ball))
+            run(explosionSound)
         }
         run(SKAction.sequence([
             SKAction.wait(forDuration: 0.5),

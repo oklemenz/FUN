@@ -179,17 +179,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         let addValue = value * multiplier > 1 ? multiplier : 1
         score.text = "\(addValue)"
         score.position = CGPoint(x: contactPoint.x, y: contactPoint.y)
-        let targetPosition = statusBar.score.convert(statusBar.score.position, to: self)
+        let targetPosition = statusBar.score.convert(statusBar.score.position, to: self) // TODO: Down
         score.run(SKAction.sequence([
             SKAction.move(to: targetPosition, duration: 0.75),
             SKAction.run({
-                self.statusBar.score.run(SKAction.sequence([
-                    SKAction.scale(to: 1.2, duration: 0.25),
-                    SKAction.run {
-                        self.statusBar.scoreValue += addValue
-                    },
-                    SKAction.scale(to: 1.0, duration: 0.25)
-                ]))
+                self.statusBar.addScore(addValue, animated: true)
             }),
             SKAction.removeFromParent()
         ]))
@@ -203,7 +197,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int) {
         guard multiplier > 1 else {
             if multiplier == 1 {
-               self.statusBar.multiplierValue = multiplier
+               self.statusBar.setMultiplier(multiplier, animated: true)
             }
             return
         }
@@ -244,7 +238,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         multiplierGroup!.run(SKAction.sequence([
             SKAction.scale(to: 1.2, duration: 0.5),
             SKAction.run {
-                self.statusBar.multiplierValue = multiplier
+                self.statusBar.setMultiplier(multiplier, animated: true)
             },
             SKAction.scale(to: 1.0, duration: 0.25),
             SKAction.wait(forDuration: 2.0),
@@ -260,7 +254,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didResetMultiplier() {
-        self.statusBar.multiplierValue = 0
+        self.statusBar.setMultiplier(0, animated: true)
     }
     
     func loadContext() {

@@ -44,7 +44,7 @@ class Ball : SKShapeNode {
         
         zPosition = 1
         
-        physicsBody = SKPhysicsBody(circleOfRadius: radius)
+        physicsBody = SKPhysicsBody(circleOfRadius: radius + 1)
         physicsBody?.restitution = 0.7
         physicsBody?.linearDamping = 2
         physicsBody?.affectedByGravity = false
