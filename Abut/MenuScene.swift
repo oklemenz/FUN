@@ -32,6 +32,7 @@ class MenuScene: SKNode {
     override init() {
         super.init()
         
+        border.color = UIColor.darkGray
         addChild(border)
         
         restartButton = Button(icon: "restart", width: 100, height: 50, corner: 20, pressed: menuDelegate?.didPressRestart)

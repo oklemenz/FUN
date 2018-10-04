@@ -17,6 +17,7 @@ protocol BoardDelegate: class {
 }
 
 var blockSound = SKAction.playSoundFileNamed("sounds/block.caf", waitForCompletion: false)
+var bounceSound = SKAction.playSoundFileNamed("sounds/bounce.caf", waitForCompletion: false)
 var contactSound = SKAction.playSoundFileNamed("sounds/contact.caf", waitForCompletion: false)
 var explosionSound = SKAction.playSoundFileNamed("sounds/explosion.caf", waitForCompletion: false)
 var highscoreSound = SKAction.playSoundFileNamed("sounds/highscore.caf", waitForCompletion: false)
@@ -126,6 +127,7 @@ class Board : SKNode {
         setStatusRolling()
         collisionContact = 0
         highestColorCollisionContact = 0
+        run(wooshSound)
     }
     
     func setStatusResting() {
@@ -202,7 +204,7 @@ class Board : SKNode {
                 }
             } else if contact.bodyA.collisionBitMask == CollisionCategoryDefault ||
                 contact.bodyB.collisionBitMask == CollisionCategoryDefault {
-                //run(contactBorderSound)
+                run(bounceSound)
                 if contact.bodyA.collisionBitMask == CollisionCategoryBall {
                     if let ball = contact.bodyA.node as? Ball {
                         pushBall(ball: ball, contact: contact)
@@ -253,18 +255,36 @@ class Board : SKNode {
             updateColor()
             resetMultiplier()
         } else {
-            collisionContact += 1
-            if ballA.value == highestColorValue {
-                highestColorCollisionContact += 1
-                dice.countUp()
+            handleMatch(contactPoint: contactPoint, ballA: ballA, ballB: ballB)
+        }
+    }
+    
+    func handleMatch(contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
+        collisionContact += 1
+        if ballA.value == highestColorValue {
+            highestColorCollisionContact += 1
+            dice.countUp()
+        }
+        ballA.increase()
+        ballB.removeFromParent()
+        addChild(CollisionEffect(context: self.parent!, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
+        run(laserSound)
+        updateCollide(contactPoint: contactPoint, value: ballA.value)
+        updateColor()
+        updateMultiplier()
+    }
+            
+    func explodeBlock() {
+        let block = children.first { (child) -> Bool in
+            if let _ = child as? Block {
+                return true
             }
-            ballA.increase()
-            ballB.removeFromParent()
-            addChild(CollisionEffect(context: self.parent!, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
-            run(laserSound)
-            updateCollide(contactPoint: contactPoint, value: ballA.value)
-            updateColor()
-            updateMultiplier()
+            return false
+        }
+        if let block = block as? Block {
+            block.removeFromParent()
+            addChild(ExplosionEffect(context: self.parent!, block: block))
+            run(explosionSound)
         }
     }
 

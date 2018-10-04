@@ -12,7 +12,7 @@ import GameKit
 
 class GameViewController: UIViewController, GKGameCenterControllerDelegate, GameDelegate {
 
-    let LEADERBOARD_ID = "de.oklemenz.abut.Leaderboard"
+    let LEADERBOARD_ID = "de.oklemenz.fun.Leaderboard"
     
     var gcEnabled = false
     var gcDefaultLeaderBoard = ""

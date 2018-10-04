@@ -12,7 +12,8 @@ import SpriteKit
 class ExplosionEffect: SKNode {
     
     var context: SKNode!
-    var ball: Ball!
+    var node: SKNode!
+    var color: UIColor!
     
     var cover: SKShapeNode!
     
@@ -20,8 +21,19 @@ class ExplosionEffect: SKNode {
         super.init()
 
         self.context = context
-        self.ball = ball
+        self.node = ball
+        self.color = ball.color
 
+        show()
+    }
+    
+    init(context: SKNode, block: Block) {
+        super.init()
+        
+        self.context = context
+        self.node = block
+        self.color = .black
+        
         show()
     }
     
@@ -31,9 +43,9 @@ class ExplosionEffect: SKNode {
     
     func show() {
         if let contactEffect = SKEmitterNode(fileNamed: "ExplosionEffect") {
-            contactEffect.position = ball.position
-            contactEffect.particleColor = ball.color
-            contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [ball.color], times: [0.0])
+            contactEffect.position = node.position
+            contactEffect.particleColor = color
+            contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [color], times: [0.0])
             contactEffect.particleLifetime = 0.5
             contactEffect.zPosition = 10
             context.addChild(contactEffect)
@@ -51,7 +63,7 @@ class ExplosionEffect: SKNode {
         cover.zPosition = 999
         cover.position = CGPoint(x: 0, y: 0)
         cover.alpha = 0.4
-        cover.fillColor = ball.color
+        cover.fillColor = color
         context.addChild(cover)
         
         animate()
