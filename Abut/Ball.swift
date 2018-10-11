@@ -13,11 +13,16 @@ let CollisionCategoryDefault: UInt32 = 0x1 << 0
 let CollisionCategoryBall: UInt32 = 0x1 << 1
 let CollisionCategoryBlock: UInt32 = 0x1 << 2
 
+let BALL_BORDER: CGFloat = 5
+
 class Ball : SKShapeNode {
     
     let radius: CGFloat = BALL_RADIUS
+    var border: CGFloat = 0
     
     var color = SKColor.white
+    var borderColor = UIColor.clear
+    
     var value = 0 {
         didSet {
             render()
@@ -63,64 +68,54 @@ class Ball : SKShapeNode {
     }
     
     func render() {
-        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius, y: -radius),
-                                        size: CGSize(width: radius * 2, height: radius * 2)), transform: nil)
-        strokeColor = SKColor.clear
-        color = Ball.colorForValue(value: value)
+        border = value <= 8 ? 0 : BALL_BORDER
+        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius - border / 2.0, y: -radius - border / 2.0),
+                                        size: CGSize(width: radius * 2 - border, height: radius * 2 - border)),
+                      transform: nil)
+        color = Ball.colorForValue(value)
+        borderColor = Ball.strokeColorForValue(value: value)
+
         fillColor = color
+        strokeColor = borderColor
+        lineWidth = border
         glowWidth = 1
     }
    
-    static func colorForValue(value: Int) -> SKColor {
+    static func strokeColorForValue(value: Int) -> SKColor {
+        if value <= 8 {
+            return .clear
+        } else {
+            return .white
+        }
+    }
+    
+    static func colorForValue(_ value: Int) -> SKColor {
         var color: SKColor
-        switch value {
-            case -1:
-                color = .black
-            case 0:
-                color = .white
-            case 1:
-                color = SKColor(r: 255, g: 59, b: 48)
-            case 2:
-                color = SKColor(r: 255, g: 149, b: 0)
-            case 3:
-                color = SKColor(r: 255, g: 204, b: 0)
-            case 4:
-                color = SKColor(r: 76, g: 217, b: 100)
-            case 5:
-                color = SKColor(r: 90, g: 200, b: 250)
-            case 6:
-                color = SKColor(r: 0, g: 122, b: 255)
-            case 7:
-                color = SKColor(r: 88, g: 86, b: 214)
-            case 8:
-                color = SKColor(r: 255, g: 45, b: 85)
-            case 9:
-                // TODO: Color?
-                color = .black
-            case 10:
-                // TODO: Color?
-                color = .black
-            case 11:
-                // TODO: Color?
-                color = .black
-            case 12:
-                // TODO: Color?
-                color = .black
-            case 13:
-                // TODO: Color?
-                color = .black
-            case 14:
-                // TODO: Color?
-                color = .black
-            case 15:
-                // TODO: Color?
-                color = .black
-            case 16:
-                // TODO: Color?
-                color = .black
-            default:
-                // TODO: Color?
-                color = .clear
+        if value == -1 {
+            color = .black
+        } else if value == 0 {
+            color = .white
+        } else {
+            switch value % 8 {
+                case 1:
+                    color = COLOR_RED
+                case 2:
+                    color = COLOR_ORANGE
+                case 3:
+                    color = COLOR_YELLOW
+                case 4:
+                    color = COLOR_GREEN
+                case 5:
+                    color = COLOR_TEAL_BLUE
+                case 6:
+                    color = COLOR_BLUE
+                case 7:
+                    color = COLOR_PURPLE
+                case 0:
+                    color = COLOR_PINK                
+                default:
+                    color = .darkGray
+            }
         }
         return color
     }

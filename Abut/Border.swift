@@ -98,7 +98,7 @@ class Border : SKNode {
         board.position = CGPoint(x: 0, y: 0)
         addChild(board)
 
-        color = Ball.colorForValue(value: 1)
+        color = Ball.colorForValue(1)
         position = CGPoint(x: 0, y: 0)
     }
     

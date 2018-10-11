@@ -22,6 +22,15 @@ let BORDER_LINE_WIDTH: CGFloat = 2.5
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 2 : 1)
 
+let COLOR_RED = SKColor(r: 255, g: 59, b: 48)
+let COLOR_ORANGE = SKColor(r: 255, g: 149, b: 0)
+let COLOR_YELLOW = SKColor(r: 255, g: 204, b: 0)
+let COLOR_GREEN = SKColor(r: 76, g: 217, b: 100)
+let COLOR_TEAL_BLUE = SKColor(r: 90, g: 200, b: 250)
+let COLOR_BLUE = SKColor(r: 0, g: 122, b: 255)
+let COLOR_PURPLE = SKColor(r: 88, g: 86, b: 214)
+let COLOR_PINK = SKColor(r: 255, g: 45, b: 85)
+
 protocol GameDelegate: class {
     func openGameCenter()
     func openSharing(score: Int)
@@ -112,24 +121,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         if menuScene == nil {
             menuScene = MenuScene()
             menuScene?.menuDelegate = self
-            menuScene?.alpha = 0.0
         }
         menuScene?.soundButton?.state = sound
-        menuScene?.run(SKAction.sequence([
-            SKAction.run {
-                self.addChild(self.menuScene!)
-            },
-            SKAction.fadeIn(withDuration: 0.5)
-            ]))
+        self.menuScene?.alpha = 0
+        self.addChild(self.menuScene!)
+        self.menuScene?.run(SKAction.fadeIn(withDuration: 0.5))
     }
     
     func didResumePause() {
         pause = false
         menuScene?.run(SKAction.sequence([
             SKAction.fadeOut(withDuration: 0.5),
-            SKAction.run {
-                self.menuScene!.removeFromParent()
-            }]))
+            SKAction.removeFromParent()]))
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
@@ -179,13 +182,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         let addValue = value * multiplier > 1 ? multiplier : 1
         score.text = "\(addValue)"
         score.position = CGPoint(x: contactPoint.x, y: contactPoint.y)
-        let targetPosition = statusBar.score.convert(statusBar.score.position, to: self) // TODO: Down
+        let targetPosition = statusBar.score.convert(statusBar.score.position, to: self)
         score.run(SKAction.sequence([
             SKAction.move(to: targetPosition, duration: 0.75),
             SKAction.run({
                 self.statusBar.addScore(addValue, animated: true)
             }),
-            SKAction.removeFromParent()
+            //SKAction.removeFromParent()
         ]))
         addChild(score)
     }

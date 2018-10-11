@@ -13,6 +13,7 @@ class ToggleButton : SKShapeNode {
     
     var iconOnImage: SKSpriteNode!
     var iconOffImage: SKSpriteNode!
+    var color: SKColor?
     var pressed: ButtonPressedType?
     var state: Bool = false {
         didSet {
@@ -26,23 +27,28 @@ class ToggleButton : SKShapeNode {
         }
     }
     
-    init(iconOn: String, iconOff: String, width: CGFloat, height: CGFloat, corner: CGFloat, pressed: ButtonPressedType?) {
+    init(iconOn: String, iconOff: String, width: CGFloat, height: CGFloat, corner: CGFloat, color: SKColor? = nil, pressed: ButtonPressedType?) {
         super.init()
         
         self.pressed = pressed
+        self.color = color
         
         zPosition = 2000001
-        
-        path = CGPath(roundedRect: CGRect(x: 0, y: 0, width: width, height: height),
-                      cornerWidth: corner, cornerHeight: corner, transform: nil)
+        isUserInteractionEnabled = true
+        path = UIBezierPath(roundedRect: CGRect(x: -width / 2.0, y: -height / 2.0, width: width, height: height),
+                            cornerRadius: 15).cgPath
         strokeColor = SKColor.white
-        fillColor = SKColor.clear
+        fillColor = self.color ?? SKColor.clear
         
         iconOnImage = SKSpriteNode(imageNamed: iconOn)
         iconOnImage.isHidden = true
+        iconOnImage.xScale = 0.7
+        iconOnImage.yScale = 0.7
         addChild(iconOnImage)
         iconOffImage = SKSpriteNode(imageNamed: iconOff)
         iconOffImage.isHidden = false
+        iconOffImage.xScale = 0.7
+        iconOffImage.yScale = 0.7
         addChild(iconOffImage)
     }
     
@@ -56,18 +62,18 @@ class ToggleButton : SKShapeNode {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.location(in: self)
+            let location = touch.location(in: parent!)
             if contains(location) {
                 fillColor = .darkGray
             } else {
-                fillColor = .clear
+                fillColor = self.color ?? SKColor.clear
             }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.location(in: self)
+            let location = touch.location(in: parent!)
             if contains(location) {
                 if let pressed = pressed {
                     state = !state
@@ -75,6 +81,6 @@ class ToggleButton : SKShapeNode {
                 }
             }
         }
-        fillColor = .clear
+        fillColor = self.color ?? SKColor.clear
     }
 }

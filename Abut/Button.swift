@@ -14,21 +14,25 @@ typealias ButtonPressedType = () -> ()
 class Button : SKShapeNode {
     
     var iconImage: SKSpriteNode!
+    var color: SKColor?
     var pressed: ButtonPressedType?
-    
-    init(icon: String, width: CGFloat, height: CGFloat, corner: CGFloat, pressed: ButtonPressedType?) {
+
+    init(icon: String, width: CGFloat, height: CGFloat, corner: CGFloat, color: SKColor? = nil, pressed: ButtonPressedType?) {
         super.init()
         
         self.pressed = pressed
+        self.color = color
         
         zPosition = 2000001
-        
-        path = CGPath(roundedRect: CGRect(x: 0, y: 0, width: width, height: height),
-                      cornerWidth: corner, cornerHeight: corner, transform: nil)
+        isUserInteractionEnabled = true
+        path = UIBezierPath(roundedRect: CGRect(x: -width / 2.0, y: -height / 2.0, width: width, height: height),
+                            cornerRadius: 15).cgPath
         strokeColor = SKColor.white
-        fillColor = SKColor.clear
+        fillColor = self.color ?? SKColor.clear
         
         iconImage = SKSpriteNode(imageNamed: icon)
+        iconImage.xScale = 0.7
+        iconImage.yScale = 0.7
         addChild(iconImage)
     }
     
@@ -42,24 +46,24 @@ class Button : SKShapeNode {
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.location(in: self)
+            let location = touch.location(in: parent!)
             if contains(location) {
                 fillColor = .darkGray
             } else {
-                fillColor = .clear
+                fillColor = self.color ?? .clear
             }
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
-            let location = touch.location(in: self)
+            let location = touch.location(in: parent!)
             if contains(location) {
                 if let pressed = pressed {
                     pressed()
                 }
             }
         }
-        fillColor = .clear
+        fillColor = self.color ?? .clear
     }
 }

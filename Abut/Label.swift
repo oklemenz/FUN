@@ -19,10 +19,11 @@ class Label : SKNode {
         case l = 35
         case xl = 40
         case xxl = 45
+        case xxxl = 70
     }
     
-    private var label: SKLabelNode!
-    private var outline: SKLabelNode!
+    var label: SKLabelNode!
+    var outline: SKLabelNode!
     
     var fontName = "FredokaOne-Regular" { // ArialRoundedMTBold
         didSet {

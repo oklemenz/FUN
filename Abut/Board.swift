@@ -111,13 +111,13 @@ class Board : SKNode {
             return false
         }
         if startBall == nil {
-            rollBall(Ball()) // TODO: Roll other colored balls?
+            rollBall(Ball())
         }
     }
     
     func roll() {
         rollStart()
-        rollBall(Ball()) // TODO: Roll other colored balls?
+        rollBall(Ball())
         updateColor()
     }
     
@@ -226,19 +226,19 @@ class Board : SKNode {
         let h2 = h / 2.0
         let f = 0.5
         // Right
-        if contact.contactPoint.x + ball.radius > w2 {
+        if contact.contactPoint.x + ball.radius >= w2 {
             ball.physicsBody?.applyImpulse(CGVector(dx: -f, dy: 0.0))
         }
         // Left
-        if contact.contactPoint.x - ball.radius < -w2 {
+        if contact.contactPoint.x - ball.radius <= -w2 {
             ball.physicsBody?.applyImpulse(CGVector(dx: f, dy: 0.0))
         }
         // Top
-        if contact.contactPoint.y + ball.radius > h2 - BAR_HEIGHT + CORNER_RADIUS {
+        if contact.contactPoint.y + ball.radius >= h2 - BAR_HEIGHT {
             ball.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: -f))
         }
         // Bottom
-        if contact.contactPoint.y - ball.radius < -h2 {
+        if contact.contactPoint.y - ball.radius <= -h2 {
             ball.physicsBody?.applyImpulse(CGVector(dx: 0.0, dy: f))
         }
     }
@@ -294,7 +294,7 @@ class Board : SKNode {
     
     func updateColor() {
         highestColorValue = determineHighestColorValue()
-        delegate?.didUpdateColor(color: Ball.colorForValue(value: highestColorValue))
+        delegate?.didUpdateColor(color: Ball.colorForValue(highestColorValue))
     }
     
     func updateMultiplier() {
