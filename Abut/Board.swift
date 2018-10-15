@@ -14,17 +14,22 @@ protocol BoardDelegate: class {
     func didUpdateColor(color: UIColor)
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int)
     func didResetMultiplier()
+    func didUnlockNewColor(color: Int)
 }
 
-var blockSound = SKAction.playSoundFileNamed("sounds/block.caf", waitForCompletion: false)
-var bounceSound = SKAction.playSoundFileNamed("sounds/bounce.caf", waitForCompletion: false)
-var contactSound = SKAction.playSoundFileNamed("sounds/contact.caf", waitForCompletion: false)
-var explosionSound = SKAction.playSoundFileNamed("sounds/explosion.caf", waitForCompletion: false)
-var highscoreSound = SKAction.playSoundFileNamed("sounds/highscore.caf", waitForCompletion: false)
-var laserSound = SKAction.playSoundFileNamed("sounds/laser.caf", waitForCompletion: false)
-var scoreSound = SKAction.playSoundFileNamed("sounds/score.caf", waitForCompletion: false)
-var shootSound = SKAction.playSoundFileNamed("sounds/shoot.caf", waitForCompletion: false)
-var wooshSound = SKAction.playSoundFileNamed("sounds/woosh.caf", waitForCompletion: false)
+let blockSound = SKAction.playSoundFileNamed("sounds/block.caf", waitForCompletion: false)
+let bounceSound = SKAction.playSoundFileNamed("sounds/bounce.caf", waitForCompletion: false)
+let buttonSound = SKAction.playSoundFileNamed("sounds/button.caf", waitForCompletion: false)
+let contactSound = SKAction.playSoundFileNamed("sounds/contact.caf", waitForCompletion: false)
+let explosionSound = SKAction.playSoundFileNamed("sounds/explosion.caf", waitForCompletion: false)
+let highscoreSound = SKAction.playSoundFileNamed("sounds/highscore.caf", waitForCompletion: false)
+let laserSound = SKAction.playSoundFileNamed("sounds/laser.caf", waitForCompletion: false)
+let scoreSound = SKAction.playSoundFileNamed("sounds/score.caf", waitForCompletion: false)
+let shootSound = SKAction.playSoundFileNamed("sounds/shoot.caf", waitForCompletion: false)
+let wooshSound = SKAction.playSoundFileNamed("sounds/woosh.caf", waitForCompletion: false)
+
+let BLOCK: CGFloat = 100
+let BLOCK_INSET: CGFloat = 1
 
 class Board : SKNode {
 
@@ -69,6 +74,7 @@ class Board : SKNode {
         
         position = CGPoint(x: 0, y: -BAR_HEIGHT / 2)
         
+        addBlocks()
         addChild(dice)
         addChild(line)
         addChild(endSpot)
@@ -98,8 +104,10 @@ class Board : SKNode {
             dy: line.endPoint!.y - line.startPoint!.y
         )
         whiteBall.shoot(vector: vector)
-        run(shootSound)
-        run(wooshSound)
+        if Settings.instance.sound {
+            run(shootSound)
+            run(wooshSound)
+        }
         setStatusShooting()
     }
     
@@ -127,7 +135,9 @@ class Board : SKNode {
         setStatusRolling()
         collisionContact = 0
         highestColorCollisionContact = 0
-        run(wooshSound)
+        if Settings.instance.sound {
+            run(wooshSound)
+        }
     }
     
     func setStatusResting() {
@@ -197,14 +207,18 @@ class Board : SKNode {
                 contact.bodyB.collisionBitMask == CollisionCategoryBall && contact.bodyB != whiteBall {
                 if let ballA = contact.bodyA.node as? Ball,
                     let ballB = contact.bodyB.node as? Ball {
-                    run(contactSound)
+                    if Settings.instance.sound {
+                        run(contactSound)
+                    }
                     if ballA.value == ballB.value {
                         collisionDetected(contactPoint: contact.contactPoint, ballA: ballA, ballB: ballB)
                     }
                 }
             } else if contact.bodyA.collisionBitMask == CollisionCategoryDefault ||
                 contact.bodyB.collisionBitMask == CollisionCategoryDefault {
-                run(bounceSound)
+                if Settings.instance.sound {
+                    run(bounceSound)
+                }
                 if contact.bodyA.collisionBitMask == CollisionCategoryBall {
                     if let ball = contact.bodyA.node as? Ball {
                         pushBall(ball: ball, contact: contact)
@@ -251,7 +265,9 @@ class Board : SKNode {
             block.position = contactPoint
             addChild(block)
             addChild(BlockedEffect(context: self.parent!, contactPoint: contactPoint))
-            run(blockSound)
+            if Settings.instance.sound {
+                run(blockSound)
+            }
             updateColor()
             resetMultiplier()
         } else {
@@ -268,7 +284,9 @@ class Board : SKNode {
         ballA.increase()
         ballB.removeFromParent()
         addChild(CollisionEffect(context: self.parent!, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
-        run(laserSound)
+        if Settings.instance.sound {
+            run(laserSound)
+        }
         updateCollide(contactPoint: contactPoint, value: ballA.value)
         updateColor()
         updateMultiplier()
@@ -284,7 +302,9 @@ class Board : SKNode {
         if let block = block as? Block {
             block.removeFromParent()
             addChild(ExplosionEffect(context: self.parent!, block: block))
-            run(explosionSound)
+            if Settings.instance.sound {
+                run(explosionSound)
+            }
         }
     }
 
@@ -293,7 +313,11 @@ class Board : SKNode {
     }
     
     func updateColor() {
-        highestColorValue = determineHighestColorValue()
+        let newHighestColorValue = determineHighestColorValue()
+        if newHighestColorValue > highestColorValue {
+            delegate?.didUnlockNewColor(color: newHighestColorValue)
+        }
+        highestColorValue = newHighestColorValue
         delegate?.didUpdateColor(color: Ball.colorForValue(highestColorValue))
     }
     
@@ -369,7 +393,9 @@ class Board : SKNode {
         if let ball = ball {
             ball.removeFromParent()
             addChild(ExplosionEffect(context: self.parent!, ball: ball))
-            run(explosionSound)
+            if Settings.instance.sound {
+                run(explosionSound)
+            }
         }
         run(SKAction.sequence([
             SKAction.wait(forDuration: 0.5),
@@ -396,6 +422,77 @@ class Board : SKNode {
         }
     }
     
+    func addBlocks() {
+        topBlock()
+        bottomBlock()
+        leftBlock()
+        rightBlock()
+    }
+    
+    func topBlock() {
+        let w = UIScreen.main.bounds.width
+        let h = UIScreen.main.bounds.height
+        let h2 = h / 2.0
+        let size = CGSize(width: w + 2 * BLOCK, height: BLOCK)
+        let top = SKShapeNode(rectOf: size)
+        top.zPosition = 0
+        top.fillColor = .clear
+        top.strokeColor = .clear
+        top.physicsBody = SKPhysicsBody(rectangleOf: size)
+        top.physicsBody?.isDynamic = false
+        top.physicsBody?.usesPreciseCollisionDetection = true
+        top.position = CGPoint(x: 0, y: h2 + BLOCK/2 + BLOCK_INSET + position.y)
+        addChild(top)
+    }
+    
+    func bottomBlock() {
+        let w = UIScreen.main.bounds.width
+        let h = UIScreen.main.bounds.height
+        let h2 = h / 2.0
+        let size = CGSize(width: w + 2 * BLOCK, height: BLOCK)
+        let bottom = SKShapeNode(rectOf: size)
+        bottom.zPosition = 0
+        bottom.fillColor = .clear
+        bottom.strokeColor = .clear
+        bottom.physicsBody = SKPhysicsBody(rectangleOf: size)
+        bottom.physicsBody?.isDynamic = false
+        bottom.physicsBody?.usesPreciseCollisionDetection = true
+        bottom.position = CGPoint(x: 0, y: -h2 - BLOCK/2 - BLOCK_INSET - position.y)
+        addChild(bottom)
+    }
+    
+    func leftBlock() {
+        let w = UIScreen.main.bounds.width
+        let w2 = w / 2.0
+        let h = UIScreen.main.bounds.height
+        let size = CGSize(width: BLOCK, height: h + 2 * BLOCK)
+        let left = SKShapeNode(rectOf: size)
+        left.zPosition = 0
+        left.fillColor = .clear
+        left.strokeColor = .clear
+        left.physicsBody = SKPhysicsBody(rectangleOf: size)
+        left.physicsBody?.isDynamic = false
+        left.physicsBody?.usesPreciseCollisionDetection = true
+        left.position = CGPoint(x: -w2 - BLOCK/2 - BLOCK_INSET, y: 0)
+        addChild(left)
+    }
+    
+    func rightBlock() {
+        let w = UIScreen.main.bounds.width
+        let w2 = w / 2.0
+        let h = UIScreen.main.bounds.height
+        let size = CGSize(width: BLOCK, height: h + 2 * BLOCK)
+        let right = SKShapeNode(rectOf: size)
+        right.zPosition = 0
+        right.fillColor = .clear
+        right.strokeColor = .clear
+        right.physicsBody = SKPhysicsBody(rectangleOf: size)
+        right.physicsBody?.isDynamic = false
+        right.physicsBody?.usesPreciseCollisionDetection = true
+        right.position = CGPoint(x: w2 + BLOCK/2 + BLOCK_INSET, y: 0)
+        addChild(right)
+    }
+
     func save() -> [String:Any] {
         var data: [String:Any] = [:]
         var balls: [[String:Any]] = []
@@ -443,6 +540,10 @@ class Board : SKNode {
     }
     
     func reset() {
+        dice.value = 6
+        dice.place()
+        multiplier = 0
+        roundMultiplier = 0
         children.forEach { (node) in
             if let ball = node as? Ball {
                 if ball.value != whiteBall.value {
@@ -457,11 +558,7 @@ class Board : SKNode {
     
     func new() {
         reset()
-        dice.value = 6
-        dice.place()
-        multiplier = 0
-        roundMultiplier = 0
-        rollStart()
+        roll()
         setStatusAiming()
     }
 }

@@ -120,6 +120,51 @@ class Ball : SKShapeNode {
         return color
     }
     
+    static func colorNameForValue(_ value: Int) -> String {
+        var color = ""
+        switch value {
+        case -1:
+            color = "black"
+        case 0:
+            color = "white"
+        case 1:
+            color = "red"
+        case 2:
+            color = "orange"
+        case 3:
+            color = "yellow"
+        case 4:
+            color = "green"
+        case 5:
+            color = "turquois"
+        case 6:
+            color = "blue"
+        case 7:
+            color = "purple"
+        case 8:
+            color = "pink"
+        case 9:
+            color = "red white"
+        case 10:
+            color = "orange white"
+        case 11:
+            color = "yellow white"
+        case 12:
+            color = "green white"
+        case 13:
+            color = "turquois white"
+        case 14:
+            color = "blue white"
+        case 15:
+            color = "purple white"
+        case 16:
+            color = "pink white"
+        default:
+            color = ""
+        }
+        return color
+    }
+    
     func shoot(vector: CGVector) {
         physicsBody?.applyImpulse(vector)
     }

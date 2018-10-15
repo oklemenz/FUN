@@ -37,7 +37,7 @@ class ToggleButton : SKShapeNode {
         isUserInteractionEnabled = true
         path = UIBezierPath(roundedRect: CGRect(x: -width / 2.0, y: -height / 2.0, width: width, height: height),
                             cornerRadius: 15).cgPath
-        strokeColor = SKColor.white
+        strokeColor = SKColor.lightGray
         fillColor = self.color ?? SKColor.clear
         
         iconOnImage = SKSpriteNode(imageNamed: iconOn)
@@ -58,6 +58,8 @@ class ToggleButton : SKShapeNode {
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         fillColor = .darkGray
+        iconOnImage.position = CGPoint(x: 0, y: -2)
+        iconOffImage.position = CGPoint(x: 0, y: -2)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -82,5 +84,7 @@ class ToggleButton : SKShapeNode {
             }
         }
         fillColor = self.color ?? SKColor.clear
+        iconOnImage.position = .zero
+        iconOffImage.position = .zero
     }
 }

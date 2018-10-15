@@ -91,7 +91,7 @@ class StatusBar : SKNode {
         multiplierGroup.addChild(multiplier)
         
         pauseIcon = SKSpriteNode(imageNamed: "pause")
-        pauseIcon.position = CGPoint(x: -w2 + 25, y: BAR_HEIGHT / 2 + 20)
+        pauseIcon.position = CGPoint(x: -w2 + 25, y: BAR_HEIGHT / 2 + 18)
         pauseIcon.xScale = 1.0
         pauseIcon.yScale = 1.0
         pauseIcon.zPosition = 10000
@@ -118,7 +118,9 @@ class StatusBar : SKNode {
                 SKAction.scale(to: 1.2, duration: 0.25),
                 SKAction.run {
                     self.scoreValue += addValue
-                    self.run(scoreSound)
+                    if Settings.instance.sound {
+                        self.run(scoreSound)
+                    }
                     self.setHighscore(self.scoreValue, animated: true)
                 },
                 SKAction.scale(to: 1.0, duration: 0.25)
@@ -140,7 +142,9 @@ class StatusBar : SKNode {
                     SKAction.scale(to: 1.2, duration: 0.25),
                     SKAction.run {
                         self.highscoreValue = value
-                        self.run(highscoreSound)
+                        if Settings.instance.sound {
+                            self.run(highscoreSound)
+                        }
                     },
                     SKAction.scale(to: 1.0, duration: 0.25)
                     ]))
