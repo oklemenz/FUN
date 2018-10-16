@@ -10,6 +10,7 @@ import Foundation
 import SpriteKit
 
 protocol StatusBarDelegate: class {
+    func didReachNewHighscore(_ value: Int)
     func didPressPause()
 }
 
@@ -134,7 +135,12 @@ class StatusBar : SKNode {
     func setHighscore(_ value: Int, animated: Bool = false) {
         if value > highscoreValue {
             if !newHighscore {
-                // Play sound
+                if highscoreValue > 0 {
+                    self.delegate?.didReachNewHighscore(value)
+                    if Settings.instance.sound {
+                        self.run(highscoreSound)
+                    }
+                }
                 newHighscore = true
             }
             if animated {
@@ -142,9 +148,6 @@ class StatusBar : SKNode {
                     SKAction.scale(to: 1.2, duration: 0.25),
                     SKAction.run {
                         self.highscoreValue = value
-                        if Settings.instance.sound {
-                            self.run(highscoreSound)
-                        }
                     },
                     SKAction.scale(to: 1.0, duration: 0.25)
                     ]))

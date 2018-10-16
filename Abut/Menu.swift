@@ -17,7 +17,7 @@ protocol MenuDelegate : class {
     func didPressShare()
 }
 
-class MenuScene: SKNode {
+class Menu: SKNode {
     
     var border: Border!
     
@@ -41,7 +41,7 @@ class MenuScene: SKNode {
         
         border = Border()
         border.color = UIColor.darkGray
-        border.board.removeFromParent()
+        border.board.alpha = 0
         border.screen.glowWidth = 1
         border.screen.lineWidth = 4
         addChild(border)

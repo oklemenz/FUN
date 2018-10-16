@@ -36,21 +36,22 @@ protocol GameDelegate: class {
     func openSharing(score: Int)
 }
 
-class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate, MenuDelegate {
+class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate, MenuDelegate, SplashDelegate {
     
     let statusBar = StatusBar()
     let board = Board()
     let border = Border()
+
+    var menu: Menu?
+    var splash: Splash!
     
     weak var gameDelegate: GameDelegate?
     
     var multiplierGroup: SKNode! = nil
     var multiplierLabel1: Label! = nil
     var multiplierLabel2: Label! = nil
-    
+    var newHighscoreLabel: Label! = nil
     var newColorLabel: Label! = nil
-    
-    var menuScene: MenuScene?
     
     var loaded = false
     var pause = false
@@ -67,24 +68,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         addChild(statusBar)
         addChild(board)
         addChild(border)
+        border.color = Ball.colorForValue(1)
 
-        run(SKAction.sequence([
-            SKAction.wait(forDuration: 1.0),
-            SKAction.run {
-                if !self.loaded {
-                    self.board.start()
-                }
-            }
-        ]))
-        
-        run(SKAction.sequence([
-            SKAction.wait(forDuration: 5.0 * 60.0),
-            SKAction.run {
-                if !self.review {
-                    self.review = true
-                    SKStoreReviewController.requestReview()
-                }
-            }
+        splash = Splash()
+        splash.splashDelegate = self
+        addChild(splash)
+    }
+    
+    func splashDidFinish() {
+        splash.run(SKAction.sequence([
+            SKAction.fadeOut(withDuration: 0.5),
+            SKAction.removeFromParent(),
+            SKAction.run({
+                self.run(SKAction.sequence([
+                    SKAction.wait(forDuration: 1.0),
+                    SKAction.run {
+                        if !self.loaded {
+                            self.board.start()
+                        }
+                    }
+                    ]))
+                
+                self.run(SKAction.sequence([
+                    SKAction.wait(forDuration: 5.0 * 60.0),
+                    SKAction.run {
+                        if !self.review {
+                            self.review = true
+                            SKStoreReviewController.requestReview()
+                        }
+                    }
+                    ]))
+            })
         ]))
     }
     
@@ -117,27 +131,51 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
+    func didReachNewHighscore(_ value: Int) {
+        if newHighscoreLabel == nil {
+            newHighscoreLabel = Label()
+            newHighscoreLabel.fontSize = .s
+            let h = UIScreen.main.bounds.height - BAR_HEIGHT
+            let h4 = h / 4.0
+            newHighscoreLabel.position = CGPoint(x: 0, y: h4)
+            newHighscoreLabel.xScale = 0.0
+            newHighscoreLabel.yScale = 0.0
+        }
+        newHighscoreLabel.text = "New high score reached: \(value)!"
+        newHighscoreLabel!.run(SKAction.sequence([
+            SKAction.scale(to: 1.2, duration: 0.5),
+            SKAction.scale(to: 1.0, duration: 0.25),
+            SKAction.wait(forDuration: 2.0),
+            SKAction.run {
+                self.newHighscoreLabel = nil
+            },
+            SKAction.scale(to: 1.2, duration: 0.25),
+            SKAction.scale(to: 0.0, duration: 0.25),
+            SKAction.removeFromParent()
+            ]))
+    }
+    
     func didPressPause() {
         if !pause {
             pause = true
-            if menuScene == nil {
-                menuScene = MenuScene()
-                menuScene?.menuDelegate = self
+            if menu == nil {
+                menu = Menu()
+                menu?.menuDelegate = self
             }
             if Settings.instance.sound {
                 run(buttonSound)
             }
-            menuScene?.soundButton?.state = Settings.instance.sound
-            self.menuScene?.alpha = 0
-            self.addChild(self.menuScene!)
-            self.menuScene?.run(SKAction.fadeIn(withDuration: 0.5))
+            menu?.soundButton?.state = Settings.instance.sound
+            self.menu?.alpha = 0
+            self.addChild(self.menu!)
+            self.menu?.run(SKAction.fadeIn(withDuration: 0.5))
         }
     }
     
     func didResumePause() {
         if pause {
             pause = false
-            menuScene?.run(SKAction.sequence([
+            menu?.run(SKAction.sequence([
                 SKAction.fadeOut(withDuration: 0.5),
                 SKAction.removeFromParent()]))
         }
@@ -285,7 +323,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             SKAction.scale(to: 1.2, duration: 0.25),
             SKAction.scale(to: 0.0, duration: 0.25),
             SKAction.removeFromParent()
-            ]))
+        ]))
     }
     
     func didResetMultiplier() {
@@ -323,6 +361,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didPressRestart() {
+        border.color = Ball.colorForValue(1)
         statusBar.reset()
         board.reset()
         didResumePause()
@@ -335,8 +374,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didPressSound() {
-        if let menuScene = menuScene {
-            Settings.instance.sound = menuScene.soundButton!.state
+        if let menu = menu {
+            Settings.instance.sound = menu.soundButton!.state
         }
     }
     
