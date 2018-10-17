@@ -30,11 +30,12 @@ class Splash: SKNode {
         border.color = UIColor.darkGray
         border.board.alpha = 0
         border.screen.glowWidth = 1
-        border.screen.lineWidth = 4
+        border.screen.lineWidth = 5
+        border.render()
         addChild(border)
         
         logo = Logo()
-        logo.position = CGPoint(x: 0, y: 0)
+        logo.position = CGPoint(x: 0, y: -20)
         logo.alpha = 0.0
         logo.xScale = 0.75
         logo.yScale = 0.75
@@ -43,9 +44,8 @@ class Splash: SKNode {
         logo.run(SKAction.sequence([
             SKAction.group([
                 SKAction.fadeIn(withDuration: 0.5),
-                SKAction.scale(to: 1.0, duration: 2.0)
+                SKAction.scale(to: 1.0, duration: 1.0)
             ]),
-            SKAction.wait(forDuration: 1.0),
             SKAction.wait(forDuration: 1.0),
             SKAction.fadeOut(withDuration: 0.5),
             SKAction.run {

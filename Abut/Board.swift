@@ -43,7 +43,7 @@ class Board : SKNode {
         case Shooting
     }
     
-    weak var delegate: BoardDelegate?
+    weak var boardDelegate: BoardDelegate?
     
     let dice = Dice()
     let line = Line()
@@ -80,17 +80,20 @@ class Board : SKNode {
         addChild(endSpot)
         whiteBall.addChild(startSpot)
 
-        line.isHidden = true
-        startSpot.isHidden = true
-        endSpot.isHidden = true
-        
-        status = .Init
+        setup()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
+    func setup() {
+        line.isHidden = true
+        startSpot.isHidden = true
+        endSpot.isHidden = true
+        status = .Init
+    }
+    
     func start() {
         addChild(whiteBall)
         whiteBall.roll()
@@ -309,28 +312,28 @@ class Board : SKNode {
     }
 
     func updateCollide(contactPoint: CGPoint, value: Int) {
-        delegate?.didCollideBall(contactPoint: contactPoint, value: value, multiplier: multiplier)
+        boardDelegate?.didCollideBall(contactPoint: contactPoint, value: value, multiplier: multiplier)
     }
     
     func updateColor() {
         let newHighestColorValue = determineHighestColorValue()
         if newHighestColorValue > highestColorValue {
-            delegate?.didUnlockNewColor(color: newHighestColorValue)
+            boardDelegate?.didUnlockNewColor(color: newHighestColorValue)
         }
         highestColorValue = newHighestColorValue
-        delegate?.didUpdateColor(color: Ball.colorForValue(highestColorValue))
+        boardDelegate?.didUpdateColor(color: Ball.colorForValue(highestColorValue))
     }
     
     func updateMultiplier() {
         multiplier += 1
         roundMultiplier += 1
-        delegate?.didUpdateMultiplier(multiplier: multiplier, roundMultiplier: roundMultiplier)
+        boardDelegate?.didUpdateMultiplier(multiplier: multiplier, roundMultiplier: roundMultiplier)
     }
     
     func resetMultiplier() {
         multiplier = 0
         roundMultiplier = 0
-        delegate?.didResetMultiplier()
+        boardDelegate?.didResetMultiplier()
     }
     
     func pointTouched(position: CGPoint, began: Bool = false) {
@@ -535,6 +538,7 @@ class Board : SKNode {
         dice.place()
         multiplier = data["multiplier"] as! Int
         roundMultiplier = 0
+        updateColor()
         rollStart()
         setStatusAiming()
     }
@@ -546,19 +550,17 @@ class Board : SKNode {
         roundMultiplier = 0
         children.forEach { (node) in
             if let ball = node as? Ball {
-                if ball.value != whiteBall.value {
-                    ball.removeFromParent()
-                }
+                ball.removeFromParent()
             }
             if let block = node as? Block {
                 block.removeFromParent()
             }
         }
+        setup()
     }
     
     func new() {
         reset()
-        roll()
-        setStatusAiming()
+        start()
     }
 }

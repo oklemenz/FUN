@@ -43,7 +43,8 @@ class Menu: SKNode {
         border.color = UIColor.darkGray
         border.board.alpha = 0
         border.screen.glowWidth = 1
-        border.screen.lineWidth = 4
+        border.screen.lineWidth = 5
+        border.render()
         addChild(border)
         
         titleLabel = Label(text: "f.u.n.")

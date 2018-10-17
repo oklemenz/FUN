@@ -15,10 +15,11 @@ class Logo : SKNode {
     var outline: SKLabelNode!
     
     let fontName = "FredokaOne-Regular"
-    let fontSize: Label.Size = .xxxl
+    let fontSize: Label.Size = .xxxxl
     let width: CGFloat = 10.0
     let horizontalAlignmentMode: SKLabelHorizontalAlignmentMode = .center
     
+    let plainText = "f.u.n."
     let text = NSMutableAttributedString(string: "f.u.n.")
     
     override init() {
@@ -49,9 +50,10 @@ class Logo : SKNode {
     }
     
     func render() {
-        outline.attributedText = text
+        outline.text = plainText
         outline.horizontalAlignmentMode = horizontalAlignmentMode
         outline.fontColor = .white
+        outline.fontSize = fontSize.rawValue
         outline.addStroke(color: .black, width: width)
         label.attributedText = text
         label.horizontalAlignmentMode = horizontalAlignmentMode

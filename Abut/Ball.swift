@@ -174,7 +174,7 @@ class Ball : SKShapeNode {
         let w2 = w / 2.0
         let h = UIScreen.main.bounds.height - BAR_HEIGHT
         let h2 = h / 2.0
-        let space: CGFloat = 5
+        let space: CGFloat = 10
         let side = randomInt(min: 1, max: 4)
         let fx = randomCGFloat(min: 5, max: 10)
         let fy = randomCGFloat(min: 5, max: 10)

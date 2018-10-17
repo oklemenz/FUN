@@ -32,12 +32,14 @@ let COLOR_PURPLE = SKColor(r: 88, g: 86, b: 214)
 let COLOR_PINK = SKColor(r: 255, g: 45, b: 85)
 
 protocol GameDelegate: class {
+    func submitScore(score: Int)
     func openGameCenter()
     func openSharing(score: Int)
 }
 
 class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate, MenuDelegate, SplashDelegate {
     
+    let rootNode = SKNode()
     let statusBar = StatusBar()
     let board = Board()
     let border = Border()
@@ -50,26 +52,27 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     var multiplierGroup: SKNode! = nil
     var multiplierLabel1: Label! = nil
     var multiplierLabel2: Label! = nil
-    var newHighscoreLabel: Label! = nil
-    var newColorLabel: Label! = nil
+    var notificationLabel: Label! = nil
     
     var loaded = false
     var pause = false
     var review = false
+    var shaking = false
     
     override func didMove(to view: SKView) {
-        statusBar.delegate = self
-        board.delegate = self
+        statusBar.statusBarDelegate = self
+        board.boardDelegate = self
         
         physicsWorld.contactDelegate = self
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.9
         
-        addChild(statusBar)
-        addChild(board)
-        addChild(border)
+        rootNode.addChild(statusBar)
+        rootNode.addChild(board)
+        rootNode.addChild(border)
         border.color = Ball.colorForValue(1)
-
+        addChild(rootNode)
+        
         splash = Splash()
         splash.splashDelegate = self
         addChild(splash)
@@ -102,21 +105,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         ]))
     }
     
-    func shake(duration: Float) {
-        let amplitudeX: Float = 10
-        let amplitudeY: Float = 6
-        let numberOfShakes = duration / 0.04
-        var actions: [SKAction] = []
-        for _ in 1...Int(numberOfShakes) {
-            let moveX = Float(arc4random_uniform(UInt32(amplitudeX))) - amplitudeX / 2
-            let moveY = Float(arc4random_uniform(UInt32(amplitudeY))) - amplitudeY / 2
-            let shakeAction = SKAction.moveBy(x: CGFloat(moveX), y: CGFloat(moveY), duration: 0.02)
-            shakeAction.timingMode = SKActionTimingMode.easeOut
-            actions.append(shakeAction)
-            actions.append(shakeAction.reversed())
+    func shake() {
+        if !shaking {
+            shaking = true
+            rootNode.run(SKAction.shake(initialPosition: rootNode.position, duration: 0.5, completed: {
+                self.shaking = false
+            }))
         }
-        let actionSeq = SKAction.sequence(actions)
-        run(actionSeq)
     }
     
     func vibrate() {
@@ -131,28 +126,37 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         UIApplication.shared.delegate?.window??.rootViewController?.present(alertController, animated: true, completion: nil)
     }
     
-    func didReachNewHighscore(_ value: Int) {
-        if newHighscoreLabel == nil {
-            newHighscoreLabel = Label()
-            newHighscoreLabel.fontSize = .s
+    func showNotificationLabel(_ text: String) {
+        if notificationLabel == nil {
+            notificationLabel = Label()
+            notificationLabel.fontSize = .s
             let h = UIScreen.main.bounds.height - BAR_HEIGHT
             let h4 = h / 4.0
-            newHighscoreLabel.position = CGPoint(x: 0, y: h4)
-            newHighscoreLabel.xScale = 0.0
-            newHighscoreLabel.yScale = 0.0
+            notificationLabel.position = CGPoint(x: 0, y: h4)
+            notificationLabel.xScale = 0.0
+            notificationLabel.yScale = 0.0
+            addChild(notificationLabel)
         }
-        newHighscoreLabel.text = "New high score reached: \(value)!"
-        newHighscoreLabel!.run(SKAction.sequence([
+        notificationLabel.text = text
+        notificationLabel!.run(SKAction.sequence([
             SKAction.scale(to: 1.2, duration: 0.5),
             SKAction.scale(to: 1.0, duration: 0.25),
             SKAction.wait(forDuration: 2.0),
             SKAction.run {
-                self.newHighscoreLabel = nil
+                self.notificationLabel = nil
             },
             SKAction.scale(to: 1.2, duration: 0.25),
             SKAction.scale(to: 0.0, duration: 0.25),
             SKAction.removeFromParent()
             ]))
+    }
+    
+    func didReachNewHighscore(_ value: Int) {
+        gameDelegate?.submitScore(score: value)
+        guard statusBar.highscoreValue > 0 else {
+            return
+        }
+        showNotificationLabel("New high score reached!")
     }
     
     func didPressPause() {
@@ -228,9 +232,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         let addValue = value * multiplier > 1 ? multiplier : 1
         score.text = "\(addValue)"
         score.position = CGPoint(x: contactPoint.x, y: contactPoint.y)
-        let point = statusBar.score.convert(statusBar.score.position, to: self)
+        var point = statusBar.score.convert(statusBar.score.position, to: self)
+        point = CGPoint(x: point.x, y: point.y - 40)
+        let distance = score.position.distanceTo(point)
         score.run(SKAction.sequence([
-            SKAction.move(to: CGPoint(x: point.x, y: point.y - 40), duration: 0.5),
+            SKAction.move(to: point, duration: TimeInterval(distance / 750)),
             SKAction.run({
                 self.statusBar.addScore(addValue, animated: true)
             }),
@@ -244,6 +250,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
 
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int) {
+        shake()
         guard multiplier > 1 else {
             if multiplier == 1 {
                self.statusBar.setMultiplier(multiplier, animated: true)
@@ -276,11 +283,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             } else if roundMultiplier == 3 {
                 multiplierLabel1.text = ["Amazing!", "Awesome!"].randomElement()!
                 multiplierLabel2.text = combo
-                shake(duration: 1.0)
+                //shake(duration: 1.0)
             } else if roundMultiplier >= 4 {
                 multiplierLabel1.text = ["Fantastic!", "Incredible!"].randomElement()!
                 multiplierLabel2.text = combo
-                shake(duration: 1.0)
+                //shake(duration: 1.0)
                 vibrate()
             }
         }
@@ -303,27 +310,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didUnlockNewColor(color: Int) {
-        if newColorLabel == nil {
-            newColorLabel = Label()
-            newColorLabel.fontSize = .s
-            let h = UIScreen.main.bounds.height - BAR_HEIGHT
-            let h4 = h / 4.0
-            newColorLabel.position = CGPoint(x: 0, y: h4)
-            newColorLabel.xScale = 0.0
-            newColorLabel.yScale = 0.0
-        }
-        newColorLabel.text = "New color \(Ball.colorNameForValue(color)) unlocked!"
-        newColorLabel!.run(SKAction.sequence([
-            SKAction.scale(to: 1.2, duration: 0.5),
-            SKAction.scale(to: 1.0, duration: 0.25),
-            SKAction.wait(forDuration: 2.0),
-            SKAction.run {
-                self.newColorLabel = nil
-            },
-            SKAction.scale(to: 1.2, duration: 0.25),
-            SKAction.scale(to: 0.0, duration: 0.25),
-            SKAction.removeFromParent()
-        ]))
+        // TODO: Does match the second and not first occurrence of color!!!
+        showNotificationLabel("New color: \(Ball.colorNameForValue(color))!")
     }
     
     func didResetMultiplier() {

@@ -16,7 +16,7 @@ protocol StatusBarDelegate: class {
 
 class StatusBar : SKNode {
     
-    weak var delegate: StatusBarDelegate?
+    weak var statusBarDelegate: StatusBarDelegate?
     
     var score: Label!
     var scoreValue: Int = 0 { // < 1000000
@@ -25,7 +25,7 @@ class StatusBar : SKNode {
         }
     }
     
-    var newHighscore = false
+    var highscoreBeaten = false
     var highscore: Label!
     var highscoreValue: Int = 0 { // < 1000000
         didSet {
@@ -108,7 +108,7 @@ class StatusBar : SKNode {
             let location = touch.location(in: self)
             let node : SKNode = self.atPoint(location)
             if node == pauseIcon {
-                delegate?.didPressPause()
+                statusBarDelegate?.didPressPause()
             }
         }
     }
@@ -134,14 +134,14 @@ class StatusBar : SKNode {
     
     func setHighscore(_ value: Int, animated: Bool = false) {
         if value > highscoreValue {
-            if !newHighscore {
+            self.statusBarDelegate?.didReachNewHighscore(value)
+            if !highscoreBeaten {
+                highscoreBeaten = true
                 if highscoreValue > 0 {
-                    self.delegate?.didReachNewHighscore(value)
                     if Settings.instance.sound {
                         self.run(highscoreSound)
                     }
                 }
-                newHighscore = true
             }
             if animated {
                 highscore.run(SKAction.sequence([
@@ -199,7 +199,7 @@ class StatusBar : SKNode {
         var data: [String:Any] = [:]
         data["score"] = scoreValue
         data["highscore"] = highscoreValue
-        data["newHighscore"] = newHighscore
+        data["highscoreBeaten"] = highscoreBeaten
         data["multiplier"] = multiplierValue
         return data
     }
@@ -207,13 +207,13 @@ class StatusBar : SKNode {
     func load(data: [String:Any]) {
         scoreValue = data["score"] as! Int
         highscoreValue = data["highscore"] as! Int
-        newHighscore = data["newHighscore"] as! Bool
+        highscoreBeaten = data["newHighscore"] as! Bool
         setMultiplier(data["multiplier"] as! Int)
     }
     
     func reset() {
         scoreValue = 0
-        newHighscore = false
+        highscoreBeaten = false
         setMultiplier(0)
     }
 }

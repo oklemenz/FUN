@@ -20,6 +20,7 @@ class Label : SKNode {
         case xl = 40
         case xxl = 45
         case xxxl = 70
+        case xxxxl = 80
     }
     
     var label: SKLabelNode!

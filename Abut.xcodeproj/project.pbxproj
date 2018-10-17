@@ -15,9 +15,11 @@
 		540222CA20FDEA03006F25E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 540222C920FDEA03006F25E9 /* Assets.xcassets */; };
 		540222CD20FDEA03006F25E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */; };
 		540222D520FDEFA7006F25E9 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540222D420FDEFA7006F25E9 /* Ball.swift */; };
+		540F361621776C7600760BA7 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540F361521776C7600760BA7 /* UIImage+Extension.swift */; };
+		540F361821777CF000760BA7 /* SKAction+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540F361721777CF000760BA7 /* SKAction+Extension.swift */; };
 		542A19F320FE250D006F96C1 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F220FE250D006F96C1 /* Line.swift */; };
 		542A19F520FE2A8B006F96C1 /* SKTexture+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */; };
-		542A19F720FE2DA8006F96C1 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F620FE2DA8006F96C1 /* Color+Extension.swift */; };
+		542A19F720FE2DA8006F96C1 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F620FE2DA8006F96C1 /* UIColor+Extension.swift */; };
 		542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F820FE2EAC006F96C1 /* StartSpot.swift */; };
 		5431F53C215A623C00436FCA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5431F53B215A623C00436FCA /* GameKit.framework */; };
 		543BF180217637F800DDA1C4 /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543BF17F217637F800DDA1C4 /* Splash.swift */; };
@@ -59,9 +61,11 @@
 		540222CC20FDEA03006F25E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		540222CE20FDEA03006F25E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		540222D420FDEFA7006F25E9 /* Ball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
+		540F361521776C7600760BA7 /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
+		540F361721777CF000760BA7 /* SKAction+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKAction+Extension.swift"; sourceTree = "<group>"; };
 		542A19F220FE250D006F96C1 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKTexture+Extension.swift"; sourceTree = "<group>"; };
-		542A19F620FE2DA8006F96C1 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
+		542A19F620FE2DA8006F96C1 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		542A19F820FE2EAC006F96C1 /* StartSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSpot.swift; sourceTree = "<group>"; };
 		5431F53B215A623C00436FCA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		543BF17F217637F800DDA1C4 /* Splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
@@ -150,9 +154,11 @@
 				54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */,
 				54A0E16E2100756D002D629F /* CGVector+Extension.swift */,
 				54A0E172210087A2002D629F /* CGPoint+Extension.swift */,
+				540F361721777CF000760BA7 /* SKAction+Extension.swift */,
 				542A19F420FE2A8B006F96C1 /* SKTexture+Extension.swift */,
 				545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */,
-				542A19F620FE2DA8006F96C1 /* Color+Extension.swift */,
+				542A19F620FE2DA8006F96C1 /* UIColor+Extension.swift */,
+				540F361521776C7600760BA7 /* UIImage+Extension.swift */,
 				540222BE20FDEA02006F25E9 /* GameScene.sks */,
 				544F4176210B4A6200E10B15 /* CollisionEffect.sks */,
 				545BA8AC211B253D000362DA /* ExplosionEffect.sks */,
@@ -271,7 +277,7 @@
 				5449CC2A211B05E200531181 /* Board.swift in Sources */,
 				545BA8B1211B3681000362DA /* Label.swift in Sources */,
 				542A19F320FE250D006F96C1 /* Line.swift in Sources */,
-				542A19F720FE2DA8006F96C1 /* Color+Extension.swift in Sources */,
+				542A19F720FE2DA8006F96C1 /* UIColor+Extension.swift in Sources */,
 				543BF180217637F800DDA1C4 /* Splash.swift in Sources */,
 				544D93BC21469CB5005134BA /* Menu.swift in Sources */,
 				54A0E171210076E8002D629F /* EndSpot.swift in Sources */,
@@ -283,8 +289,10 @@
 				542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */,
 				548D786D2147D05F004885FE /* Block.swift in Sources */,
 				54A0E17521008E83002D629F /* DiceEye.swift in Sources */,
+				540F361821777CF000760BA7 /* SKAction+Extension.swift in Sources */,
 				5493649E215BC0A500887C71 /* Button.swift in Sources */,
 				543FEE8D217495E500A773E1 /* Settings.swift in Sources */,
+				540F361621776C7600760BA7 /* UIImage+Extension.swift in Sources */,
 				540222BD20FDEA02006F25E9 /* AppDelegate.swift in Sources */,
 				54D64738215935C90027E46D /* BlockedEffect.swift in Sources */,
 			);
