@@ -54,7 +54,8 @@ class Board : SKNode {
     var status: GameStatus = .Resting
     var collisionContact = 0
     var highestColorValue = 1
-    var highestColorCollisionContact = 0
+    var leadingColorValue = 1
+    var leadingColorCollisionContact = 0
     var multiplier = 0
     var roundMultiplier = 0
     
@@ -137,7 +138,7 @@ class Board : SKNode {
         ball.roll()
         setStatusRolling()
         collisionContact = 0
-        highestColorCollisionContact = 0
+        leadingColorCollisionContact = 0
         if Settings.instance.sound {
             run(wooshSound)
         }
@@ -173,7 +174,7 @@ class Board : SKNode {
     func setStatusShooting() {
         if status != .Shooting {
             collisionContact = 0
-            highestColorCollisionContact = 0
+            leadingColorCollisionContact = 0
             line.isHidden = true
             startSpot.isHidden = true
             endSpot.isHidden = true
@@ -183,6 +184,18 @@ class Board : SKNode {
     
     func determineHighestColorValue() -> Int {
         var highestColorValue = 1
+        for child in children {
+            if let ball = child as? Ball {
+                if ball.value > highestColorValue {
+                    highestColorValue = ball.value
+                }
+            }
+        }
+        return highestColorValue
+    }
+    
+    func determineLeadingColorValue() -> Int {
+        var leadingColorValue = 1
         var valueMap: [Int: Int] = [:]
         for child in children {
             if let ball = child as? Ball {
@@ -197,11 +210,11 @@ class Board : SKNode {
         if maxValue > 0 {
             for i in 1...maxValue {
                 if valueMap[i] ?? 0 > 1 {
-                    highestColorValue = i
+                    leadingColorValue = i
                 }
             }
         }
-        return highestColorValue
+        return leadingColorValue
     }
     
     func detectCollision(_ contact: SKPhysicsContact) {
@@ -280,8 +293,8 @@ class Board : SKNode {
     
     func handleMatch(contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
         collisionContact += 1
-        if ballA.value == highestColorValue {
-            highestColorCollisionContact += 1
+        if ballA.value == leadingColorValue {
+            leadingColorCollisionContact += 1
             dice.countUp()
         }
         ballA.increase()
@@ -321,7 +334,8 @@ class Board : SKNode {
             boardDelegate?.didUnlockNewColor(color: newHighestColorValue)
         }
         highestColorValue = newHighestColorValue
-        boardDelegate?.didUpdateColor(color: Ball.colorForValue(highestColorValue))
+        leadingColorValue = determineLeadingColorValue()
+        boardDelegate?.didUpdateColor(color: Ball.colorForValue(leadingColorValue))
     }
     
     func updateMultiplier() {
@@ -374,7 +388,7 @@ class Board : SKNode {
         if collisionContact == 0 {
             resetMultiplier()
         }
-        if highestColorCollisionContact == 0 {
+        if leadingColorCollisionContact == 0 {
             if dice.value > 1 {
                 dice.decrease()
                 roll()
@@ -389,7 +403,7 @@ class Board : SKNode {
     func diceZero() {
         let ball = children.first { (node) -> Bool in
             if let ball = node as? Ball {
-                return ball.value == highestColorValue
+                return ball.value == leadingColorValue
             }
             return false
             } as? Ball
@@ -546,6 +560,11 @@ class Board : SKNode {
     func reset() {
         dice.value = 6
         dice.place()
+        status = .Resting
+        collisionContact = 0
+        highestColorValue = 1
+        leadingColorValue = 1
+        leadingColorCollisionContact = 0
         multiplier = 0
         roundMultiplier = 0
         children.forEach { (node) in

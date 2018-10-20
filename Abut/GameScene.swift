@@ -105,10 +105,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         ]))
     }
     
-    func shake() {
+    func shake(duration: Float = 0.5) {
         if !shaking {
             shaking = true
-            rootNode.run(SKAction.shake(initialPosition: rootNode.position, duration: 0.5, completed: {
+            rootNode.run(SKAction.shake(initialPosition: rootNode.position, duration: duration, completed: {
                 self.shaking = false
             }))
         }
@@ -153,9 +153,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     func didReachNewHighscore(_ value: Int) {
         gameDelegate?.submitScore(score: value)
-        guard statusBar.highscoreValue > 0 else {
-            return
-        }
         showNotificationLabel("New high score reached!")
     }
     
@@ -250,7 +247,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
 
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int) {
-        shake()
         guard multiplier > 1 else {
             if multiplier == 1 {
                self.statusBar.setMultiplier(multiplier, animated: true)
@@ -283,11 +279,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             } else if roundMultiplier == 3 {
                 multiplierLabel1.text = ["Amazing!", "Awesome!"].randomElement()!
                 multiplierLabel2.text = combo
-                //shake(duration: 1.0)
+                shake()
             } else if roundMultiplier >= 4 {
                 multiplierLabel1.text = ["Fantastic!", "Incredible!"].randomElement()!
                 multiplierLabel2.text = combo
-                //shake(duration: 1.0)
+                shake()
                 vibrate()
             }
         }

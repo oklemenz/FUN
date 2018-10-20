@@ -37,17 +37,16 @@ class Splash: SKNode {
         logo = Logo()
         logo.position = CGPoint(x: 0, y: -20)
         logo.alpha = 0.0
-        logo.xScale = 0.75
-        logo.yScale = 0.75
+        logo.xScale = 0.9
+        logo.yScale = 0.9
         addChild(logo)
         
         logo.run(SKAction.sequence([
             SKAction.group([
-                SKAction.fadeIn(withDuration: 0.5),
-                SKAction.scale(to: 1.0, duration: 1.0)
+                SKAction.fadeIn(withDuration: 1.0),
+                SKAction.scale(to: 1.0, duration: 1.5)
             ]),
-            SKAction.wait(forDuration: 1.0),
-            SKAction.fadeOut(withDuration: 0.5),
+            SKAction.fadeOut(withDuration: 1.0),
             SKAction.run {
                 self.splashDelegate?.splashDidFinish()
             }

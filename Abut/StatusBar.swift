@@ -134,12 +134,12 @@ class StatusBar : SKNode {
     
     func setHighscore(_ value: Int, animated: Bool = false) {
         if value > highscoreValue {
-            self.statusBarDelegate?.didReachNewHighscore(value)
             if !highscoreBeaten {
                 highscoreBeaten = true
                 if highscoreValue > 0 {
+                    statusBarDelegate?.didReachNewHighscore(value)
                     if Settings.instance.sound {
-                        self.run(highscoreSound)
+                        run(highscoreSound)
                     }
                 }
             }
@@ -207,7 +207,7 @@ class StatusBar : SKNode {
     func load(data: [String:Any]) {
         scoreValue = data["score"] as! Int
         highscoreValue = data["highscore"] as! Int
-        highscoreBeaten = data["newHighscore"] as! Bool
+        highscoreBeaten = data["highscoreBeaten"] as! Bool
         setMultiplier(data["multiplier"] as! Int)
     }
     
