@@ -28,8 +28,8 @@ let scoreSound = SKAction.playSoundFileNamed("sounds/score.caf", waitForCompleti
 let shootSound = SKAction.playSoundFileNamed("sounds/shoot.caf", waitForCompletion: false)
 let wooshSound = SKAction.playSoundFileNamed("sounds/woosh.caf", waitForCompletion: false)
 
-let BLOCK: CGFloat = 100
-let BLOCK_INSET: CGFloat = 1
+let BOUNDARY: CGFloat = 100
+let BOUNDARY_INSET: CGFloat = 1
 
 class Board : SKNode {
 
@@ -75,7 +75,7 @@ class Board : SKNode {
         
         position = CGPoint(x: 0, y: -BAR_HEIGHT / 2)
         
-        addBlocks()
+        addBoundary()
         addChild(dice)
         addChild(line)
         addChild(endSpot)
@@ -130,7 +130,8 @@ class Board : SKNode {
     func roll() {
         rollStart()
         rollBall(Ball())
-        updateColor()
+        updateLeadingColor()
+        updateHighestColor()
     }
     
     func rollBall(_ ball: Ball) {
@@ -274,7 +275,7 @@ class Board : SKNode {
     }
     
     func collisionDetected(contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
-        if ballA.value == Ball.Black.value {
+        if ballA.value == Ball.Black.value && ballB.value == Ball.Black.value {
             ballA.removeFromParent()
             ballB.removeFromParent()
             let block = Block()
@@ -284,7 +285,8 @@ class Board : SKNode {
             if Settings.instance.sound {
                 run(blockSound)
             }
-            updateColor()
+            updateLeadingColor()
+            updateHighestColor()
             resetMultiplier()
         } else {
             handleMatch(contactPoint: contactPoint, ballA: ballA, ballB: ballB)
@@ -304,7 +306,8 @@ class Board : SKNode {
             run(laserSound)
         }
         updateCollide(contactPoint: contactPoint, value: ballA.value)
-        updateColor()
+        updateLeadingColor()
+        updateHighestColor()
         updateMultiplier()
     }
             
@@ -328,14 +331,17 @@ class Board : SKNode {
         boardDelegate?.didCollideBall(contactPoint: contactPoint, value: value, multiplier: multiplier)
     }
     
-    func updateColor() {
+    func updateLeadingColor() {
+        leadingColorValue = determineLeadingColorValue()
+        boardDelegate?.didUpdateColor(color: Ball.colorForValue(leadingColorValue))
+    }
+    
+    func updateHighestColor(_ suppressDelegate: Bool = false) {
         let newHighestColorValue = determineHighestColorValue()
-        if newHighestColorValue > highestColorValue {
+        if newHighestColorValue > highestColorValue && !suppressDelegate {
             boardDelegate?.didUnlockNewColor(color: newHighestColorValue)
         }
         highestColorValue = newHighestColorValue
-        leadingColorValue = determineLeadingColorValue()
-        boardDelegate?.didUpdateColor(color: Ball.colorForValue(leadingColorValue))
     }
     
     func updateMultiplier() {
@@ -388,6 +394,8 @@ class Board : SKNode {
         if collisionContact == 0 {
             resetMultiplier()
         }
+        diceZero()
+        return
         if leadingColorCollisionContact == 0 {
             if dice.value > 1 {
                 dice.decrease()
@@ -413,6 +421,7 @@ class Board : SKNode {
             if Settings.instance.sound {
                 run(explosionSound)
             }
+            resetMultiplier()
         }
         run(SKAction.sequence([
             SKAction.wait(forDuration: 0.5),
@@ -439,18 +448,18 @@ class Board : SKNode {
         }
     }
     
-    func addBlocks() {
-        topBlock()
-        bottomBlock()
-        leftBlock()
-        rightBlock()
+    func addBoundary() {
+        topBoundary()
+        bottomBoundary()
+        leftBoundary()
+        rightBoundary()
     }
     
-    func topBlock() {
+    func topBoundary() {
         let w = UIScreen.main.bounds.width
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
-        let size = CGSize(width: w + 2 * BLOCK, height: BLOCK)
+        let size = CGSize(width: w + 2 * BOUNDARY, height: BOUNDARY)
         let top = SKShapeNode(rectOf: size)
         top.zPosition = 0
         top.fillColor = .clear
@@ -458,15 +467,15 @@ class Board : SKNode {
         top.physicsBody = SKPhysicsBody(rectangleOf: size)
         top.physicsBody?.isDynamic = false
         top.physicsBody?.usesPreciseCollisionDetection = true
-        top.position = CGPoint(x: 0, y: h2 + BLOCK/2 + BLOCK_INSET + position.y)
+        top.position = CGPoint(x: 0, y: h2 + BOUNDARY/2 + BOUNDARY_INSET + position.y)
         addChild(top)
     }
     
-    func bottomBlock() {
+    func bottomBoundary() {
         let w = UIScreen.main.bounds.width
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
-        let size = CGSize(width: w + 2 * BLOCK, height: BLOCK)
+        let size = CGSize(width: w + 2 * BOUNDARY, height: BOUNDARY)
         let bottom = SKShapeNode(rectOf: size)
         bottom.zPosition = 0
         bottom.fillColor = .clear
@@ -474,15 +483,15 @@ class Board : SKNode {
         bottom.physicsBody = SKPhysicsBody(rectangleOf: size)
         bottom.physicsBody?.isDynamic = false
         bottom.physicsBody?.usesPreciseCollisionDetection = true
-        bottom.position = CGPoint(x: 0, y: -h2 - BLOCK/2 - BLOCK_INSET - position.y)
+        bottom.position = CGPoint(x: 0, y: -h2 - BOUNDARY/2 - BOUNDARY_INSET - position.y)
         addChild(bottom)
     }
     
-    func leftBlock() {
+    func leftBoundary() {
         let w = UIScreen.main.bounds.width
         let w2 = w / 2.0
         let h = UIScreen.main.bounds.height
-        let size = CGSize(width: BLOCK, height: h + 2 * BLOCK)
+        let size = CGSize(width: BOUNDARY, height: h + 2 * BOUNDARY)
         let left = SKShapeNode(rectOf: size)
         left.zPosition = 0
         left.fillColor = .clear
@@ -490,15 +499,15 @@ class Board : SKNode {
         left.physicsBody = SKPhysicsBody(rectangleOf: size)
         left.physicsBody?.isDynamic = false
         left.physicsBody?.usesPreciseCollisionDetection = true
-        left.position = CGPoint(x: -w2 - BLOCK/2 - BLOCK_INSET, y: 0)
+        left.position = CGPoint(x: -w2 - BOUNDARY/2 - BOUNDARY_INSET, y: 0)
         addChild(left)
     }
     
-    func rightBlock() {
+    func rightBoundary() {
         let w = UIScreen.main.bounds.width
         let w2 = w / 2.0
         let h = UIScreen.main.bounds.height
-        let size = CGSize(width: BLOCK, height: h + 2 * BLOCK)
+        let size = CGSize(width: BOUNDARY, height: h + 2 * BOUNDARY)
         let right = SKShapeNode(rectOf: size)
         right.zPosition = 0
         right.fillColor = .clear
@@ -506,7 +515,7 @@ class Board : SKNode {
         right.physicsBody = SKPhysicsBody(rectangleOf: size)
         right.physicsBody?.isDynamic = false
         right.physicsBody?.usesPreciseCollisionDetection = true
-        right.position = CGPoint(x: w2 + BLOCK/2 + BLOCK_INSET, y: 0)
+        right.position = CGPoint(x: w2 + BOUNDARY/2 + BOUNDARY_INSET, y: 0)
         addChild(right)
     }
 
@@ -552,7 +561,8 @@ class Board : SKNode {
         dice.place()
         multiplier = data["multiplier"] as! Int
         roundMultiplier = 0
-        updateColor()
+        updateLeadingColor()
+        updateHighestColor(true)
         rollStart()
         setStatusAiming()
     }

@@ -21,7 +21,7 @@ class Menu: SKNode {
     
     var border: Border!
     
-    var titleLabel: Label!
+    var logo: Logo!
     var restartButton: Button!
     var soundButton: ToggleButton!
     var gameCenterButton: Button!
@@ -47,16 +47,15 @@ class Menu: SKNode {
         border.render()
         addChild(border)
         
-        titleLabel = Label(text: "f.u.n.")
-        titleLabel.fontSize = .xxxl
-        titleLabel.position = CGPoint(x: 0, y: h2 - 200)
-        addChild(titleLabel)
+        logo = Logo()
+        logo.position = CGPoint(x: 0, y: h2 - 200)
+        addChild(logo)
         
         restartButton = Button(icon: "restart", width: 100, height: 75, corner: 10, color: COLOR_RED, pressed: didPressRestart)
         restartButton.position = CGPoint(x: -75, y: 50)
         addChild(restartButton)
         
-        soundButton = ToggleButton(iconOn: "sound_on", iconOff: "sound_off", width: 100, height: 75, corner: 10, color: COLOR_YELLOW, pressed: didPressSound)
+        soundButton = ToggleButton(iconOn: "sound_on", iconOff: "sound_off", width: 100, height: 75, corner: 10, color: COLOR_PURPLE, pressed: didPressSound)
         soundButton.position = CGPoint(x: 75, y: 50)
         addChild(soundButton)
         
@@ -64,7 +63,7 @@ class Menu: SKNode {
         gameCenterButton.position = CGPoint(x: -75, y: -50)
         addChild(gameCenterButton)
         
-        shareButton = Button(icon: "share", width: 100, height: 75, corner: 10, color: COLOR_BLUE, pressed: didPressShare)
+        shareButton = Button(icon: "share", width: 100, height: 75, corner: 10, color: COLOR_TEAL_BLUE, pressed: didPressShare)
         shareButton.position = CGPoint(x: 75, y: -50)
         addChild(shareButton)
         

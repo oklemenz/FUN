@@ -37,7 +37,7 @@ class CollisionEffect: SKNode {
     func show() {
         if let contactEffect = SKEmitterNode(fileNamed: "CollisionEffect") {
             contactEffect.position = CGPoint(x: 0, y: 0)
-            contactEffect.particleLifetime = 1.0
+            contactEffect.particleLifetime = 0.5
             contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [ballB.color, ballA.color], times: [0.0, 0.5])
             ballA.addChild(contactEffect)
             contactEffect.run(SKAction.sequence([

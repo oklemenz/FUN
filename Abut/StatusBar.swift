@@ -97,6 +97,7 @@ class StatusBar : SKNode {
         pauseIcon.yScale = 1.0
         pauseIcon.zPosition = 10000
         addChild(pauseIcon)
+
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -108,9 +109,20 @@ class StatusBar : SKNode {
             let location = touch.location(in: self)
             let node : SKNode = self.atPoint(location)
             if node == pauseIcon {
+                pauseIcon.texture = SKTexture(imageNamed: "pause_pressed")
+            }
+        }
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if let touch = touches.first {
+            let location = touch.location(in: self)
+            let node : SKNode = self.atPoint(location)
+            if node == pauseIcon {
                 statusBarDelegate?.didPressPause()
             }
         }
+        pauseIcon.texture = SKTexture(imageNamed: "pause")
     }
     
     func addScore(_ addValue: Int, animated: Bool = false) {

@@ -57,16 +57,16 @@ class ToggleButton : SKShapeNode {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        fillColor = self.color !== nil ? self.color!.withAlphaComponent(0.5) : .darkGray
+        fillColor = self.color !== nil ? self.color!.withAlphaComponent(0.25) : .darkGray
         iconOnImage.position = CGPoint(x: 0, y: -2)
         iconOffImage.position = CGPoint(x: 0, y: -2)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
+        if let touch = touches.first {
             let location = touch.location(in: parent!)
             if contains(location) {
-                fillColor = self.color !== nil ? self.color!.withAlphaComponent(0.5) : .darkGray
+                fillColor = self.color !== nil ? self.color!.withAlphaComponent(0.25) : .darkGray
             } else {
                 fillColor = self.color ?? SKColor.clear
             }
@@ -74,7 +74,7 @@ class ToggleButton : SKShapeNode {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for touch in touches {
+        if let touch = touches.first {
             let location = touch.location(in: parent!)
             if contains(location) {
                 if let pressed = pressed {
