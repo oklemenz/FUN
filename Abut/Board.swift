@@ -276,12 +276,12 @@ class Board : SKNode {
     
     func collisionDetected(contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
         if ballA.value == Ball.Black.value && ballB.value == Ball.Black.value {
+            let block = Block()
+            block.position = ballA.position.middleTo(ballB.position)
+            addChild(block)
             ballA.removeFromParent()
             ballB.removeFromParent()
-            let block = Block()
-            block.position = contactPoint
-            addChild(block)
-            addChild(BlockedEffect(context: self.parent!, contactPoint: contactPoint))
+            addChild(BlockedEffect(context: self, contactPoint: block.position))
             if Settings.instance.sound {
                 run(blockSound)
             }
@@ -301,7 +301,7 @@ class Board : SKNode {
         }
         ballA.increase()
         ballB.removeFromParent()
-        addChild(CollisionEffect(context: self.parent!, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
+        addChild(CollisionEffect(context: self, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
         if Settings.instance.sound {
             run(laserSound)
         }
@@ -320,7 +320,7 @@ class Board : SKNode {
         }
         if let block = block as? Block {
             block.removeFromParent()
-            addChild(ExplosionEffect(context: self.parent!, block: block))
+            addChild(ExplosionEffect(context: self, block: block))
             if Settings.instance.sound {
                 run(explosionSound)
             }
@@ -336,10 +336,11 @@ class Board : SKNode {
         boardDelegate?.didUpdateColor(color: Ball.colorForValue(leadingColorValue))
     }
     
-    func updateHighestColor(_ suppressDelegate: Bool = false) {
+    func updateHighestColor(_ suppress: Bool = false) {
         let newHighestColorValue = determineHighestColorValue()
-        if newHighestColorValue > highestColorValue && !suppressDelegate {
+        if newHighestColorValue > highestColorValue && !suppress {
             boardDelegate?.didUnlockNewColor(color: newHighestColorValue)
+            explodeBlock()
         }
         highestColorValue = newHighestColorValue
     }
@@ -374,7 +375,9 @@ class Board : SKNode {
         line.startPoint = whiteBall.position
         let rollingBall = children.first { (node) -> Bool in
             if let ball = node as? Ball {
-                return ball.physicsBody!.velocity.length() >= RestBias
+                if let physicsBody = ball.physicsBody {
+                    return physicsBody.velocity.length() >= RestBias
+                }
             }
             return false
         }
@@ -394,8 +397,6 @@ class Board : SKNode {
         if collisionContact == 0 {
             resetMultiplier()
         }
-        diceZero()
-        return
         if leadingColorCollisionContact == 0 {
             if dice.value > 1 {
                 dice.decrease()
@@ -417,7 +418,7 @@ class Board : SKNode {
             } as? Ball
         if let ball = ball {
             ball.removeFromParent()
-            addChild(ExplosionEffect(context: self.parent!, ball: ball))
+            addChild(ExplosionEffect(context: self, ball: ball))
             if Settings.instance.sound {
                 run(explosionSound)
             }

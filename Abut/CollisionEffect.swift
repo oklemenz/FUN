@@ -35,17 +35,17 @@ class CollisionEffect: SKNode {
     }
     
     func show() {
-        if let contactEffect = SKEmitterNode(fileNamed: "CollisionEffect") {
-            contactEffect.position = CGPoint(x: 0, y: 0)
-            contactEffect.particleLifetime = 0.5
-            contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [ballB.color, ballA.color], times: [0.0, 0.5])
-            ballA.addChild(contactEffect)
-            contactEffect.run(SKAction.sequence([
-                SKAction.wait(forDuration: Double(contactEffect.particleLifetime)),
+        if let collisionEffect = SKEmitterNode(fileNamed: "CollisionEffect") {
+            collisionEffect.position = CGPoint(x: 0, y: 0)
+            collisionEffect.particleLifetime = 0.5
+            collisionEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [ballB.color, ballA.color], times: [0.0, 0.5])
+            ballA.addChild(collisionEffect)
+            collisionEffect.run(SKAction.sequence([
+                SKAction.wait(forDuration: Double(collisionEffect.particleLifetime)),
                 SKAction.run {
-                    contactEffect.particleBirthRate = 0
+                    collisionEffect.particleBirthRate = 0
                 },
-                SKAction.wait(forDuration: Double(contactEffect.particleLifetime)),
+                SKAction.wait(forDuration: Double(collisionEffect.particleLifetime)),
                     SKAction.removeFromParent()
                 ]))
         }

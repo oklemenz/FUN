@@ -151,9 +151,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             ]))
     }
     
-    func didReachNewHighscore(_ value: Int) {
+    func reportNewHighscore(_ value: Int) {
         gameDelegate?.submitScore(score: value)
+    }
+    
+    func didReachNewHighscore(_ value: Int) {
         showNotificationLabel("New high score reached!")
+        if Settings.instance.sound {
+            run(highscoreSound)
+        }
     }
     
     func didPressPause() {
@@ -306,7 +312,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didUnlockNewColor(color: Int) {
-        // TODO: Does match the second and not first occurrence of color!!!
         showNotificationLabel("New color: \(Ball.colorNameForValue(color))!")
     }
     

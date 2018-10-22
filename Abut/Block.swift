@@ -33,7 +33,7 @@ class Block : SKShapeNode {
     }
     
     func render() {
-        path = CGPath(rect: CGRect(x: -size / 2.0, y: size / 2.0, width: size, height: size), transform: nil)
+        path = CGPath(rect: CGRect(x: -size / 2.0, y: -size / 2.0, width: size, height: size), transform: nil)
         strokeColor = SKColor.clear
         color = SKColor.black
         fillColor = color

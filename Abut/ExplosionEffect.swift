@@ -42,19 +42,19 @@ class ExplosionEffect: SKNode {
     }
     
     func show() {
-        if let contactEffect = SKEmitterNode(fileNamed: "ExplosionEffect") {
-            contactEffect.position = node.position
-            contactEffect.particleColor = color
-            contactEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [color], times: [0.0])
-            contactEffect.particleLifetime = 0.5
-            contactEffect.zPosition = 10
-            context.addChild(contactEffect)
-            contactEffect.run(SKAction.sequence([
-                SKAction.wait(forDuration: Double(contactEffect.particleLifetime)),
+        if let explosionEffect = SKEmitterNode(fileNamed: "ExplosionEffect") {
+            explosionEffect.position = node.position
+            explosionEffect.particleColor = color
+            explosionEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [color], times: [0.0])
+            explosionEffect.particleLifetime = 0.5
+            explosionEffect.zPosition = 10
+            context.addChild(explosionEffect)
+            explosionEffect.run(SKAction.sequence([
+                SKAction.wait(forDuration: Double(explosionEffect.particleLifetime)),
                 SKAction.run {
-                    contactEffect.particleBirthRate = 0
+                    explosionEffect.particleBirthRate = 0
                 },
-                SKAction.wait(forDuration: Double(contactEffect.particleLifetime)),
+                SKAction.wait(forDuration: Double(explosionEffect.particleLifetime)),
                     SKAction.removeFromParent()
                 ]))
         }

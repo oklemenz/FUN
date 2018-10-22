@@ -89,7 +89,8 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         if self.gcEnabled {
             let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_ID)
             currentScore.value = Int64(score)
-            GKScore.report([currentScore])
+            GKScore.report([currentScore], withCompletionHandler: { (error) in
+            })
         }
     }
     
