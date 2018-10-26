@@ -12,18 +12,16 @@ import SpriteKit
 class CollisionEffect: SKNode {
     
     var context: SKNode!
-    var contactPoint: CGPoint!
     var ballA: Ball!
     var ballB: Ball!
     
     var line: SKShapeNode!
     var cover: SKShapeNode!
     
-    init(context: SKNode, contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
+    init(context: SKNode, ballA: Ball, ballB: Ball) {
         super.init()
 
         self.context = context
-        self.contactPoint = contactPoint
         self.ballA = ballA
         self.ballB = ballB
 
@@ -52,36 +50,43 @@ class CollisionEffect: SKNode {
         
         let size = CGVector(dx: UIScreen.main.bounds.width, dy: UIScreen.main.bounds.height)
         let direction = (ballA.position - ballB.position).normalized()
+        let point = ballA.position.middleTo(ballB.position)
         line = SKShapeNode()
         let bezierPath = UIBezierPath()
-        bezierPath.move(to: contactPoint - direction * size.length())
-        bezierPath.addLine(to: contactPoint + direction * size.length())
+        bezierPath.move(to: point - direction * size.length())
+        bezierPath.addLine(to: point + direction * size.length())
         line.zPosition = 1000
         line.path = bezierPath.cgPath
         line.lineWidth = 20
         line.glowWidth = 10
         line.strokeColor = ballA.color
-        context.addChild(line)
+        context.parent!.addChild(line)
         
         cover = SKShapeNode(rectOf: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         cover.zPosition = 999
         cover.position = CGPoint(x: 0, y: 0)
         cover.alpha = 0.4
         cover.fillColor = ballA.color
-        context.addChild(cover)
+        context.parent!.addChild(cover)
         
         animate()
     }
     
     func animate() {
+        let startAlpha = cover.alpha
+        let repeatCount = line.lineWidth
         let action = SKAction.sequence([
             SKAction.repeat(SKAction.sequence([
                 SKAction.wait(forDuration: 0.05),
                 SKAction.run {
                     self.line.lineWidth -= 1
-                    self.cover.alpha -= 0.03
+                    self.cover.alpha -= startAlpha / repeatCount
                 }
-                ]), count: Int(self.line.lineWidth)),
+                ]), count: Int(repeatCount)),
+            SKAction.run({
+                self.line.removeFromParent()
+                self.cover.removeFromParent()
+            }),
             SKAction.removeFromParent()
         ])
         run(action, withKey: "pulse")

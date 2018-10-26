@@ -110,7 +110,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     
     func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
-        let text = "Hi, I scored \(scoreText) in the iOS game F.U.N."
+        let text = "Hi, I scored \(scoreText) in the iOS game f.u.n."
         let image = screenshot()
         let url = URL(string:"https://itunes.apple.com/us/app/fun/id1332716706?mt=8")!
         let activityViewController = UIActivityViewController(activityItems: [text , image , url],

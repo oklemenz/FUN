@@ -12,15 +12,15 @@ import SpriteKit
 class BlockedEffect: SKNode {
     
     var context: SKNode!
-    var contactPosition: CGPoint!
+    var point: CGPoint!
     
     var cover: SKShapeNode!
     
-    init(context: SKNode, contactPoint: CGPoint) {
+    init(context: SKNode, point: CGPoint) {
         super.init()
         
         self.context = context
-        self.contactPosition = contactPoint
+        self.point = point
         
         show()
     }
@@ -31,7 +31,7 @@ class BlockedEffect: SKNode {
     
     func show() {
         if let contactEffect = SKEmitterNode(fileNamed: "BlockedEffect") {
-            contactEffect.position = contactPosition
+            contactEffect.position = point
             contactEffect.particleLifetime = 1.0
             contactEffect.zPosition = 10
             context.addChild(contactEffect)
@@ -50,19 +50,24 @@ class BlockedEffect: SKNode {
         cover.position = CGPoint(x: 0, y: 0)
         cover.alpha = 0.4
         cover.fillColor = .black
-        context.addChild(cover)
+        context.parent!.addChild(cover)
         
         animate()
     }
     
     func animate() {
+        let startAlpha = cover.alpha
+        let repeatCount = 20
         let action = SKAction.sequence([
             SKAction.repeat(SKAction.sequence([
                 SKAction.wait(forDuration: 0.05),
                 SKAction.run {
-                    self.cover.alpha -= 0.03
+                    self.cover.alpha -= startAlpha / CGFloat(repeatCount)
                 }
-                ]), count: 20),
+                ]), count: repeatCount),
+            SKAction.run({
+                self.cover.removeFromParent()
+            }),
             SKAction.removeFromParent()
             ])
         run(action, withKey: "hide")

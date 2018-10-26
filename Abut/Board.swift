@@ -276,12 +276,13 @@ class Board : SKNode {
     
     func collisionDetected(contactPoint: CGPoint, ballA: Ball, ballB: Ball) {
         if ballA.value == Ball.Black.value && ballB.value == Ball.Black.value {
+            let point = ballA.position.middleTo(ballB.position)
             let block = Block()
-            block.position = ballA.position.middleTo(ballB.position)
+            block.position = point
             addChild(block)
             ballA.removeFromParent()
             ballB.removeFromParent()
-            addChild(BlockedEffect(context: self, contactPoint: block.position))
+            addChild(BlockedEffect(context: self, point: point))
             if Settings.instance.sound {
                 run(blockSound)
             }
@@ -301,7 +302,7 @@ class Board : SKNode {
         }
         ballA.increase()
         ballB.removeFromParent()
-        addChild(CollisionEffect(context: self, contactPoint: contactPoint, ballA: ballA, ballB: ballB))
+        addChild(CollisionEffect(context: self, ballA: ballA, ballB: ballB))
         if Settings.instance.sound {
             run(laserSound)
         }

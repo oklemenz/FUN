@@ -38,6 +38,7 @@ class Menu: SKNode {
         
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
+        let h4 = h2 / 2.0
         
         border = Border()
         border.color = UIColor.darkGray
@@ -48,7 +49,7 @@ class Menu: SKNode {
         addChild(border)
         
         logo = Logo()
-        logo.position = CGPoint(x: 0, y: h2 - 200)
+        logo.position = CGPoint(x: 0, y: h4)
         addChild(logo)
         
         restartButton = Button(icon: "restart", width: 100, height: 75, corner: 10, color: COLOR_RED, pressed: didPressRestart)

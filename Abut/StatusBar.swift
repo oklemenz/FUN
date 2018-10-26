@@ -15,6 +15,10 @@ protocol StatusBarDelegate: class {
     func didPressPause()
 }
 
+let BASE_LINE: CGFloat = BAR_HEIGHT / 2
+let BASE_LINE_OFFSET: CGFloat = 5
+let TOP_LINE_OFFSET: CGFloat = 0
+
 class StatusBar : SKNode {
     
     weak var statusBarDelegate: StatusBarDelegate?
@@ -39,7 +43,7 @@ class StatusBar : SKNode {
     var multiplier: Label!
     var multiplierValue: Int = 0 {
         didSet {
-            multiplier.text = "x\(self.multiplierValue)"
+            multiplier.text = self.multiplierValue >= 1 ? "x\(self.multiplierValue)" : ""
         }
     }
     var multiplierIcon: SKSpriteNode!
@@ -59,46 +63,43 @@ class StatusBar : SKNode {
         position = CGPoint(x: 0, y: h2 - BAR_HEIGHT - CORNER_RADIUS + (Device.IS_IPHONE_X ? 0 : 15))
 
         score = Label(text: "\(scoreValue)")
-        score.position = CGPoint(x: 0, y: BAR_HEIGHT / 2)
+        score.position = CGPoint(x: 0, y: BASE_LINE)
         addChild(score)
 
         highscore = Label(text: "\(highscoreValue)")
         highscore.fontSize = .s
-        highscore.position = CGPoint(x: w2 - 50, y: BAR_HEIGHT / 2 + 0)
+        highscore.position = CGPoint(x: w2 - 50, y: BASE_LINE + BASE_LINE_OFFSET)
         addChild(highscore)
         
         highscoreIcon = SKSpriteNode(imageNamed: "crown")
-        highscoreIcon.position = CGPoint(x: w2 - 50, y: BAR_HEIGHT / 2 + 40)
+        highscoreIcon.position = CGPoint(x: w2 - 50, y: BASE_LINE + BASE_LINE_OFFSET + TOP_LINE_OFFSET + 45)
         highscoreIcon.xScale = 0.75
         highscoreIcon.yScale = 0.75
         highscoreIcon.zPosition = 10000
         addChild(highscoreIcon)
         
         multiplierGroup = SKNode()
-        multiplierGroup.position = CGPoint(x: -w2 + 60, y: BAR_HEIGHT / 2 + 20)
+        multiplierGroup.position = CGPoint(x: -w2 + 60, y: BASE_LINE + BASE_LINE_OFFSET + 20)
         multiplierGroup.xScale = 0.0
         multiplierGroup.yScale = 0.0
-        addChild(multiplierGroup)
-        
         multiplierIcon = SKSpriteNode(imageNamed: "rocket")
-        multiplierIcon.position = CGPoint(x: 0, y: 20)
+        multiplierIcon.position = CGPoint(x: 0, y: 25)
         multiplierIcon.xScale = 0.75
         multiplierIcon.yScale = 0.75
         multiplierIcon.zPosition = 10000
         multiplierGroup.addChild(multiplierIcon)
-    
         multiplier = Label(text: "")
         multiplier.position = CGPoint(x: 0, y: -20)
         multiplier.fontSize = .s
         multiplierGroup.addChild(multiplier)
+        addChild(multiplierGroup)
         
         pauseIcon = SKSpriteNode(imageNamed: "pause")
-        pauseIcon.position = CGPoint(x: -w2 + 25, y: BAR_HEIGHT / 2 + 18)
+        pauseIcon.position = CGPoint(x: -w2 + 25, y: BASE_LINE + BASE_LINE_OFFSET + 18)
         pauseIcon.xScale = 1.0
         pauseIcon.yScale = 1.0
         pauseIcon.zPosition = 10000
         addChild(pauseIcon)
-
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -64,19 +64,24 @@ class ExplosionEffect: SKNode {
         cover.position = CGPoint(x: 0, y: 0)
         cover.alpha = 0.4
         cover.fillColor = color
-        context.addChild(cover)
+        context.parent!.addChild(cover)
         
         animate()
     }
     
     func animate() {
+        let startAlpha = cover.alpha
+        let repeatCount = 20
         let action = SKAction.sequence([
             SKAction.repeat(SKAction.sequence([
                 SKAction.wait(forDuration: 0.05),
                 SKAction.run {
-                    self.cover.alpha -= 0.03
+                    self.cover.alpha -= startAlpha / CGFloat(repeatCount)
                 }
-                ]), count: 20),
+                ]), count: repeatCount),
+            SKAction.run({
+                self.cover.removeFromParent()
+            }),
             SKAction.removeFromParent()
         ])
         run(action, withKey: "hide")
