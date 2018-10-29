@@ -362,9 +362,10 @@ class Board : SKNode {
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
         if let startPoint = line.startPoint {
+            let screenPosition = convert(position, to: parent!)
             if began && line.endPoint != nil && startPoint.distanceTo(position) <= whiteBall.radius * 3 {
                 shoot()
-            } else if (position.y < h2 - BAR_HEIGHT + CORNER_RADIUS) {
+            } else if (screenPosition.y < h2 - BAR_HEIGHT) {
                 line.endPoint = position
                 endSpot.position = position
             }

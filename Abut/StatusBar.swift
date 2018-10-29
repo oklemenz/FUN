@@ -16,8 +16,8 @@ protocol StatusBarDelegate: class {
 }
 
 let BASE_LINE: CGFloat = BAR_HEIGHT / 2
-let BASE_LINE_OFFSET: CGFloat = 5
-let TOP_LINE_OFFSET: CGFloat = 0
+let BASE_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 5 : -4
+let TOP_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 0 : -7
 
 class StatusBar : SKNode {
     
@@ -83,7 +83,7 @@ class StatusBar : SKNode {
         multiplierGroup.xScale = 0.0
         multiplierGroup.yScale = 0.0
         multiplierIcon = SKSpriteNode(imageNamed: "rocket")
-        multiplierIcon.position = CGPoint(x: 0, y: 25)
+        multiplierIcon.position = CGPoint(x: 0, y: TOP_LINE_OFFSET + 25)
         multiplierIcon.xScale = 0.75
         multiplierIcon.yScale = 0.75
         multiplierIcon.zPosition = 10000

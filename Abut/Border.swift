@@ -80,7 +80,7 @@ class Border : SKNode {
         screen.path = screenPath.cgPath
         screen.zPosition = 0.9
         screen.fillColor = .white
-        screen.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(color: color ?? .white), color2: CIColor(rgba: "#000000"))
+        screen.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: color ?? .white, color2: UIColor(rgba: "#000000"))
         screen.strokeColor = color ?? .clear
         screen.lineWidth = l
         screen.glowWidth = 1
@@ -92,8 +92,8 @@ class Border : SKNode {
         }
         board.zPosition = 0.9
         board.fillColor = .white
-        board.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: CIColor(rgba: "#666666"),
-                                      color2: CIColor(rgba: "#000000"))
+        board.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: UIColor(rgba: "#666666"),
+                                      color2: UIColor(rgba: "#000000"))
         board.strokeColor = color ?? .clear
         board.lineWidth = l
         board.glowWidth = 1

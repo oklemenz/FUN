@@ -12,15 +12,15 @@ import SpriteKit
 
 public extension SKTexture {
     
-    convenience init(size: CGFloat, color1: CIColor, color2: CIColor) {
-        let context = CIContext(options: nil)
-        let filter = CIFilter(name: "CIGaussianGradient")
-        let inputCenter: CIVector = CIVector(x: size * 0.5, y: size * 0.5)
-        filter!.setDefaults()
-        filter!.setValue(inputCenter, forKey: "inputCenter")
-        filter!.setValue(color1, forKey: "inputColor0")
-        filter!.setValue(color2, forKey: "inputColor1")
-        let image = context.createCGImage(filter!.outputImage!, from: CGRect(x: 0, y: 0, width: size, height: size))
-        self.init(cgImage: image!)
+    convenience init(size: CGFloat, color1: UIColor, color2: UIColor) {
+        let size = CGSize(width: size, height: size)
+        let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [color1.cgColor, color2.cgColor] as CFArray,
+                                  locations: [0.0, 1.0])
+        let center = CGPoint(x: size.width / 2, y: size.height / 2)
+        UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.main.scale)
+        let ctx = UIGraphicsGetCurrentContext()!
+        ctx.drawRadialGradient(gradient!, startCenter: center, startRadius: 0, endCenter: center, endRadius: size.width, options: CGGradientDrawingOptions(rawValue: 0))
+        let gradientImage = UIGraphicsGetImageFromCurrentImageContext()
+        self.init(image: gradientImage!)
     }
 }
