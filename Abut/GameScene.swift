@@ -241,7 +241,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         point = CGPoint(x: point.x, y: point.y - 40)
         let distance = score.position.distanceTo(point)
         score.run(SKAction.sequence([
-            SKAction.move(to: point, duration: TimeInterval(distance / 750)),
+            SKAction.move(to: point, duration: TimeInterval(distance / 500)),
             SKAction.run({
                 self.statusBar.addScore(addValue, animated: true)
             }),
@@ -316,6 +316,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     func didUnlockNewColor(color: Int) {
         showNotificationLabel("New color: \(Ball.colorNameForValue(color))!")
+        run(newColorSound)
     }
     
     func didResetMultiplier() {

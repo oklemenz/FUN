@@ -26,6 +26,7 @@ let explosionSound = SKAction.playSoundFileNamed("sounds/explosion.caf", waitFor
 let highscoreSound = SKAction.playSoundFileNamed("sounds/highscore.caf", waitForCompletion: false)
 let laserSound = SKAction.playSoundFileNamed("sounds/laser.caf", waitForCompletion: false)
 let scoreSound = SKAction.playSoundFileNamed("sounds/score.caf", waitForCompletion: false)
+let newColorSound = SKAction.playSoundFileNamed("sounds/newcolor.caf", waitForCompletion: false)
 let shootSound = SKAction.playSoundFileNamed("sounds/shoot.caf", waitForCompletion: false)
 let wooshSound = SKAction.playSoundFileNamed("sounds/woosh.caf", waitForCompletion: false)
 
