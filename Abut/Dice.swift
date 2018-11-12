@@ -60,6 +60,7 @@ class Dice : SKSpriteNode {
         guard value < 6 else {
             return
         }
+        previousValue = value
         run(SKAction.sequence([
             SKAction.run {
                 self.value += 1

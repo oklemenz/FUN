@@ -27,7 +27,8 @@ class Button : SKShapeNode {
         isUserInteractionEnabled = true
         path = UIBezierPath(roundedRect: CGRect(x: -width / 2.0, y: -height / 2.0, width: width, height: height),
                             cornerRadius: 15).cgPath
-        strokeColor = SKColor.lightGray
+        lineWidth = BORDER_LINE_WIDTH
+        strokeColor = SKColor.darkGray
         fillColor = self.color ?? SKColor.clear
         
         iconImage = SKSpriteNode(imageNamed: icon)

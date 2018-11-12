@@ -10,12 +10,12 @@ import Foundation
 import SpriteKit
 
 protocol StatusBarDelegate: class {
-    func reportNewHighscore(_ value: Int)
+    func reportScore(_ value: Int)
     func didReachNewHighscore(_ value: Int)
     func didPressPause()
 }
 
-let BASE_LINE: CGFloat = BAR_HEIGHT / 2
+let BASE_LINE: CGFloat = 0
 let BASE_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 5 : -4
 let TOP_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 0 : -7
 
@@ -60,7 +60,7 @@ class StatusBar : SKNode {
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
 
-        position = CGPoint(x: 0, y: h2 - BAR_HEIGHT - CORNER_RADIUS + (Device.IS_IPHONE_X ? 0 : 15))
+        position = CGPoint(x: 0, y: h2 - BAR_HEIGHT)
 
         score = Label(text: "\(scoreValue)")
         score.position = CGPoint(x: 0, y: BASE_LINE)
@@ -133,6 +133,7 @@ class StatusBar : SKNode {
                 SKAction.scale(to: 1.2, duration: 0.25),
                 SKAction.run {
                     self.scoreValue += addValue
+                    self.statusBarDelegate?.reportScore(self.scoreValue)
                     if Settings.instance.sound {
                         self.run(scoreSound)
                     }
@@ -148,9 +149,6 @@ class StatusBar : SKNode {
     
     func setHighscore(_ value: Int, animated: Bool = false) {
         if value > highscoreValue {
-            if highscoreValue > 0 {
-                statusBarDelegate?.reportNewHighscore(value)
-            }
             if !highscoreBeaten {
                 highscoreBeaten = true
                 if highscoreValue > 0 {

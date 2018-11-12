@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import AudioToolbox
 
 protocol BoardDelegate: class {
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int)
@@ -113,6 +114,8 @@ class Board : SKNode {
             run(wooshSound)
         }
         setStatusShooting()
+        let peek = SystemSoundID(1519)
+        AudioServicesPlaySystemSound(peek)
     }
     
     func rollStart() {
@@ -306,7 +309,7 @@ class Board : SKNode {
         if Settings.instance.sound {
             run(laserSound)
         }
-        updateCollide(contactPoint: contactPoint, value: ballA.value)
+        updateCollide(contactPoint: contactPoint, value: ballB.value)
         updateLeadingColor()
         updateHighestColor()
         updateMultiplier()

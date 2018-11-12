@@ -27,6 +27,8 @@ class Menu: SKNode {
     var gameCenterButton: Button!
     var shareButton: Button!
     var resumeButton: Button!
+    var highscoreIcon: SKSpriteNode!
+    var highscore: Label!
     
     weak var menuDelegate: MenuDelegate?
     
@@ -68,9 +70,19 @@ class Menu: SKNode {
         shareButton.position = CGPoint(x: 75, y: -50)
         addChild(shareButton)
         
-        resumeButton = Button(icon: "resume", width: 200, height: 75, corner: 10, color: COLOR_GREEN, pressed: didPressResume)
-        resumeButton.position = CGPoint(x: 0, y: -200)
+        resumeButton = Button(icon: "resume", width: 250, height: 75, corner: 10, color: COLOR_GREEN, pressed: didPressResume)
+        resumeButton.position = CGPoint(x: 0, y: -150)
         addChild(resumeButton)
+
+        highscoreIcon = SKSpriteNode(imageNamed: "crown")
+        highscoreIcon.position = CGPoint(x: 0, y: -250)
+        highscoreIcon.zPosition = 10000
+        addChild(highscoreIcon)
+        
+        highscore = Label()
+        highscore.fontSize = .xl
+        highscore.position = CGPoint(x: 0, y: -310)
+        addChild(highscore)
     }
     
     required init?(coder aDecoder: NSCoder) {

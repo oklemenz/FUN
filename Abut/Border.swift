@@ -54,7 +54,6 @@ class Border : SKNode {
         if Device.IS_IPHONE_X {
             // https://www.paintcodeapp.com/news/iphone-x-screen-demystified
             screenPath = UIBezierPath()
-            screenPath.move(to: CGPoint(x: -w2 + i, y: h2))
             screenPath.addLine(to: CGPoint(x: -w2 + i, y: h2 - r - i))
             screenPath.addArc(withCenter: CGPoint(x: -w2 + r + i, y: h2 - r - i), radius: r, startAngle: .pi, endAngle: .pi/2, clockwise: false)
             screenPath.addLine(to: CGPoint(x: -n2 - r3 - i, y: h2 - i))

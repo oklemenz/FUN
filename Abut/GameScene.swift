@@ -17,7 +17,7 @@ let NOTCH_HEIGHT: CGFloat = Device.IS_IPHONE_XR ? 33.0 : 30.0
 let NOTCH_RADIUS_1: CGFloat = Device.IS_IPHONE_XR ? 26.0 : 20.0
 let NOTCH_RADIUS_2: CGFloat = 6.0
 
-let CORNER_RADIUS: CGFloat = 40.0
+let CORNER_RADIUS: CGFloat = Device.IS_IPHONE ? 40.0 : 20.0
 let BORDER_LINE_WIDTH: CGFloat = 2.5
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 1.5 : 1)
@@ -33,6 +33,7 @@ let COLOR_PINK = SKColor(r: 255, g: 45, b: 85)
 
 protocol GameDelegate: class {
     func submitScore(score: Int)
+    func submitMultiplier(multiplier: Int)
     func openGameCenter()
     func openSharing(score: Int)
 }
@@ -151,7 +152,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             ]))
     }
     
-    func reportNewHighscore(_ value: Int) {
+    func reportScore(_ value: Int) {
         gameDelegate?.submitScore(score: value)
     }
     
@@ -173,6 +174,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
                 run(buttonSound)
             }
             menu?.soundButton?.state = Settings.instance.sound
+            menu?.highscore.text = "\(statusBar.highscoreValue)"
             self.menu?.alpha = 0
             self.addChild(self.menu!)
             self.menu?.run(SKAction.fadeIn(withDuration: 0.5))
@@ -232,7 +234,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int) {
         let score = Label()
-        let addValue = value * multiplier > 1 ? multiplier : 1
+        let addValue = value * (multiplier > 1 ? multiplier : 1)
         score.text = "\(addValue)"
         score.position = CGPoint(x: contactPoint.x, y: contactPoint.y)
         var point = statusBar.score.convert(statusBar.score.position, to: self)
@@ -253,6 +255,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
 
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int) {
+        gameDelegate?.submitMultiplier(multiplier: multiplier)
         guard multiplier > 1 else {
             if multiplier == 1 {
                self.statusBar.setMultiplier(multiplier, animated: true)

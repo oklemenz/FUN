@@ -12,7 +12,8 @@ import GameKit
 
 class GameViewController: UIViewController, GKGameCenterControllerDelegate, GameDelegate {
 
-    let LEADERBOARD_ID = "de.oklemenz.fun.Leaderboard"
+    let LEADERBOARD_SCORE_ID = "de.oklemenz.fun.Leaderboard"
+    let LEADERBOARD_MULTIPLIER_ID = "de.oklemenz.fun.Leaderboard.Multiplier"
     
     var gcEnabled = false
     var gcDefaultLeaderBoard = ""
@@ -87,8 +88,17 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     
     func submitScore(score: Int) {
         if self.gcEnabled {
-            let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_ID)
+            let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_SCORE_ID)
             currentScore.value = Int64(score)
+            GKScore.report([currentScore], withCompletionHandler: { (error) in
+            })
+        }
+    }
+    
+    func submitMultiplier(multiplier: Int) {
+        if self.gcEnabled {
+            let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_MULTIPLIER_ID)
+            currentScore.value = Int64(multiplier)
             GKScore.report([currentScore], withCompletionHandler: { (error) in
             })
         }
@@ -103,14 +113,14 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
             let viewController = GKGameCenterViewController()
             viewController.gameCenterDelegate = self
             viewController.viewState = .leaderboards
-            viewController.leaderboardIdentifier = LEADERBOARD_ID
+            viewController.leaderboardIdentifier = LEADERBOARD_SCORE_ID
             present(viewController, animated: true, completion: nil)
         }
     }
     
     func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
-        let text = "Hi, I scored \(scoreText) in the iOS game f.u.n."
+        let text = "Hi, I scored \(scoreText) in the iOS game #f.u.n."
         let image = screenshot()
         let url = URL(string:"https://itunes.apple.com/us/app/fun/id1332716706?mt=8")!
         let activityViewController = UIActivityViewController(activityItems: [text , image , url],
