@@ -14,6 +14,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
 
     let LEADERBOARD_SCORE_ID = "de.oklemenz.fun.Leaderboard"
     let LEADERBOARD_MULTIPLIER_ID = "de.oklemenz.fun.Leaderboard.Multiplier"
+    let LEADERBOARD_COLOR_ID = "de.oklemenz.fun.Leaderboard.Color"
     
     var gcEnabled = false
     var gcDefaultLeaderBoard = ""
@@ -99,6 +100,15 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         if self.gcEnabled {
             let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_MULTIPLIER_ID)
             currentScore.value = Int64(multiplier)
+            GKScore.report([currentScore], withCompletionHandler: { (error) in
+            })
+        }
+    }
+    
+    func submitColor(color: Int) {
+        if self.gcEnabled {
+            let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_COLOR_ID)
+            currentScore.value = Int64(color)
             GKScore.report([currentScore], withCompletionHandler: { (error) in
             })
         }

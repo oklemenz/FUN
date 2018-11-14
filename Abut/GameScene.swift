@@ -34,6 +34,7 @@ let COLOR_PINK = SKColor(r: 255, g: 45, b: 85)
 protocol GameDelegate: class {
     func submitScore(score: Int)
     func submitMultiplier(multiplier: Int)
+    func submitColor(color: Int)
     func openGameCenter()
     func openSharing(score: Int)
 }
@@ -317,6 +318,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     func didUnlockNewColor(color: Int) {
         showNotificationLabel("New color: \(Ball.colorNameForValue(color))!")
         run(newColorSound)
+        gameDelegate?.submitColor(color: color)
     }
     
     func didResetMultiplier() {
@@ -373,6 +375,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     }
     
     func didPressShare() {
-        gameDelegate?.openSharing(score: statusBar.scoreValue)
+        gameDelegate?.openSharing(score: statusBar.highscoreValue)
     }
 }
