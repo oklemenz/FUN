@@ -66,7 +66,7 @@ class Menu: SKNode {
         gameCenterButton.position = CGPoint(x: -75, y: -50)
         addChild(gameCenterButton)
         
-        shareButton = Button(icon: "share", width: 100, height: 75, corner: 10, color: COLOR_PURPLE, pressed: didPressShare)
+        shareButton = Button(icon: "share", width: 100, height: 75, corner: 10, color: COLOR_BLUE, pressed: didPressShare)
         shareButton.position = CGPoint(x: 75, y: -50)
         addChild(shareButton)
         
