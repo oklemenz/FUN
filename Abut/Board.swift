@@ -204,7 +204,7 @@ class Board : SKNode {
                 return false
             }
             if let ball = ball as? Ball {
-                let to = (ball.position - whiteBall.position).normalized() * 150
+                let to = (ball.position - whiteBall.position).normalized() * 125
                 hand.end(whiteBall.position + to)
                 hand.status = .Set
                 boardDelegate?.didShowIntroHandMove()
