@@ -20,7 +20,8 @@ let NOTCH_RADIUS_2: CGFloat = 6.0
 let CORNER_RADIUS: CGFloat = Device.IS_IPHONE ? 40.0 : 20.0
 let BORDER_LINE_WIDTH: CGFloat = 2.5
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
-let BALL_RADIUS: CGFloat = 16.0 * (Device.IS_IPAD ? 1.5 : 1)
+let SIZE_MULT: CGFloat = Device.IS_IPAD ? 1.5 : 1
+let BALL_RADIUS: CGFloat = 16.0 * SIZE_MULT
 
 let COLOR_RED = SKColor(r: 255, g: 59, b: 48)
 let COLOR_ORANGE = SKColor(r: 255, g: 149, b: 0)
@@ -204,6 +205,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             if let touch = touches.first {
                 let location = touch.location(in: board)
                 board.pointTouched(position: location, began: true)
+                board.showIntroHandWait()
             }
         }
     }
@@ -220,6 +222,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         if board.status == .Aiming {
             if let touch = touches.first {
                 board.pointTouched(position: touch.location(in: board))
+                board.showIntroHandPress()
             }
         }
     }

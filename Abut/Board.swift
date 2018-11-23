@@ -52,7 +52,9 @@ class Board : SKNode {
     let whiteBall = Ball.White
     let startSpot = StartSpot()
     let endSpot = EndSpot()
+    let hand = Hand()
 
+    var showIntro: Bool = true
     var status: GameStatus = .Resting
     var collisionContact = 0
     var highestColorValue = 1
@@ -173,6 +175,7 @@ class Board : SKNode {
             pointTouched(position: line.startPoint! - line.startPoint!.normalized() * 100)
             roundMultiplier = 0
             status = .Aiming
+            showIntroHandStart()
         }
     }
     
@@ -184,6 +187,47 @@ class Board : SKNode {
             startSpot.isHidden = true
             endSpot.isHidden = true
             status = .Shooting
+            showIntroHandEnd()
+        }
+    }
+    
+    func showIntroHandStart() {
+        if showIntro && hand.status == .Start {
+            addChild(hand)
+            hand.start(endSpot.position)
+            let ball = children.first { (child) -> Bool in
+                if let ball = child as? Ball {
+                    return ball.value > 0
+                }
+                return false
+            }
+            if let ball = ball as? Ball {
+                let to = (ball.position - whiteBall.position).normalized() * 100
+                hand.end(whiteBall.position + to)
+                hand.status = .Set
+            } else {
+                hand.status = .End
+            }
+        }
+    }
+    
+    func showIntroHandWait() {
+        if showIntro && hand.status == .Move {
+            hand.status = .Wait
+        }
+    }
+    
+    func showIntroHandPress() {
+        if showIntro && hand.status == .Wait {
+            hand.start(whiteBall.position)
+            hand.status = .Press
+        }
+    }
+    
+    func showIntroHandEnd() {
+        if showIntro && hand.status != .End {
+            hand.status = .End
+            showIntro = false
         }
     }
     
@@ -564,6 +608,7 @@ class Board : SKNode {
             let block = Block.load(data: blockData)
             addChild(block)
         }
+        showIntro = false
         dice.value = data["dice"] as! Int
         dice.place()
         multiplier = data["multiplier"] as! Int

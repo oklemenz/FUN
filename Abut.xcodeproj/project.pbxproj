@@ -22,6 +22,7 @@
 		542A19F720FE2DA8006F96C1 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F620FE2DA8006F96C1 /* UIColor+Extension.swift */; };
 		542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542A19F820FE2EAC006F96C1 /* StartSpot.swift */; };
 		5431F53C215A623C00436FCA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5431F53B215A623C00436FCA /* GameKit.framework */; };
+		543557B921A571C100DA639B /* Hand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543557B821A571C100DA639B /* Hand.swift */; };
 		543BF180217637F800DDA1C4 /* Splash.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543BF17F217637F800DDA1C4 /* Splash.swift */; };
 		543BF182217638C500DDA1C4 /* Logo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543BF181217638C500DDA1C4 /* Logo.swift */; };
 		543FEE8D217495E500A773E1 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543FEE8C217495E500A773E1 /* Settings.swift */; };
@@ -68,6 +69,7 @@
 		542A19F620FE2DA8006F96C1 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		542A19F820FE2EAC006F96C1 /* StartSpot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartSpot.swift; sourceTree = "<group>"; };
 		5431F53B215A623C00436FCA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		543557B821A571C100DA639B /* Hand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hand.swift; sourceTree = "<group>"; };
 		543BF17F217637F800DDA1C4 /* Splash.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Splash.swift; sourceTree = "<group>"; };
 		543BF181217638C500DDA1C4 /* Logo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logo.swift; sourceTree = "<group>"; };
 		543FEE8C217495E500A773E1 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -144,6 +146,7 @@
 				54A0E17621009010002D629F /* Dice.swift */,
 				54A0E17421008E83002D629F /* DiceEye.swift */,
 				545BA8B0211B3681000362DA /* Label.swift */,
+				543557B821A571C100DA639B /* Hand.swift */,
 				543BF181217638C500DDA1C4 /* Logo.swift */,
 				543FEE8C217495E500A773E1 /* Settings.swift */,
 				5493649D215BC0A500887C71 /* Button.swift */,
@@ -264,6 +267,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				543557B921A571C100DA639B /* Hand.swift in Sources */,
 				544F416F210B479300E10B15 /* CollisionEffect.swift in Sources */,
 				540222D520FDEFA7006F25E9 /* Ball.swift in Sources */,
 				542A19F520FE2A8B006F96C1 /* SKTexture+Extension.swift in Sources */,
