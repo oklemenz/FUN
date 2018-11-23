@@ -12,7 +12,6 @@
 		540222C320FDEA02006F25E9 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540222C220FDEA02006F25E9 /* GameScene.swift */; };
 		540222C520FDEA02006F25E9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540222C420FDEA02006F25E9 /* GameViewController.swift */; };
 		540222C820FDEA02006F25E9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540222C620FDEA02006F25E9 /* Main.storyboard */; };
-		540222CA20FDEA03006F25E9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 540222C920FDEA03006F25E9 /* Assets.xcassets */; };
 		540222CD20FDEA03006F25E9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */; };
 		540222D520FDEFA7006F25E9 /* Ball.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540222D420FDEFA7006F25E9 /* Ball.swift */; };
 		540F361621776C7600760BA7 /* UIImage+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540F361521776C7600760BA7 /* UIImage+Extension.swift */; };
@@ -49,6 +48,7 @@
 		54A8E014210F31AD0095DF3B /* Border.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54A8E013210F31AD0095DF3B /* Border.swift */; };
 		54D64738215935C90027E46D /* BlockedEffect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54D64737215935C90027E46D /* BlockedEffect.swift */; };
 		54F0537B20FE1D4C00FF4AA1 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */; };
+		54F1F17721A857D0001FFCEB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F1F17621A857D0001FFCEB /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,7 +58,6 @@
 		540222C220FDEA02006F25E9 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		540222C420FDEA02006F25E9 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		540222C720FDEA02006F25E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		540222C920FDEA03006F25E9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		540222CC20FDEA03006F25E9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		540222CE20FDEA03006F25E9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		540222D420FDEFA7006F25E9 /* Ball.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ball.swift; sourceTree = "<group>"; };
@@ -96,6 +95,7 @@
 		54A8E013210F31AD0095DF3B /* Border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
 		54D64737215935C90027E46D /* BlockedEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedEffect.swift; sourceTree = "<group>"; };
 		54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
+		54F1F17621A857D0001FFCEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,8 +170,8 @@
 				544A93EC215D213500D60E51 /* sounds */,
 				540222C620FDEA02006F25E9 /* Main.storyboard */,
 				540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */,
-				540222C920FDEA03006F25E9 /* Assets.xcassets */,
 				540222CE20FDEA03006F25E9 /* Info.plist */,
+				54F1F17621A857D0001FFCEB /* Assets.xcassets */,
 			);
 			path = Abut;
 			sourceTree = "<group>";
@@ -252,10 +252,10 @@
 				5449CC28211AF96A00531181 /* BlockedEffect.sks in Resources */,
 				545BA8AD211B253D000362DA /* ExplosionEffect.sks in Resources */,
 				540222BF20FDEA02006F25E9 /* GameScene.sks in Resources */,
-				540222CA20FDEA03006F25E9 /* Assets.xcassets in Resources */,
 				544A93ED215D213500D60E51 /* sounds in Resources */,
 				544F4177210B4A6200E10B15 /* CollisionEffect.sks in Resources */,
 				540222CD20FDEA03006F25E9 /* LaunchScreen.storyboard in Resources */,
+				54F1F17721A857D0001FFCEB /* Assets.xcassets in Resources */,
 				547653DE211D6B15000405E3 /* FredokaOne-Regular.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

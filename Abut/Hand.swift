@@ -23,8 +23,7 @@ class Hand: SKSpriteNode {
     var start: CGPoint?
     var end: CGPoint?
     
-    let offset = CGPoint(x: 110 * SIZE_MULT, y: -125 * SIZE_MULT)
-    let offsetPress = CGPoint(x: -5 * SIZE_MULT, y: 5 * SIZE_MULT)
+    let offset = CGPoint(x: 107 * SIZE_MULT, y: -120 * SIZE_MULT)
     
     var status: HandStatus = .Start {
         didSet {
@@ -33,8 +32,10 @@ class Hand: SKSpriteNode {
                     break
                 case .Set:
                     alpha = 0.0
-                    show {
-                        self.status = .Move
+                    delay {
+                        self.show {
+                            self.status = .Move
+                        }
                     }
                 case .Move:
                     move()
@@ -67,10 +68,20 @@ class Hand: SKSpriteNode {
         super.init(coder: aDecoder)
     }
     
-    func show(completed: (() -> ())? = nil) {
+    func delay(completed: (() -> ())? = nil) {
         run(SKAction.sequence([
             SKAction.wait(forDuration: 0.25),
-            SKAction.fadeIn(withDuration: 0.5),
+            SKAction.run {
+                if let completed = completed {
+                    completed()
+                }
+            }
+        ]))
+    }
+    
+    func show(completed: (() -> ())? = nil) {
+        run(SKAction.sequence([
+            SKAction.fadeIn(withDuration: 0.25),
             SKAction.run {
                 if let completed = completed {
                     completed()
@@ -81,8 +92,7 @@ class Hand: SKSpriteNode {
     
     func hide(completed: (() -> ())? = nil) {
         run(SKAction.sequence([
-            SKAction.wait(forDuration: 0.25),
-            SKAction.fadeOut(withDuration: 0.5),
+            SKAction.fadeOut(withDuration: 0.25),
             SKAction.run {
                 if let completed = completed {
                     completed()
@@ -120,19 +130,18 @@ class Hand: SKSpriteNode {
     
     func press() {
         if let start = self.start {
-            self.start(start + offsetPress)
+            self.start(start)
         }
         removeAllActions()
         run(SKAction.repeatForever(SKAction.sequence([
-            SKAction.wait(forDuration: 0.5),
-            SKAction.run({
-                self.texture = SKTexture(imageNamed: "hand")
-            }),
-            SKAction.wait(forDuration: 0.5),
             SKAction.run({
                 self.texture = SKTexture(imageNamed: "hand_pressed")
             }),
-            SKAction.wait(forDuration: 1.5)
+            SKAction.wait(forDuration: 1.5),
+            SKAction.run({
+                self.texture = SKTexture(imageNamed: "hand")
+            }),
+            SKAction.wait(forDuration: 0.5)
         ])))
     }
 }

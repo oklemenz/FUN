@@ -16,6 +16,8 @@ protocol BoardDelegate: class {
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int)
     func didResetMultiplier()
     func didUnlockNewColor(color: Int)
+    func didShowIntroHandMove()
+    func didShowIntroHandPress()
 }
 
 let blockSound = SKAction.playSoundFileNamed("sounds/block.caf", waitForCompletion: false)
@@ -202,9 +204,10 @@ class Board : SKNode {
                 return false
             }
             if let ball = ball as? Ball {
-                let to = (ball.position - whiteBall.position).normalized() * 100
+                let to = (ball.position - whiteBall.position).normalized() * 150
                 hand.end(whiteBall.position + to)
                 hand.status = .Set
+                boardDelegate?.didShowIntroHandMove()
             } else {
                 hand.status = .End
             }
@@ -221,6 +224,7 @@ class Board : SKNode {
         if showIntro && hand.status == .Wait {
             hand.start(whiteBall.position)
             hand.status = .Press
+            boardDelegate?.didShowIntroHandPress()
         }
     }
     

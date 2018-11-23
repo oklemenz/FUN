@@ -324,6 +324,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         gameDelegate?.submitColor(color: color)
     }
     
+    func didShowIntroHandMove() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.showNotificationLabel("Aim...")
+        }
+    }
+    
+    func didShowIntroHandPress() {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.showNotificationLabel("Shoot...")
+        }
+    }
+    
     func didResetMultiplier() {
         self.statusBar.setMultiplier(0, animated: true)
     }
