@@ -66,6 +66,9 @@ html {
 
 .a-title {
     text-decoration-color: transparent;
+    -webkit-text-decoration-color: transparent;
+    -moz-text-decoration-color: transparent;
+    -o-text-decoration-color: transparent;
 }
 
 .title {
