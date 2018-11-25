@@ -48,9 +48,9 @@ html {
 .border {
     position: absolute;
     border-radius: 40px;
-    border: 5px solid #5ac8fa;
-    width: calc(100% - 10px);
-    height: calc(100% - 10px);
+    border: 3px solid #5ac8fa;
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
 }
 
 .container {
