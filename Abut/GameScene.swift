@@ -180,6 +180,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             self.menu?.alpha = 0
             self.addChild(self.menu!)
             self.menu?.run(SKAction.fadeIn(withDuration: 0.5))
+            let peek = SystemSoundID(1519)
+            AudioServicesPlaySystemSound(peek)
         }
     }
     

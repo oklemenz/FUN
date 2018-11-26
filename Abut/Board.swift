@@ -174,7 +174,7 @@ class Board : SKNode {
             line.isHidden = false
             startSpot.isHidden = false
             endSpot.isHidden = false
-            pointTouched(position: line.startPoint! - line.startPoint!.normalized() * 100)
+            pointTouched(position: line.startPoint! - line.startPoint!.normalized() * 100 * SIZE_MULT)
             roundMultiplier = 0
             status = .Aiming
             showIntroHandStart()
@@ -204,7 +204,7 @@ class Board : SKNode {
                 return false
             }
             if let ball = ball as? Ball {
-                let to = (ball.position - whiteBall.position).normalized() * 125
+                let to = (ball.position - whiteBall.position).normalized() * 125 * SIZE_MULT
                 hand.end(whiteBall.position + to)
                 hand.status = .Set
                 boardDelegate?.didShowIntroHandMove()

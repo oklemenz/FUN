@@ -167,10 +167,10 @@
 				545BA8AC211B253D000362DA /* ExplosionEffect.sks */,
 				5449CC27211AF96A00531181 /* BlockedEffect.sks */,
 				547653DD211D6B15000405E3 /* FredokaOne-Regular.ttf */,
-				544A93EC215D213500D60E51 /* sounds */,
 				540222C620FDEA02006F25E9 /* Main.storyboard */,
 				540222CB20FDEA03006F25E9 /* LaunchScreen.storyboard */,
 				540222CE20FDEA03006F25E9 /* Info.plist */,
+				544A93EC215D213500D60E51 /* sounds */,
 				54F1F17621A857D0001FFCEB /* Assets.xcassets */,
 			);
 			path = Abut;

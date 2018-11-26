@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import AudioToolbox
 
 typealias ButtonPressedType = () -> ()
 
@@ -44,6 +45,8 @@ class Button : SKShapeNode {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         fillColor = self.color !== nil ? self.color!.withAlphaComponent(0.25) : .darkGray
         iconImage.position = CGPoint(x: 0, y: -2)
+        let peek = SystemSoundID(1519)
+        AudioServicesPlaySystemSound(peek)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -68,5 +71,7 @@ class Button : SKShapeNode {
         }
         fillColor = self.color ?? .clear
         iconImage.position = .zero
+        let peek = SystemSoundID(1520)
+        AudioServicesPlaySystemSound(peek)
     }
 }

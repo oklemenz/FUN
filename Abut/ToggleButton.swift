@@ -8,6 +8,7 @@
 
 import Foundation
 import SpriteKit
+import AudioToolbox
 
 class ToggleButton : SKShapeNode {
     
@@ -61,6 +62,8 @@ class ToggleButton : SKShapeNode {
         fillColor = self.color !== nil ? self.color!.withAlphaComponent(0.25) : .darkGray
         iconOnImage.position = CGPoint(x: 0, y: -2)
         iconOffImage.position = CGPoint(x: 0, y: -2)
+        let peek = SystemSoundID(1519)
+        AudioServicesPlaySystemSound(peek)
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -87,5 +90,7 @@ class ToggleButton : SKShapeNode {
         fillColor = self.color ?? SKColor.clear
         iconOnImage.position = .zero
         iconOffImage.position = .zero
+        let peek = SystemSoundID(1520)
+        AudioServicesPlaySystemSound(peek)
     }
 }

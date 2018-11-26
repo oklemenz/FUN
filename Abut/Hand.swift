@@ -134,6 +134,7 @@ class Hand: SKSpriteNode {
         }
         removeAllActions()
         run(SKAction.repeatForever(SKAction.sequence([
+            SKAction.wait(forDuration: 0.5),
             SKAction.run({
                 self.texture = SKTexture(imageNamed: "hand_pressed")
             }),
