@@ -86,7 +86,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
             }
         }
     }
-    
+        
     func submitScore(score: Int) {
         if self.gcEnabled {
             let currentScore = GKScore(leaderboardIdentifier: LEADERBOARD_SCORE_ID)

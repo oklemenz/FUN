@@ -238,6 +238,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         board.update()
     }
     
+    func gameDidRest() {
+        saveContext()
+    }
+    
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int) {
         let score = Label()
         let addValue = value * (multiplier > 1 ? multiplier : 1)

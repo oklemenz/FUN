@@ -11,6 +11,9 @@ import SpriteKit
 
 class Hand: SKSpriteNode {
     
+    static let handTexture: SKTexture = SKTexture(imageNamed: "hand")
+    static let handPressedTexture: SKTexture = SKTexture(imageNamed: "hand_pressed")
+    
     enum HandStatus {
         case Start
         case Set
@@ -56,8 +59,7 @@ class Hand: SKSpriteNode {
     }
     
     init() {
-        let texture = SKTexture(imageNamed: "hand")
-        super.init(texture: texture, color: UIColor.white, size: texture.size())
+        super.init(texture: Hand.handTexture, color: UIColor.white, size: Hand.handTexture.size())
         zPosition = 5000
         alpha = 0.0
         xScale = 0.35 * SIZE_MULT
@@ -136,11 +138,11 @@ class Hand: SKSpriteNode {
         run(SKAction.repeatForever(SKAction.sequence([
             SKAction.wait(forDuration: 0.5),
             SKAction.run({
-                self.texture = SKTexture(imageNamed: "hand_pressed")
+                self.texture = Hand.handPressedTexture
             }),
             SKAction.wait(forDuration: 1.5),
             SKAction.run({
-                self.texture = SKTexture(imageNamed: "hand")
+                self.texture = Hand.handTexture
             }),
             SKAction.wait(forDuration: 0.5)
         ])))

@@ -71,7 +71,5 @@ class Button : SKShapeNode {
         }
         fillColor = self.color ?? .clear
         iconImage.position = .zero
-        let peek = SystemSoundID(1520)
-        AudioServicesPlaySystemSound(peek)
     }
 }

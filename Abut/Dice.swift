@@ -11,6 +11,8 @@ import SpriteKit
 
 class Dice : SKSpriteNode {
     
+    static let diceTexture: SKTexture = SKTexture(imageNamed: "dice")
+    
     let distance:CGFloat = 60
     
     var eyes: [DiceEye] = []
@@ -18,8 +20,7 @@ class Dice : SKSpriteNode {
     var previousValue = 0
     
     init() {
-        let texture = SKTexture(imageNamed: "dice")
-        super.init(texture: texture, color: UIColor.white, size: texture.size())
+        super.init(texture: Dice.diceTexture, color: UIColor.white, size: Dice.diceTexture.size())
         
         zPosition = 0.95
         

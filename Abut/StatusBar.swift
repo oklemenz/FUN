@@ -21,6 +21,9 @@ let TOP_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 0 : -7
 
 class StatusBar : SKNode {
     
+    static let pauseTexture = SKTexture(imageNamed: "pause")
+    static let pausePressedTexture = SKTexture(imageNamed: "pause_pressed")
+    
     weak var statusBarDelegate: StatusBarDelegate?
     
     var score: Label!
@@ -94,7 +97,7 @@ class StatusBar : SKNode {
         multiplierGroup.addChild(multiplier)
         addChild(multiplierGroup)
         
-        pauseIcon = SKSpriteNode(imageNamed: "pause")
+        pauseIcon = SKSpriteNode(texture: StatusBar.pauseTexture)
         pauseIcon.position = CGPoint(x: -w2 + 25, y: BASE_LINE + BASE_LINE_OFFSET + 18)
         pauseIcon.xScale = 1.0
         pauseIcon.yScale = 1.0
@@ -111,7 +114,7 @@ class StatusBar : SKNode {
             let location = touch.location(in: self)
             let node : SKNode = self.atPoint(location)
             if node == pauseIcon {
-                pauseIcon.texture = SKTexture(imageNamed: "pause_pressed")
+                pauseIcon.texture = StatusBar.pausePressedTexture
             }
         }
     }
@@ -124,7 +127,7 @@ class StatusBar : SKNode {
                 statusBarDelegate?.didPressPause()
             }
         }
-        pauseIcon.texture = SKTexture(imageNamed: "pause")
+        pauseIcon.texture = StatusBar.pauseTexture
     }
     
     func addScore(_ addValue: Int, animated: Bool = false) {

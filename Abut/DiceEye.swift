@@ -11,9 +11,10 @@ import SpriteKit
 
 class DiceEye : SKSpriteNode {
     
+    static let diceEyeTexture: SKTexture = SKTexture(imageNamed: "dice_eye")
+    
     init() {
-        let texture = SKTexture(imageNamed: "dice_eye")
-        super.init(texture: texture, color: UIColor.white, size: texture.size())
+        super.init(texture: DiceEye.diceEyeTexture, color: UIColor.white, size: DiceEye.diceEyeTexture.size())
     }
     
     required init?(coder aDecoder: NSCoder) {

@@ -9,22 +9,27 @@
 import Foundation
 import SpriteKit
 
-class Border : SKNode {    
+class Border : SKNode {
+
+    static let boardTexture = SKTexture(size: UIScreen.main.bounds.width, color1: UIColor(rgba: "#666666"),
+                                        color2: UIColor(rgba: "#000000"))
     
     var lineWidth: CGFloat = BORDER_LINE_WIDTH {
         didSet {
-            render()
+            rerender()
         }
     }
     
     var color: SKColor? {
         didSet {
-            render()
+            rerender()
         }
     }
     
     var screen: SKShapeNode!
     var board: SKShapeNode!
+    
+    var screenTextureMap: [SKColor: SKTexture] = [:]
     
     override init() {
         super.init()
@@ -79,9 +84,6 @@ class Border : SKNode {
         screen.path = screenPath.cgPath
         screen.zPosition = 0.9
         screen.fillColor = .white
-        screen.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: color ?? .white, color2: UIColor(rgba: "#000000"))
-        screen.strokeColor = color ?? .clear
-        screen.lineWidth = l
         screen.glowWidth = 1
         screen.position = CGPoint(x: 0, y: 0)
         
@@ -91,13 +93,27 @@ class Border : SKNode {
         }
         board.zPosition = 0.9
         board.fillColor = .white
-        board.fillTexture = SKTexture(size: UIScreen.main.bounds.width, color1: UIColor(rgba: "#666666"),
-                                      color2: UIColor(rgba: "#000000"))
-        board.strokeColor = color ?? .clear
-        board.lineWidth = l
+        board.fillTexture = Border.boardTexture
         board.glowWidth = 1
         board.position = CGPoint(x: 0, y: 0)
 
         position = CGPoint(x: 0, y: 0)
+        
+        rerender()
+    }
+    
+    func rerender() {
+        let l:CGFloat = lineWidth
+        board.lineWidth = l
+        board.strokeColor = color ?? .clear
+        
+        var screenTexture = screenTextureMap[color ?? .white]
+        if screenTexture == nil {
+            screenTexture = SKTexture(size: UIScreen.main.bounds.width, color1: color ?? .white, color2: UIColor(rgba: "#000000"))
+            screenTextureMap[color ?? .white] = screenTexture
+        }
+        screen.fillTexture = screenTexture
+        screen.strokeColor = color ?? .clear
+        screen.lineWidth = l
     }
 }

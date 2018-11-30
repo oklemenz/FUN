@@ -11,6 +11,7 @@ import SpriteKit
 import AudioToolbox
 
 protocol BoardDelegate: class {
+    func gameDidRest()
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int)
     func didUpdateColor(color: UIColor)
     func didUpdateMultiplier(multiplier: Int, roundMultiplier: Int)
@@ -178,6 +179,7 @@ class Board : SKNode {
             roundMultiplier = 0
             status = .Aiming
             showIntroHandStart()
+            boardDelegate?.gameDidRest()
         }
     }
     
