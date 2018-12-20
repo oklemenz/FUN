@@ -29,7 +29,11 @@ class Border : SKNode {
     var screen: SKShapeNode!
     var board: SKShapeNode!
     
-    var screenTextureMap: [SKColor: SKTexture] = [:]
+    static var screenTextureMap: [SKColor: SKTexture] = [:]
+    
+    static func clearScreenTextures() {
+        screenTextureMap.removeAll()
+    }
     
     override init() {
         super.init()
@@ -107,10 +111,10 @@ class Border : SKNode {
         board.lineWidth = l
         board.strokeColor = color ?? .clear
         
-        var screenTexture = screenTextureMap[color ?? .white]
+        var screenTexture = Border.screenTextureMap[color ?? .white]
         if screenTexture == nil {
             screenTexture = SKTexture(size: UIScreen.main.bounds.width, color1: color ?? .white, color2: UIColor(rgba: "#000000"))
-            screenTextureMap[color ?? .white] = screenTexture
+            Border.screenTextureMap[color ?? .white] = screenTexture
         }
         screen.fillTexture = screenTexture
         screen.strokeColor = color ?? .clear

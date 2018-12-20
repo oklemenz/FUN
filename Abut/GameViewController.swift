@@ -41,8 +41,6 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
             
             loadContext()
         }
-        
-        authenticateLocalPlayer()
     }
 
     override var shouldAutorotate: Bool {
@@ -131,7 +129,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
         let text = "Hi, I scored \(scoreText) in the iOS game #f.u.n."
-        let image = screenshot()
+        let image = splatterScreenshot()
         let url = URL(string:"https://itunes.apple.com/us/app/fun/id1332716706?mt=8")!
         let activityViewController = UIActivityViewController(activityItems: [text , image , url],
                                                               applicationActivities: nil)
@@ -139,9 +137,9 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         self.present(activityViewController, animated: true, completion: nil)
     }
     
-    func screenshot() -> UIImage {
-        UIGraphicsBeginImageContextWithOptions(self.view.bounds.size, false, UIScreen.main.scale)
-        self.view.drawHierarchy(in: self.view.bounds, afterScreenUpdates: true)
+    func screenshot(_ view: UIView) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.main.scale)
+        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         if (image != nil) {
@@ -151,6 +149,47 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     }
     
     func splatterScreenshot() -> UIImage {
-        return UIImage()
+        let view = SKView(frame: self.view.bounds)
+        let scene = SKScene()
+        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        scene.scaleMode = .resizeFill
+        
+        gameScene.board.children.forEach { (node) in
+            let i = Int.random(in: 1...25)
+            let image = UIImage(named: "splash" + String(format: "%02d", i))
+            if let block = node as? Block {
+                let texture = SKTexture(image: image!.colored(color: block.color)) // Cache?
+                let node = SKSpriteNode(texture: texture)
+                node.position = block.position
+                node.xScale = 0.4
+                node.yScale = 0.4
+                node.zRotation = CGFloat(Float.random(in: -Float.pi...Float.pi))
+                scene.addChild(node)
+            }
+        }
+        gameScene.board.children.forEach { (node) in
+            let i = Int.random(in: 1...25)
+            let image = UIImage(named: "splash" + String(format: "%02d", i))
+            if let ball = node as? Ball {
+                let texture = SKTexture(image: image!.colored(color: ball.color)) // Cache?
+                let node = SKSpriteNode(texture: texture)
+                node.position = ball.position
+                node.xScale = 0.4
+                node.yScale = 0.4
+                node.zRotation = CGFloat(Float.random(in: -Float.pi...Float.pi))
+                scene.addChild(node)
+            }
+        }
+        
+        let logo = Logo()
+        logo.position = CGPoint(x: 0, y: 0)
+        scene.addChild(logo)
+        
+        view.presentScene(scene)
+        return screenshot(view)
+    }
+    
+    override func didReceiveMemoryWarning() {
+        Border.clearScreenTextures()
     }
 }

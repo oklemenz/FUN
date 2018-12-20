@@ -33,6 +33,7 @@ let COLOR_PURPLE = SKColor(r: 88, g: 86, b: 214)
 let COLOR_PINK = SKColor(r: 255, g: 45, b: 85)
 
 protocol GameDelegate: class {
+    func authenticateLocalPlayer()
     func submitScore(score: Int)
     func submitMultiplier(multiplier: Int)
     func submitColor(color: Int)
@@ -86,6 +87,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             SKAction.fadeOut(withDuration: 0.5),
             SKAction.removeFromParent(),
             SKAction.run({
+                self.gameDelegate?.authenticateLocalPlayer()
                 self.run(SKAction.sequence([
                     SKAction.wait(forDuration: 1.0),
                     SKAction.run {
@@ -93,8 +95,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
                             self.board.start()
                         }
                     }
-                    ]))
-                
+                ]))
                 self.run(SKAction.sequence([
                     SKAction.wait(forDuration: 5.0 * 60.0),
                     SKAction.run {
@@ -103,7 +104,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
                             SKStoreReviewController.requestReview()
                         }
                     }
-                    ]))
+                ]))
             })
         ]))
     }
