@@ -12,6 +12,8 @@ import GameKit
 
 class GameViewController: UIViewController, GKGameCenterControllerDelegate, GameDelegate {
 
+    static var splashTextureMap: [String: SKTexture] = [:]
+    
     let LEADERBOARD_SCORE_ID = "de.oklemenz.fun.Leaderboard"
     let LEADERBOARD_MULTIPLIER_ID = "de.oklemenz.fun.Leaderboard.Multiplier"
     let LEADERBOARD_COLOR_ID = "de.oklemenz.fun.Leaderboard.Color"
@@ -128,13 +130,15 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     
     func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
-        let text = "Hi, I scored \(scoreText) in the iOS game #f.u.n."
-        let image = splatterScreenshot()
+        let text = "Hi, I just scored \(scoreText) in the iOS game #f.u.n."
         let url = URL(string:"https://itunes.apple.com/us/app/fun/id1332716706?mt=8")!
-        let activityViewController = UIActivityViewController(activityItems: [text , image , url],
-                                                              applicationActivities: nil)
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        self.present(activityViewController, animated: true, completion: nil)
+        let view = splatterView()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            let image = self.screenshot(view)
+            let activityViewController = UIActivityViewController(activityItems: [text, url, image], applicationActivities: nil)
+            activityViewController.popoverPresentationController?.sourceView = self.view
+            self.present(activityViewController, animated: true, completion: nil)
+        }
     }
     
     func screenshot(_ view: UIView) -> UIImage {
@@ -148,48 +152,70 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         return UIImage()
     }
     
-    func splatterScreenshot() -> UIImage {
+    func splatterView() -> UIView {
         let view = SKView(frame: self.view.bounds)
         let scene = SKScene()
         scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
         scene.scaleMode = .resizeFill
         
         gameScene.board.children.forEach { (node) in
-            let i = Int.random(in: 1...25)
-            let image = UIImage(named: "splash" + String(format: "%02d", i))
             if let block = node as? Block {
-                let texture = SKTexture(image: image!.colored(color: block.color)) // Cache?
-                let node = SKSpriteNode(texture: texture)
+                let name = "splash" + String(format: "%02d", Int.random(in: 1...25))
+                let node = SKSpriteNode(texture: cachedTexture(name: name, value: block.value, color: block.color))
                 node.position = block.position
-                node.xScale = 0.4
-                node.yScale = 0.4
+                node.xScale = 0.4 + CGFloat(Float.random(in: -0.2...0.2))
+                node.yScale = 0.4 + CGFloat(Float.random(in: -0.2...0.2))
                 node.zRotation = CGFloat(Float.random(in: -Float.pi...Float.pi))
                 scene.addChild(node)
             }
         }
+        var balls: [Ball] = []
         gameScene.board.children.forEach { (node) in
-            let i = Int.random(in: 1...25)
-            let image = UIImage(named: "splash" + String(format: "%02d", i))
             if let ball = node as? Ball {
-                let texture = SKTexture(image: image!.colored(color: ball.color)) // Cache?
-                let node = SKSpriteNode(texture: texture)
-                node.position = ball.position
-                node.xScale = 0.4
-                node.yScale = 0.4
-                node.zRotation = CGFloat(Float.random(in: -Float.pi...Float.pi))
-                scene.addChild(node)
+                balls.append(ball)
             }
+        }
+        balls.sort { (ball1, ball2) -> Bool in
+            if ball1.value == 0 || ball2.value == 0 {
+                return true
+            }
+            return ball1.value < ball2.value
+        }
+        for ball in balls {
+            let name = "splash" + String(format: "%02d", Int.random(in: 1...25))
+            let node = SKSpriteNode(texture: cachedTexture(name: name, value: ball.value, color: ball.color))
+            node.position = ball.position
+            node.xScale = 0.4 + CGFloat(Float.random(in: -0.2...0.2))
+            node.yScale = 0.4 + CGFloat(Float.random(in: -0.2...0.2))
+            node.zRotation = CGFloat(Float.random(in: -Float.pi...Float.pi))
+            scene.addChild(node)
         }
         
         let logo = Logo()
-        logo.position = CGPoint(x: 0, y: 0)
+        logo.position = CGPoint(x: 0, y: -20)
         scene.addChild(logo)
         
         view.presentScene(scene)
-        return screenshot(view)
+        return view
+    }
+    
+    func cachedTexture(name: String, value: Int, color: SKColor) -> SKTexture {
+        let cache = "\(name)~\(value)"
+        var texture = GameViewController.splashTextureMap[cache]
+        if texture == nil {
+            let image = UIImage(named: name)
+            texture = SKTexture(image: image!.colored(color: color))
+            GameViewController.splashTextureMap[cache] = texture
+        }
+        return texture!
+    }
+    
+    func clearSplashTextures() {
+        GameViewController.splashTextureMap.removeAll()
     }
     
     override func didReceiveMemoryWarning() {
+        clearSplashTextures()
         Border.clearScreenTextures()
     }
 }

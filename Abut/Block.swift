@@ -12,6 +12,7 @@ import SpriteKit
 class Block : SKShapeNode {
     
     let size: CGFloat = 2 * BALL_RADIUS
+    let value = -1
     
     var color = SKColor.black
     
