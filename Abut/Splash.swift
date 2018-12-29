@@ -35,7 +35,7 @@ class Splash: SKNode {
         addChild(border)
         
         logo = Logo()
-        logo.position = CGPoint(x: 0, y: -20)
+        logo.position = CGPoint(x: 0, y: -40)
         logo.alpha = 0.0
         logo.xScale = 0.9
         logo.yScale = 0.9

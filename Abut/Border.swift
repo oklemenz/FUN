@@ -26,6 +26,7 @@ class Border : SKNode {
         }
     }
     
+    var notch: Bool = Device.IS_IPHONE_X
     var screen: SKShapeNode!
     var board: SKShapeNode!
     
@@ -37,6 +38,12 @@ class Border : SKNode {
     
     override init() {
         super.init()
+        render()
+    }
+    
+    init(notch: Bool) {
+        super.init()
+        self.notch = notch
         render()
     }
     
@@ -60,7 +67,7 @@ class Border : SKNode {
         let i:CGFloat = l2 // Indent
 
         var screenPath: UIBezierPath!
-        if Device.IS_IPHONE_X {
+        if notch {
             // https://www.paintcodeapp.com/news/iphone-x-screen-demystified
             screenPath = UIBezierPath()
             screenPath.addLine(to: CGPoint(x: -w2 + i, y: h2 - r - i))
@@ -77,7 +84,7 @@ class Border : SKNode {
             screenPath.addArc(withCenter: CGPoint(x: w2 - r - i, y: -h2 + r + i), radius: r, startAngle: 0, endAngle: -.pi/2, clockwise: false)
             screenPath.addLine(to: CGPoint(x: -w2 + r + i, y: -h2 + i))
             screenPath.addArc(withCenter: CGPoint(x: -w2 + r + i, y: -h2 + r + i), radius: r, startAngle: -.pi/2, endAngle: -.pi, clockwise: false)
-            screenPath.addLine(to: CGPoint(x: -w2 + i, y: h2))
+            screenPath.addLine(to: CGPoint(x: -w2 + i, y: h2 - r - i))
         } else {
             screenPath = UIBezierPath(roundedRect: CGRect(x: -w2 + i, y: -h2 + i, width: w - 2 * i, height: h - 2 * i), cornerRadius: CORNER_RADIUS)
         }

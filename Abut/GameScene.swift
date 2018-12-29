@@ -43,6 +43,8 @@ protocol GameDelegate: class {
 
 class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDelegate, MenuDelegate, SplashDelegate {
     
+    static var splashTextureMap: [String: SKTexture] = [:]
+
     let rootNode = SKNode()
     let statusBar = StatusBar()
     let board = Board()
@@ -71,18 +73,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         physicsWorld.gravity = CGVector(dx: 0, dy: 0)
         physicsWorld.speed = 0.9
         
+        splash = Splash()
+        splash.splashDelegate = self
+        addChild(splash)
+    }
+    
+    func setupBoard() {
         rootNode.addChild(statusBar)
         rootNode.addChild(board)
         rootNode.addChild(border)
         border.color = Ball.colorForValue(1)
         addChild(rootNode)
         
-        splash = Splash()
-        splash.splashDelegate = self
-        addChild(splash)
+        loadContext()
     }
     
     func splashDidFinish() {
+        setupBoard()
         splash.run(SKAction.sequence([
             SKAction.fadeOut(withDuration: 0.5),
             SKAction.removeFromParent(),
@@ -207,7 +214,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         if board.status == .Aiming {
             if let touch = touches.first {
                 let location = touch.location(in: board)
-                board.pointTouched(position: location, began: true)
+                board.pointTouched(position: location, began: true, end: false)
                 board.showIntroHandWait()
             }
         }
@@ -216,7 +223,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if board.status == .Aiming {
             if let touch = touches.first {
-                board.pointTouched(position: touch.location(in: board))
+                board.pointTouched(position: touch.location(in: board), began: false, end: false)
             }
         }
     }
@@ -224,7 +231,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if board.status == .Aiming {
             if let touch = touches.first {
-                board.pointTouched(position: touch.location(in: board))
+                board.pointTouched(position: touch.location(in: board), began: false, end: true)
                 board.showIntroHandPress()
             }
         }
@@ -367,6 +374,95 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         data["sound"] = Settings.instance.sound
         UserDefaults.standard.set(data, forKey: "data")
         UserDefaults.standard.synchronize()
+    }
+    
+    func splashNode(value: Int, color: SKColor, position: CGPoint) -> SKNode {
+        let name = "splash" + String(format: "%02d", Int.random(in: 1...25))
+        let splash = SKSpriteNode(texture: GameScene.cachedTexture(name: name, value: value, color: color))
+        splash.position = position
+        splash.xScale = 0.4 + CGFloat(Float.random(in: -0.1...0.1))
+        splash.yScale = splash.xScale
+        splash.zRotation = CGFloat(Float.random(in: -Float.pi...Float.pi))
+        splash.zPosition = 9999
+        return splash
+    }
+    
+    func splatterView() -> UIView {
+        let view = SKView(frame: self.view!.bounds)
+        view.allowsTransparency = true
+        view.layer.cornerRadius = CORNER_RADIUS
+        view.backgroundColor = .clear
+        let scene = SKScene()
+        scene.backgroundColor = .clear
+        scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
+        scene.scaleMode = .resizeFill
+        
+        let logo = Logo()
+        logo.position = CGPoint(x: 0, y: -40)
+        scene.addChild(logo)
+        
+        let border = Border(notch: false)
+        border.zPosition = 10001
+        border.color = self.border.color
+        border.screen.fillTexture = nil
+        border.screen.fillColor = .clear
+        border.board.removeFromParent()
+        let background = border.screen.copy() as! SKShapeNode
+        background.fillColor = .white
+        background.fillTexture = Border.boardTexture
+        background.strokeColor = .clear
+        scene.addChild(background)
+        scene.addChild(border)
+        
+        board.children.forEach { (node) in
+            if let block = node as? Block {
+                scene.addChild(splashNode(value: block.value, color: block.color, position: block.position))
+            }
+        }
+        var balls: [Ball] = []
+        board.children.forEach { (node) in
+            if let ball = node as? Ball {
+                balls.append(ball)
+            }
+        }
+        balls.sort { (ball1, ball2) -> Bool in
+            if ball1.value == 0 || ball2.value == 0 {
+                return true
+            }
+            return ball1.value < ball2.value
+        }
+        for ball in balls {
+            scene.addChild(splashNode(value: ball.value, color: ball.color, position: ball.position))
+        }
+        
+        let highscoreIcon = SKSpriteNode(imageNamed: "crown")
+        highscoreIcon.position = CGPoint(x: 0, y: 310)
+        highscoreIcon.zPosition = 10000
+        scene.addChild(highscoreIcon)
+        
+        let highscore = Label()
+        highscore.fontSize = .xl
+        highscore.position = CGPoint(x: 0, y: 250)
+        highscore.text = "\(statusBar.highscoreValue)"
+        scene.addChild(highscore)
+        
+        view.presentScene(scene)
+        return view
+    }
+
+    static func cachedTexture(name: String, value: Int, color: SKColor) -> SKTexture {
+        let cache = "\(name)~\(value)"
+        var texture = GameScene.splashTextureMap[cache]
+        if texture == nil {
+            let image = UIImage(named: name)
+            texture = SKTexture(image: image!.colored(color: color))
+            GameScene.splashTextureMap[cache] = texture
+        }
+        return texture!
+    }
+    
+    static func clearSplashTextures() {
+        GameScene.splashTextureMap.removeAll()
     }
     
     func didPressResume() {

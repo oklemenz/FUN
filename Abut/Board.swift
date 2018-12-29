@@ -412,13 +412,15 @@ class Board : SKNode {
         boardDelegate?.didResetMultiplier()
     }
     
-    func pointTouched(position: CGPoint, began: Bool = false) {
+    func pointTouched(position: CGPoint, began: Bool = false, end: Bool = false) {
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
         if let startPoint = line.startPoint {
             let screenPosition = convert(position, to: parent!)
-            if began && line.endPoint != nil && startPoint.distanceTo(position) <= whiteBall.radius * 3 {
-                shoot()
+            if startPoint.distanceTo(position) <= whiteBall.radius * 3 {
+                if end && line.endPoint != nil {
+                    shoot()
+                }
             } else if (screenPosition.y < h2 - BAR_HEIGHT) {
                 line.endPoint = position
                 endSpot.position = position

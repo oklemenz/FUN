@@ -51,7 +51,7 @@ class Menu: SKNode {
         addChild(border)
         
         logo = Logo()
-        logo.position = CGPoint(x: 0, y: h4)
+        logo.position = CGPoint(x: 0, y: h4 - 20)
         addChild(logo)
         
         restartButton = Button(icon: "restart", width: 100, height: 75, corner: 10, color: COLOR_RED, pressed: didPressRestart)
