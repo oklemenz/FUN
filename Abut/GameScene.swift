@@ -21,6 +21,7 @@ let CORNER_RADIUS: CGFloat = Device.IS_IPHONE ? 40.0 : 20.0
 let BORDER_LINE_WIDTH: CGFloat = 2.5
 let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
 let SIZE_MULT: CGFloat = Device.IS_IPAD ? 1.5 : 1
+let FORCE_MULT: CGFloat = Device.IS_IPAD ? 2.5 : 1
 let BALL_RADIUS: CGFloat = 16.0 * SIZE_MULT
 
 let COLOR_RED = SKColor(r: 255, g: 59, b: 48)
@@ -122,6 +123,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             rootNode.run(SKAction.shake(initialPosition: rootNode.position, duration: duration, completed: {
                 self.shaking = false
             }))
+            run(shakeSound)
         }
     }
     
@@ -390,8 +392,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     func splatterView() -> UIView {
         let view = SKView(frame: self.view!.bounds)
         view.allowsTransparency = true
+        view.clipsToBounds = true
         view.layer.cornerRadius = CORNER_RADIUS
         view.backgroundColor = .clear
+        
         let scene = SKScene()
         scene.backgroundColor = .clear
         scene.anchorPoint = CGPoint(x: 0.5, y: 0.5)
@@ -426,10 +430,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             }
         }
         balls.sort { (ball1, ball2) -> Bool in
-            if ball1.value == 0 || ball2.value == 0 {
-                return true
-            }
-            return ball1.value < ball2.value
+            return ball1.compareValue < ball2.compareValue
         }
         for ball in balls {
             scene.addChild(splashNode(value: ball.value, color: ball.color, position: ball.position))

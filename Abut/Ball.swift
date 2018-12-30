@@ -28,6 +28,13 @@ class Ball : SKShapeNode {
             render()
         }
     }
+    
+    var compareValue: Int {
+        if value == 0 {
+            return Int.max
+        }
+        return value
+    }
 
     static var Black: Ball {
         return Ball(value: -1)
@@ -69,9 +76,8 @@ class Ball : SKShapeNode {
     
     func render() {
         border = value <= 8 ? 0 : BALL_BORDER
-        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius - border / 2.0, y: -radius - border / 2.0),
-                                        size: CGSize(width: radius * 2 - border, height: radius * 2 - border)),
-                      transform: nil)
+        path = CGPath(ellipseIn: CGRect(origin: CGPoint(x: -radius + border / 2, y: -radius + border / 2),
+                                        size: CGSize(width: radius * 2 - border, height: radius * 2 - border)), transform: nil)
         color = Ball.colorForValue(value)
         borderColor = Ball.strokeColorForValue(value: value)
 
@@ -166,7 +172,7 @@ class Ball : SKShapeNode {
     }
     
     func shoot(vector: CGVector) {
-        physicsBody?.applyImpulse(vector)
+        physicsBody?.applyImpulse(vector * FORCE_MULT)
     }
     
     func roll() {
@@ -213,7 +219,7 @@ class Ball : SKShapeNode {
                 y = 0
         }
         position = CGPoint(x: x, y: y)
-        shoot(vector: CGVector(dx: dx * fx, dy: dy * fy))
+        shoot(vector: CGVector(dx: dx * fx, dy: dy * fy) * FORCE_MULT)
     }
     
     func save() -> [String:Any] {

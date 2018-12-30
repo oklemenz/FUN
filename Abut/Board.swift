@@ -30,6 +30,7 @@ let highscoreSound = SKAction.playSoundFileNamed("sounds/highscore.caf", waitFor
 let laserSound = SKAction.playSoundFileNamed("sounds/laser.caf", waitForCompletion: false)
 let scoreSound = SKAction.playSoundFileNamed("sounds/score.caf", waitForCompletion: false)
 let newColorSound = SKAction.playSoundFileNamed("sounds/newcolor.caf", waitForCompletion: false)
+let shakeSound = SKAction.playSoundFileNamed("sounds/shake.caf", waitForCompletion: false)
 let shootSound = SKAction.playSoundFileNamed("sounds/shoot.caf", waitForCompletion: false)
 let wooshSound = SKAction.playSoundFileNamed("sounds/woosh.caf", waitForCompletion: false)
 
