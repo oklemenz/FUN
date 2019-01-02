@@ -59,6 +59,7 @@ class Board : SKNode {
     let hand = Hand()
 
     var showIntro: Bool = true
+    var shooting: Bool = false
     var status: GameStatus = .Resting
     var collisionContact = 0
     var highestColorValue = 1
@@ -198,7 +199,9 @@ class Board : SKNode {
     
     func showIntroHandStart() {
         if showIntro && hand.status == .Start {
-            addChild(hand)
+            if hand.parent == nil {
+                addChild(hand)
+            }
             hand.start(endSpot.position)
             let ball = children.first { (child) -> Bool in
                 if let ball = child as? Ball {
@@ -207,8 +210,8 @@ class Board : SKNode {
                 return false
             }
             if let ball = ball as? Ball {
-                let to = (ball.position - whiteBall.position).normalized() * 125 * SIZE_MULT
-                hand.end(whiteBall.position + to)
+                let to = (ball.position - endSpot.position).normalized() * 125 * SIZE_MULT
+                hand.end(endSpot.position + to)
                 hand.status = .Set
                 boardDelegate?.didShowIntroHandMove()
             } else {
@@ -418,14 +421,22 @@ class Board : SKNode {
         let h2 = h / 2.0
         if let startPoint = line.startPoint {
             let screenPosition = convert(position, to: parent!)
-            if startPoint.distanceTo(position) <= whiteBall.radius * 3 {
-                if end && line.endPoint != nil {
-                    shoot()
+            if startPoint.distanceTo(position) <= whiteBall.radius * 2.5 {
+                if began && line.endPoint != nil {
+                    shooting = true
+                } else if end && line.endPoint != nil {
+                    if shooting {
+                        shoot()
+                    }
                 }
-            } else if (screenPosition.y < h2 - BAR_HEIGHT) {
+            } else if screenPosition.y < h2 - BAR_HEIGHT {
                 line.endPoint = position
                 endSpot.position = position
+                shooting = false
             }
+        }
+        if end {
+            shooting = false
         }
     }
     
@@ -629,6 +640,8 @@ class Board : SKNode {
     }
     
     func reset() {
+        showIntro = true
+        hand.status = .Start
         dice.value = 6
         dice.place()
         status = .Resting

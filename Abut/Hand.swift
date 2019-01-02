@@ -32,6 +32,7 @@ class Hand: SKSpriteNode {
         didSet {
             switch status {
                 case .Start:
+                    setup()
                     break
                 case .Set:
                     alpha = 0.0
@@ -96,11 +97,18 @@ class Hand: SKSpriteNode {
         run(SKAction.sequence([
             SKAction.fadeOut(withDuration: 0.25),
             SKAction.run {
+                self.texture = Hand.handTexture
                 if let completed = completed {
                     completed()
                 }
             }
         ]))
+    }
+    
+    func setup() {
+        removeAllActions()
+        self.texture = Hand.handTexture
+        alpha = 0.0
     }
     
     func start(_ point: CGPoint) {

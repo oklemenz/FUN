@@ -151,6 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
             addChild(notificationLabel)
         }
         notificationLabel.text = text
+        notificationLabel.removeAllActions()
         notificationLabel!.run(SKAction.sequence([
             SKAction.scale(to: 1.2, duration: 0.5),
             SKAction.scale(to: 1.0, duration: 0.25),
@@ -225,7 +226,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
         if board.status == .Aiming {
             if let touch = touches.first {
-                board.pointTouched(position: touch.location(in: board), began: false, end: false)
+                let location = touch.location(in: board)
+                board.pointTouched(position: location, began: false, end: false)
             }
         }
     }
@@ -233,7 +235,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if board.status == .Aiming {
             if let touch = touches.first {
-                board.pointTouched(position: touch.location(in: board), began: false, end: true)
+                let location = touch.location(in: board)
+                board.pointTouched(position: location, began: false, end: true)
                 board.showIntroHandPress()
             }
         }
@@ -316,6 +319,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
                 vibrate()
             }
         }
+        multiplierGroup!.removeAllActions()
         multiplierGroup!.run(SKAction.sequence([
             SKAction.scale(to: 1.2, duration: 0.5),
             SKAction.run {
@@ -410,6 +414,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         border.color = self.border.color
         border.screen.fillTexture = nil
         border.screen.fillColor = .clear
+        border.screen.lineWidth += 1
         border.board.removeFromParent()
         let background = border.screen.copy() as! SKShapeNode
         background.fillColor = .white

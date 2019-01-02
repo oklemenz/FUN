@@ -19,6 +19,7 @@ protocol MenuDelegate : class {
 
 class Menu: SKNode {
     
+    var background: SKShapeNode!
     var border: Border!
     
     var logo: Logo!
@@ -42,7 +43,15 @@ class Menu: SKNode {
         let h2 = h / 2.0
         let h4 = h2 / 2.0
         
+        background = SKShapeNode(rectOf: UIScreen.main.bounds.size)
+        background.position = CGPoint(x: 0, y: 0)
+        background.strokeColor = .clear
+        background.fillColor = .black
+        background.zPosition = 2000000
+        addChild(background)
+        
         border = Border()
+        border.zPosition = 2000000
         border.color = UIColor.darkGray
         border.board.alpha = 0
         border.screen.glowWidth = 1
@@ -51,6 +60,7 @@ class Menu: SKNode {
         addChild(border)
         
         logo = Logo()
+        logo.zPosition = 2000000
         logo.position = CGPoint(x: 0, y: h4 - 20)
         addChild(logo)
         
@@ -76,11 +86,12 @@ class Menu: SKNode {
 
         highscoreIcon = SKSpriteNode(imageNamed: "crown")
         highscoreIcon.position = CGPoint(x: 0, y: -250)
-        highscoreIcon.zPosition = 10000
+        highscoreIcon.zPosition = 2000001
         addChild(highscoreIcon)
         
         highscore = Label()
         highscore.fontSize = .xl
+        highscore.zPosition = 2000000
         highscore.position = CGPoint(x: 0, y: -310)
         addChild(highscore)
     }
