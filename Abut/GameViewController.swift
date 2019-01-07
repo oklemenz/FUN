@@ -129,15 +129,24 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
         let text = "Hi, I scored \(scoreText) in the iOS game #f.u.n."
         let url = URL(string: "https://itunes.apple.com/us/app/fun/id1437993674?mt=8")!
         let view = gameScene.splatterView()
+        view.alpha = 0.0
         self.view.addSubview(view)
-        let imageData = self.screenshot(view)
-        let activityViewController = UIActivityViewController(activityItems: [text, url, imageData], applicationActivities: nil)
-        activityViewController.setValue("f.u.n.", forKey: "Subject")
-        activityViewController.popoverPresentationController?.sourceView = self.view
-        activityViewController.completionWithItemsHandler = { (activityType, completed:Bool, returnedItems:[Any]?, error: Error?) in
-            view.removeFromSuperview()
+        UIView.animate(withDuration: 0.5, animations: {
+            view.alpha = 1.0
+        }) { (completed) in
+            let imageData = self.screenshot(view)
+            let activityViewController = UIActivityViewController(activityItems: [text, url, imageData], applicationActivities: nil)
+            activityViewController.setValue("f.u.n.", forKey: "Subject")
+            activityViewController.popoverPresentationController?.sourceView = self.view
+            activityViewController.completionWithItemsHandler = { (activityType, completed:Bool, returnedItems:[Any]?, error: Error?) in
+                UIView.animate(withDuration: 0.5, animations: {
+                    view.alpha = 0.0
+                }) { (completed) in
+                    view.removeFromSuperview()
+                }
+            }
+            self.present(activityViewController, animated: true, completion: nil)
         }
-        self.present(activityViewController, animated: true, completion: nil)
     }
     
     func screenshot(_ view: UIView) -> Data {
