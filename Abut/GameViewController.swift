@@ -126,29 +126,25 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     
     func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
-        let text = "Hi, I just scored \(scoreText) in the iOS game #f.u.n."
+        let text = "Hi, I scored \(scoreText) in the iOS game #f.u.n."
         let url = URL(string: "https://itunes.apple.com/us/app/fun/id1437993674?mt=8")!
         let view = gameScene.splatterView()
-        view.setNeedsLayout()
-        view.layoutIfNeeded()
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let image = self.screenshot(view)
-            var activityItems: [Any] = [text, url]
-            if let image = image {
-                activityItems.append(image.pngData()!)
-            }
-            let activityViewController = UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
-            activityViewController.popoverPresentationController?.sourceView = self.view
-            self.present(activityViewController, animated: true, completion: nil)
+        self.view.addSubview(view)
+        let imageData = self.screenshot(view)
+        let activityViewController = UIActivityViewController(activityItems: [text, url, imageData], applicationActivities: nil)
+        activityViewController.setValue("f.u.n.", forKey: "Subject")
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        activityViewController.completionWithItemsHandler = { (activityType, completed:Bool, returnedItems:[Any]?, error: Error?) in
+            view.removeFromSuperview()
         }
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
-    func screenshot(_ view: UIView) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(view.bounds.size, false, UIScreen.main.scale)
-        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image
+    func screenshot(_ view: UIView) -> Data {
+        let renderer = UIGraphicsImageRenderer(size: view.bounds.size)
+        return renderer.pngData { ctx in
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
     }
     
     override func didReceiveMemoryWarning() {
