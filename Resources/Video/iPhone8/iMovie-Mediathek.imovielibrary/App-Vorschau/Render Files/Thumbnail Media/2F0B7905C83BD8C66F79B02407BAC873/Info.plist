@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>FFSegmentStoreEncodedHeight</key>
+	<integer>135</integer>
+	<key>FFSegmentStoreEncodedWidth</key>
+	<integer>76</integer>
+	<key>FFSegmentStoreFieldOrder</key>
+	<integer>-1</integer>
+	<key>FFSegmentStoreFileFrameCount</key>
+	<integer>1024</integer>
+	<key>FFSegmentStoreFirstSample</key>
+	<integer>0</integer>
+	<key>FFSegmentStorePixelTransformArray</key>
+	<array>
+		<array>
+			<real>0.10133333333333333</real>
+			<real>0.0</real>
+			<real>0.0</real>
+			<real>38</real>
+			<real>0.0</real>
+			<real>-0.10119940029985007</real>
+			<real>0.0</real>
+			<real>67.5</real>
+			<real>0.0</real>
+			<real>0.0</real>
+			<real>1</real>
+			<real>0.0</real>
+			<real>0.0</real>
+			<real>0.0</real>
+			<real>0.0</real>
+			<real>1</real>
+		</array>
+	</array>
+	<key>FFSegmentStoreRenderProps</key>
+	<string>FFRenderPropsThumbnail</string>
+	<key>FFSegmentStoreSegmentStoreMD5</key>
+	<data>
+	Lwt5Bcg72MZvebAkB7rIcw==
+	</data>
+	<key>FFSegmentStoreStoredFrameIndexes</key>
+	<data>
+	YnBsaXN0MDDUAQIDBAUGHyBYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
+	AAGGoKUHCA8TGlUkbnVsbNMJCgsMDQ5cTlNSYW5nZUNvdW50ViRjbGFzc1tOU1Jhbmdl
+	RGF0YRCigASAAtIQChESV05TLmRhdGFPEQHdEgEcAS8BOAFCAVUBXgFnAXoBhAEBjQEB
+	oAEBqQECswEBxgEBzwEB2QEB7AEB9QEB/wEBkQIBmgICpAIBtwIBwQIBygIB3QIB5gIB
+	8AIBgwMBjAMBlgMBqAMCsgMBuwMBzgMB1wMC4QMB9AMB/QMChwQBmgQBowQBrQQBwAQB
+	yQQB0wQB5QQB7wQB+AQBiwUBlAUCngUBsQUBugUBxAUB1wUB4AUB6gUB/QUBhgYBjwYB
+	ogYBrAYB0AYD9wYBgQcBnQcBwwcB3wcB6QcBjQgCtAgBvggB2ggBgAkBnAkBpQkCygkC
+	8QkB+gkClwoBvQoB2QoB4goBhgsDrgsBtwsB1AsB+QsClgwBnwwBwwwD9AwB0w0BgA4D
+	sQ4Bjw8CvQ8D7g8BzBAC+RAEqxEBiRIBthIE6BIBxhMB8xMEpBQCgxUBsBUE4RUBwBYB
+	7BYEnhcB/RcBqRgE2xgBuhkB5hkEmBoB9hoBohsF1RsBsxwB3xwFkh0B8B0BnB4F2B8C
+	2x8DlSEDmSEC0iID1iIC/SMBjiQBkCQEliQBpSQBwSQB8iQBhiUBmiUBpCUBqiUBuCUB
+	uyUBzCUBziUB0CUB9SUB9CYBiycBjScBsCgBxygByigB7CkBhCoBhyoBgCsCgAPSFBUW
+	F1okY2xhc3NuYW1lWCRjbGFzc2VzXU5TTXV0YWJsZURhdGGjFhgZVk5TRGF0YVhOU09i
+	amVjdNIUFRscXxARTlNNdXRhYmxlSW5kZXhTZXSjHR4ZXxARTlNNdXRhYmxlSW5kZXhT
+	ZXRaTlNJbmRleFNldF8QD05TS2V5ZWRBcmNoaXZlctEhIlRyb290gAEACAARABoAIwAt
+	ADIANwA9AEMASgBXAF4AagBsAG4AcAB1AH0CXgJgAmUCcAJ5AocCiwKSApsCoAK0ArgC
+	zALXAukC7ALxAAAAAAAAAgEAAAAAAAAAIwAAAAAAAAAAAAAAAAAAAvM=
+	</data>
+</dict>
+</plist>
