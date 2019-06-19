@@ -127,7 +127,7 @@ class GameViewController: UIViewController, GKGameCenterControllerDelegate, Game
     func openSharing(score: Int) {
         let scoreText = score == 1 ? "\(score) point" : "\(score) points"
         let text = "Hi, I scored \(scoreText) in the iOS game #f.u.n."
-        let url = URL(string: "https://itunes.apple.com/us/app/fun/id1437993674?mt=8")!
+        let url = URL(string: "https://apps.apple.com/us/app/fun/id1437993674?mt=8")!
         let view = gameScene.splatterView()
         view.alpha = 0.0
         self.view.addSubview(view)
