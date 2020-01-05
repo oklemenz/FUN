@@ -45,7 +45,7 @@ class ExplosionEffect: SKNode {
         if let explosionEffect = SKEmitterNode(fileNamed: "ExplosionEffect") {
             explosionEffect.position = node.position
             explosionEffect.particleColor = color
-            explosionEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [color], times: [0.0])
+            explosionEffect.particleColorSequence = SKKeyframeSequence(keyframeValues: [color!], times: [0.0])
             explosionEffect.particleLifetime = 0.5
             explosionEffect.zPosition = 10
             context.addChild(explosionEffect)

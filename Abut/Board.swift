@@ -554,7 +554,8 @@ class Board : SKNode {
         bottom.physicsBody = SKPhysicsBody(rectangleOf: size)
         bottom.physicsBody?.isDynamic = false
         bottom.physicsBody?.usesPreciseCollisionDetection = true
-        bottom.position = CGPoint(x: 0, y: -h2 - BOUNDARY/2 - BOUNDARY_INSET - position.y)
+        let y = -h2 - BOUNDARY/2 - BOUNDARY_INSET - position.y;
+        bottom.position = CGPoint(x: 0, y: y)
         addChild(bottom)
     }
     

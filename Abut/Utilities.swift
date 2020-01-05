@@ -18,7 +18,7 @@ func randomDouble(min: Double, max: Double) -> Double {
 }
 
 func randomFloat(min: Float, max: Float) -> Float {
-    return (Float(arc4random()) / 0xFFFFFFFF) * (max - min) + min
+    return (Float(arc4random()) / Float(0xFFFFFFFF)) * (max - min) + min
 }
 
 func randomCGFloat(min: CGFloat, max: CGFloat) -> CGFloat {
