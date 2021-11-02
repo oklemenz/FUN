@@ -10,7 +10,7 @@ import Foundation
 import SpriteKit
 import AudioToolbox
 
-protocol BoardDelegate: class {
+protocol BoardDelegate: AnyObject {
     func gameDidRest()
     func didCollideBall(contactPoint: CGPoint, value: Int, multiplier: Int)
     func didUpdateColor(color: UIColor)
@@ -76,7 +76,7 @@ class Board : SKNode {
         let h = UIScreen.main.bounds.height - BAR_HEIGHT
         let h2 = h / 2.0
         
-        let physicsPath = UIBezierPath(roundedRect: CGRect(x: -w2, y: -h2, width: w, height: h), cornerRadius: CORNER_RADIUS)
+        let physicsPath = UIBezierPath(roundedRect: CGRect(x: -w2, y: -h2, width: w, height: h), cornerRadius: UIDevice.current.cornerRadius)
         physicsBody = SKPhysicsBody(edgeLoopFrom: physicsPath.cgPath)
         physicsBody?.isDynamic = false
         physicsBody?.usesPreciseCollisionDetection = true

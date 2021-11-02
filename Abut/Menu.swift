@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-protocol MenuDelegate : class {
+protocol MenuDelegate : AnyObject {
     func didPressResume()
     func didPressRestart()
     func didPressSound()

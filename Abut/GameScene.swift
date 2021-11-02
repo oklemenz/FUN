@@ -11,17 +11,10 @@ import GameplayKit
 import AudioToolbox
 import StoreKit
 
-// Screen sizes
-let NOTCH_WIDTH: CGFloat = Device.IS_IPHONE_XR ? 230.0 : 209.0
-let NOTCH_HEIGHT: CGFloat = Device.IS_IPHONE_XR ? 33.0 : 30.0
-let NOTCH_RADIUS_1: CGFloat = Device.IS_IPHONE_XR ? 26.0 : 20.0
-let NOTCH_RADIUS_2: CGFloat = 6.0
-
-let CORNER_RADIUS: CGFloat = Device.IS_IPHONE ? 40.0 : 20.0
-let BORDER_LINE_WIDTH: CGFloat = 2.5
-let BAR_HEIGHT: CGFloat = 50.0 + (Device.IS_IPHONE_X ? NOTCH_HEIGHT : 0.0)
-let SIZE_MULT: CGFloat = Device.IS_IPAD ? 1.5 : 1
-let FORCE_MULT: CGFloat = Device.IS_IPAD ? 2.5 : 1
+let BORDER_LINE_THICKNESS: CGFloat = 2.5
+let BAR_HEIGHT: CGFloat = 50.0 + (UIDevice.current.hasNotch ? UIDevice.current.notchHeight : 0.0)
+let SIZE_MULT: CGFloat = Device.IS_IPHONE ? 1 : 1.5
+let FORCE_MULT: CGFloat = Device.IS_IPHONE ? 1 : 2.5
 let BALL_RADIUS: CGFloat = 16.0 * SIZE_MULT
 
 let COLOR_RED = SKColor(r: 255, g: 59, b: 48)
@@ -33,7 +26,7 @@ let COLOR_BLUE = SKColor(r: 0, g: 122, b: 255)
 let COLOR_PURPLE = SKColor(r: 88, g: 86, b: 214)
 let COLOR_PINK = SKColor(r: 255, g: 45, b: 85)
 
-protocol GameDelegate: class {
+protocol GameDelegate: AnyObject {
     func authenticateLocalPlayer()
     func submitScore(score: Int)
     func submitMultiplier(multiplier: Int)
@@ -397,7 +390,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate, BoardDelegate, StatusBarDele
         let view = SKView(frame: self.view!.bounds)
         view.allowsTransparency = true
         view.clipsToBounds = true
-        view.layer.cornerRadius = CORNER_RADIUS
+        view.layer.cornerRadius = UIDevice.current.cornerRadius
         view.backgroundColor = .clear
         
         let scene = SKScene()

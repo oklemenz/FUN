@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		22EB4B9927311C59001F30AF /* UIDevice+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EB4B9827311C59001F30AF /* UIDevice+Extension.swift */; };
 		540222BD20FDEA02006F25E9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540222BC20FDEA02006F25E9 /* AppDelegate.swift */; };
 		540222BF20FDEA02006F25E9 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 540222BE20FDEA02006F25E9 /* GameScene.sks */; };
 		540222C320FDEA02006F25E9 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 540222C220FDEA02006F25E9 /* GameScene.swift */; };
@@ -52,6 +53,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		22EB4B9827311C59001F30AF /* UIDevice+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIDevice+Extension.swift"; sourceTree = "<group>"; };
 		540222B920FDEA02006F25E9 /* Abut.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Abut.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		540222BC20FDEA02006F25E9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		540222BE20FDEA02006F25E9 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				545BA8AE211B2F21000362DA /* SKLabelNode+Extension.swift */,
 				542A19F620FE2DA8006F96C1 /* UIColor+Extension.swift */,
 				540F361521776C7600760BA7 /* UIImage+Extension.swift */,
+				22EB4B9827311C59001F30AF /* UIDevice+Extension.swift */,
 				540222BE20FDEA02006F25E9 /* GameScene.sks */,
 				544F4176210B4A6200E10B15 /* CollisionEffect.sks */,
 				545BA8AC211B253D000362DA /* ExplosionEffect.sks */,
@@ -211,7 +214,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0940;
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = "Klemenz, Oliver";
 				TargetAttributes = {
 					540222B820FDEA02006F25E9 = {
@@ -292,6 +295,7 @@
 				54F0537B20FE1D4C00FF4AA1 /* Utilities.swift in Sources */,
 				542A19F920FE2EAC006F96C1 /* StartSpot.swift in Sources */,
 				548D786D2147D05F004885FE /* Block.swift in Sources */,
+				22EB4B9927311C59001F30AF /* UIDevice+Extension.swift in Sources */,
 				54A0E17521008E83002D629F /* DiceEye.swift in Sources */,
 				540F361821777CF000760BA7 /* SKAction+Extension.swift in Sources */,
 				5493649E215BC0A500887C71 /* Button.swift in Sources */,
@@ -350,6 +354,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -375,7 +380,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -410,6 +415,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -429,7 +435,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;

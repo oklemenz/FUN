@@ -9,15 +9,15 @@
 import Foundation
 import SpriteKit
 
-protocol StatusBarDelegate: class {
+protocol StatusBarDelegate: AnyObject {
     func reportScore(_ value: Int)
     func didReachNewHighscore(_ value: Int)
     func didPressPause()
 }
 
 let BASE_LINE: CGFloat = 0
-let BASE_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 5 : -4
-let TOP_LINE_OFFSET: CGFloat = Device.IS_IPHONE_X ? 0 : -7
+let BASE_LINE_OFFSET: CGFloat = UIDevice.current.hasNotch ? 5 : -4
+let TOP_LINE_OFFSET: CGFloat = UIDevice.current.hasNotch ? 0 : -7
 
 class StatusBar : SKNode {
     

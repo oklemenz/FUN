@@ -9,7 +9,7 @@
 import Foundation
 import SpriteKit
 
-protocol SplashDelegate : class {
+protocol SplashDelegate : AnyObject {
     func splashDidFinish()
 }
 

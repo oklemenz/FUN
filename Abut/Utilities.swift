@@ -26,24 +26,30 @@ func randomCGFloat(min: CGFloat, max: CGFloat) -> CGFloat {
 }
 
 struct Device {
-    static let IS_IPAD             = UIDevice.current.userInterfaceIdiom == .pad
-    static let IS_IPHONE           = UIDevice.current.userInterfaceIdiom == .phone
-    static let IS_RETINA           = UIScreen.main.scale >= 2.0
+
+    static let IS_IPAD           = UIDevice.current.userInterfaceIdiom == .pad
+    static let IS_IPHONE         = UIDevice.current.userInterfaceIdiom == .phone
+    static let IS_RETINA         = UIScreen.main.scale >= 2.0
     
-    static let SCREEN_WIDTH        = Int(UIScreen.main.bounds.size.width)
-    static let SCREEN_HEIGHT       = Int(UIScreen.main.bounds.size.height)
-    static let SCREEN_MAX_LENGTH   = Int( max(SCREEN_WIDTH, SCREEN_HEIGHT) )
-    static let SCREEN_MIN_LENGTH   = Int( min(SCREEN_WIDTH, SCREEN_HEIGHT) )
+    static let SCREEN_WIDTH      = Int(UIScreen.main.bounds.size.width)
+    static let SCREEN_HEIGHT     = Int(UIScreen.main.bounds.size.height)
+    static let SCREEN_MAX_LENGTH = Int( max(SCREEN_WIDTH, SCREEN_HEIGHT) )
+    static let SCREEN_MIN_LENGTH = Int( min(SCREEN_WIDTH, SCREEN_HEIGHT) )
     
-    static let NATIVE_WIDTH        = Int(UIScreen.main.nativeBounds.width)
-    static let NATIVE_HEIGHT       = Int(UIScreen.main.nativeBounds.height)
-    static let NATIVE_MAX_LENGTH   = Int( max(NATIVE_WIDTH, NATIVE_HEIGHT) )
-    static let NATIVE_MIN_LENGTH   = Int( min(NATIVE_WIDTH, NATIVE_HEIGHT) )
+    static let DEVICE            = UIDevice.modelName;
     
-    static let IS_IPHONE_4_OR_LESS = IS_IPHONE && SCREEN_MAX_LENGTH  < 568
-    static let IS_IPHONE_5         = IS_IPHONE && SCREEN_MAX_LENGTH == 568
-    static let IS_IPHONE_6         = IS_IPHONE && SCREEN_MAX_LENGTH == 667
-    static let IS_IPHONE_6P        = IS_IPHONE && SCREEN_MAX_LENGTH == 736
-    static let IS_IPHONE_X         = IS_IPHONE && (SCREEN_MAX_LENGTH == 812 || SCREEN_MAX_LENGTH == 896)
-    static let IS_IPHONE_XR        = IS_IPHONE && SCREEN_MAX_LENGTH == 896 && NATIVE_MAX_LENGTH == 1792
+    static let IS_IPHONE_4       = IS_IPHONE && SCREEN_MAX_LENGTH <= 480 // 2, 3, 3GS, 4, 4S
+    static let IS_IPHONE_5       = IS_IPHONE && SCREEN_MAX_LENGTH == 568 // 5, 5S, 5C, SE
+    static let IS_IPHONE_6       = IS_IPHONE && SCREEN_MAX_LENGTH == 667 // 6, 6S, 7, 8
+    static let IS_IPHONE_6P      = IS_IPHONE && SCREEN_MAX_LENGTH == 736 // 6+, 6S+, 7+, 8+
+    static let IS_IPHONE_X       = IS_IPHONE && SCREEN_MAX_LENGTH == 812 && !DEVICE.contains("mini")// X, XS, 11 Pro
+    static let IS_IPHONE_11      = IS_IPHONE && SCREEN_MAX_LENGTH == 896 && !DEVICE.contains("Max") // XR, 11
+    static let IS_IPHONE_11_MAX  = IS_IPHONE && SCREEN_MAX_LENGTH == 896 && DEVICE.contains("Max") // XS Max, 11 Pro Max
+    static let IS_IPHONE_12_MINI = IS_IPHONE && SCREEN_MAX_LENGTH == 812 && DEVICE.contains("12 mini") // 12 Mini
+    static let IS_IPHONE_12      = IS_IPHONE && SCREEN_MAX_LENGTH == 844 && DEVICE.contains("12") && !DEVICE.contains("Max") // 12, 12 Pro
+    static let IS_IPHONE_12_MAX  = IS_IPHONE && SCREEN_MAX_LENGTH == 926 && DEVICE.contains("12 Pro Max") // 12 Pro Max
+    static let IS_IPHONE_13      = IS_IPHONE && SCREEN_MAX_LENGTH == 844 && DEVICE.contains("13") && !DEVICE.contains("Max") // 13, 13 Pro
+    static let IS_IPHONE_13_MAX  = IS_IPHONE && SCREEN_MAX_LENGTH == 926 && DEVICE.contains("13 Pro Max") // 13 Pro Max
+    static let IS_IPHONE_13_MINI = IS_IPHONE && SCREEN_MAX_LENGTH == 812 && DEVICE.contains("13 mini") // 13 Mini
+
 }

@@ -14,7 +14,7 @@ class Border : SKNode {
     static let boardTexture = SKTexture(size: UIScreen.main.bounds.width, color1: UIColor(rgba: "#666666"),
                                         color2: UIColor(rgba: "#000000"))
     
-    var lineWidth: CGFloat = BORDER_LINE_WIDTH {
+    var lineThickness: CGFloat = BORDER_LINE_THICKNESS {
         didSet {
             rerender()
         }
@@ -26,7 +26,7 @@ class Border : SKNode {
         }
     }
     
-    var notch: Bool = Device.IS_IPHONE_X
+    var notch: Bool = Device.IS_IPHONE && UIDevice.current.hasNotch
     var screen: SKShapeNode!
     var board: SKShapeNode!
     
@@ -56,37 +56,65 @@ class Border : SKNode {
         let w2 = w / 2.0
         let h = UIScreen.main.bounds.height
         let h2 = h / 2.0
-        let n = NOTCH_WIDTH
-        let n2:CGFloat = n / 2.0
-        let nh = NOTCH_HEIGHT
-        let r:CGFloat = CORNER_RADIUS
-        let r2:CGFloat = NOTCH_RADIUS_1
-        let r3:CGFloat = NOTCH_RADIUS_2
-        let l:CGFloat = lineWidth
+        let nw:CGFloat = UIDevice.current.notchWidth
+        let n2:CGFloat = nw / 2.0
+        let nh = UIDevice.current.notchHeight
+        let r:CGFloat = UIDevice.current.cornerRadius
+        let r2:CGFloat = UIDevice.current.notchRadius1
+        let r3:CGFloat = UIDevice.current.notchRadius2
+        let l:CGFloat = lineThickness
         let l2:CGFloat = l / 2.0
         let i:CGFloat = l2 // Indent
 
         var screenPath: UIBezierPath!
+        // https://www.paintcodeapp.com/news/iphone-x-screen-demystified
         if notch {
-            // https://www.paintcodeapp.com/news/iphone-x-screen-demystified
             screenPath = UIBezierPath()
-            screenPath.addLine(to: CGPoint(x: -w2 + i, y: h2 - r - i))
-            screenPath.addArc(withCenter: CGPoint(x: -w2 + r + i, y: h2 - r - i), radius: r, startAngle: .pi, endAngle: .pi/2, clockwise: false)
-            screenPath.addLine(to: CGPoint(x: -n2 - r3 - i, y: h2 - i))
-            screenPath.addArc(withCenter: CGPoint(x: -n2 - r3 - i, y: h2 - r3 - i), radius: r3, startAngle: .pi/2, endAngle: 0, clockwise: false)
-            screenPath.addArc(withCenter: CGPoint(x: -n2 + r2 - i, y: h2 - nh + r2 - i), radius: r2, startAngle: .pi, endAngle: -.pi/2, clockwise: true)
-            screenPath.addLine(to: CGPoint(x: n2 - r2 - i, y: h2 - nh - i))
-            screenPath.addArc(withCenter: CGPoint(x: n2 - r2 + i, y: h2 - nh + r2 - i), radius: r2, startAngle: -.pi/2, endAngle: 0, clockwise: true)
-            screenPath.addArc(withCenter: CGPoint(x: n2 + r3 + i, y: h2 - r3 - i), radius: r3, startAngle: .pi, endAngle: .pi/2, clockwise: false)
-            screenPath.addLine(to: CGPoint(x: w2 - r - i, y: h2 - i))
-            screenPath.addArc(withCenter: CGPoint(x: w2 - r - i, y: h2 - r - i), radius: r, startAngle: .pi/2, endAngle: 0, clockwise: false)
-            screenPath.addLine(to: CGPoint(x: w2 - i, y: -h2 + r + i))
-            screenPath.addArc(withCenter: CGPoint(x: w2 - r - i, y: -h2 + r + i), radius: r, startAngle: 0, endAngle: -.pi/2, clockwise: false)
-            screenPath.addLine(to: CGPoint(x: -w2 + r + i, y: -h2 + i))
-            screenPath.addArc(withCenter: CGPoint(x: -w2 + r + i, y: -h2 + r + i), radius: r, startAngle: -.pi/2, endAngle: -.pi, clockwise: false)
-            screenPath.addLine(to: CGPoint(x: -w2 + i, y: h2 - r - i))
+            
+            let leftMiddle = CGPoint(x: -w2 + i, y: 0)
+            screenPath.move(to: leftMiddle)
+
+            let leftTopCorner = leftMiddle + CGPoint(x: 0, y: h2 - r - i)
+            screenPath.addLine(to: leftTopCorner)
+            let leftCornerCenter = leftTopCorner + CGPoint(x: r, y: 0);
+            screenPath.addArc(withCenter: leftCornerCenter, radius: r, startAngle: .pi, endAngle: .pi/2, clockwise: false)
+            
+            let leftNotchCorner1 = CGPoint(x: -n2 - r3 - i, y: h2 - i)
+            screenPath.addLine(to: leftNotchCorner1)
+            let leftNotchTopCornerCenter1 = leftNotchCorner1 + CGPoint(x: 0, y: -r3)
+            screenPath.addArc(withCenter: leftNotchTopCornerCenter1, radius: r3, startAngle: .pi/2, endAngle: 0, clockwise: false)
+            
+            let leftNotchCorner2 = CGPoint(x: -n2 - i, y: h2 - nh - i)
+            let leftTopNotchCornerCenter2 = leftNotchCorner2 + CGPoint(x: r2, y: r2)
+            screenPath.addArc(withCenter: leftTopNotchCornerCenter2, radius: r2, startAngle: .pi, endAngle: -.pi/2, clockwise: true)
+
+            let rightNotchCorner2 = CGPoint(x: n2 - r2 + i, y: leftNotchCorner2.y)
+            screenPath.addLine(to: rightNotchCorner2)
+            let rightNotchCornerCenter2 = rightNotchCorner2 + CGPoint(x: 0, y: r2)
+            screenPath.addArc(withCenter: rightNotchCornerCenter2, radius: r2, startAngle: -.pi/2, endAngle: 0, clockwise: true)
+            
+            let rightNotchCorner1 = CGPoint(x: n2 + i, y: leftNotchCorner1.y)
+            let rightNotchCornerCenter1 = rightNotchCorner1 + CGPoint(x: r3, y: -r3)
+            screenPath.addArc(withCenter: rightNotchCornerCenter1, radius: r3, startAngle: .pi, endAngle: .pi/2, clockwise: false)
+            
+            let rightTopCorner = CGPoint(x: w2 - r - i, y: h2 - i)
+            screenPath.addLine(to: rightTopCorner)
+            let rightCornerCenter = rightTopCorner + CGPoint(x: 0, y: -r)
+            screenPath.addArc(withCenter: rightCornerCenter, radius: r, startAngle: .pi/2, endAngle: 0, clockwise: false)
+            
+            let rightBottomCorner = CGPoint(x: w2 - i, y: -h2 + r + i)
+            screenPath.addLine(to: rightBottomCorner)
+            let rightBottomCornerCenter = rightBottomCorner + CGPoint(x: -r, y: 0)
+            screenPath.addArc(withCenter: rightBottomCornerCenter, radius: r, startAngle: 0, endAngle: -.pi/2, clockwise: false)
+            
+            let leftBottomCorner = CGPoint(x: -w2 + r + i, y: -h2 + i)
+            screenPath.addLine(to: leftBottomCorner)
+            let leftBottomCornerCenter = leftBottomCorner + CGPoint(x: 0, y: r)
+            screenPath.addArc(withCenter: leftBottomCornerCenter, radius: r, startAngle: -.pi/2, endAngle: -.pi, clockwise: false)
+
+            screenPath.addLine(to: leftMiddle)
         } else {
-            screenPath = UIBezierPath(roundedRect: CGRect(x: -w2 + i, y: -h2 + i, width: w - 2 * i, height: h - 2 * i), cornerRadius: CORNER_RADIUS)
+            screenPath = UIBezierPath(roundedRect: CGRect(x: -w2 + i, y: -h2 + i, width: w - 2 * i, height: h - 2 * i), cornerRadius: UIDevice.current.cornerRadius)
         }
         if screen == nil {
             screen = SKShapeNode()
@@ -114,7 +142,7 @@ class Border : SKNode {
     }
     
     func rerender() {
-        let l:CGFloat = lineWidth
+        let l:CGFloat = lineThickness
         board.lineWidth = l
         board.strokeColor = color ?? .clear
         

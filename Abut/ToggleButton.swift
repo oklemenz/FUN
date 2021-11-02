@@ -38,7 +38,7 @@ class ToggleButton : SKShapeNode {
         isUserInteractionEnabled = true
         path = UIBezierPath(roundedRect: CGRect(x: -width / 2.0, y: -height / 2.0, width: width, height: height),
                             cornerRadius: 15).cgPath
-        lineWidth = BORDER_LINE_WIDTH
+        lineWidth = BORDER_LINE_THICKNESS
         strokeColor = SKColor.darkGray
         fillColor = self.color ?? SKColor.clear
         
