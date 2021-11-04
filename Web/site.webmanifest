@@ -1,0 +1,12 @@
+{
+    "name": "f.u.n.",
+    "short_name": "f.u.n.",
+    "description": "» Have Fun! «",
+    "icons": [{
+        "src": "touch-icon-192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+    }],
+    "display": "fullscreen",
+    "orientation": "any"
+}
