@@ -17,6 +17,7 @@ protocol StatusBarDelegate: AnyObject {
 
 let BASE_LINE: CGFloat = 0
 let BASE_LINE_OFFSET: CGFloat = UIDevice.current.hasNotch ? 5 : -4
+let MIDDLE_BASE_LINE_OFFSET: CGFloat = UIDevice.current.hasDynamicIsland ? -7 : 0
 let TOP_LINE_OFFSET: CGFloat = UIDevice.current.hasNotch ? 0 : -7
 
 class StatusBar : SKNode {
@@ -66,7 +67,7 @@ class StatusBar : SKNode {
         position = CGPoint(x: 0, y: h2 - BAR_HEIGHT)
 
         score = Label(text: "\(scoreValue)")
-        score.position = CGPoint(x: 0, y: BASE_LINE)
+        score.position = CGPoint(x: 0, y: BASE_LINE + MIDDLE_BASE_LINE_OFFSET)
         addChild(score)
 
         highscore = Label(text: "\(highscoreValue)")

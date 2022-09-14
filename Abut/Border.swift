@@ -27,7 +27,9 @@ class Border : SKNode {
     }
     
     var notch: Bool = Device.IS_IPHONE && UIDevice.current.hasNotch
+    var dynamicIsland: Bool = Device.IS_IPHONE && UIDevice.current.hasDynamicIsland
     var screen: SKShapeNode!
+    var screenCutOut: SKShapeNode!
     var board: SKShapeNode!
     
     static var screenTextureMap: [SKColor: SKTexture] = [:]
@@ -62,13 +64,19 @@ class Border : SKNode {
         let r:CGFloat = UIDevice.current.cornerRadius
         let r2:CGFloat = UIDevice.current.notchRadius1
         let r3:CGFloat = UIDevice.current.notchRadius2
+        let r4:CGFloat = UIDevice.current.dynamicIslandRadius
         let l:CGFloat = lineThickness
         let l2:CGFloat = l / 2.0
         let i:CGFloat = l2 // Indent
+        let dw:CGFloat = UIDevice.current.dynamicIslandWidth;
+        let d2:CGFloat = dw / 2.0;
+        let dh:CGFloat = UIDevice.current.dynamicIslandHeight;
+        let o:CGFloat = UIDevice.current.dynamicIslandOffset;
+        
 
         var screenPath: UIBezierPath!
         // https://www.paintcodeapp.com/news/iphone-x-screen-demystified
-        if notch {
+        if notch && !dynamicIsland {
             screenPath = UIBezierPath()
             
             let leftMiddle = CGPoint(x: -w2 + i, y: 0)
@@ -126,6 +134,41 @@ class Border : SKNode {
         screen.glowWidth = 1
         screen.position = CGPoint(x: 0, y: 0)
         
+        if (dynamicIsland) {
+            let screenCutOutPath = UIBezierPath()
+            let topMiddle = CGPoint(x: 0, y: h2 + i - o)
+            screenCutOutPath.move(to: topMiddle)
+            
+            let rightTopCorner = CGPoint(x: d2 - r4 + i, y: h2 + i - o)
+            screenCutOutPath.addLine(to: rightTopCorner)
+            
+            let rightCornerCenter = rightTopCorner + CGPoint(x: 0, y: -r4)
+            screenCutOutPath.addArc(withCenter: rightCornerCenter, radius: r4, startAngle: .pi/2, endAngle: 0, clockwise: false)
+                        
+            let rightBottomCorner = CGPoint(x: d2 + i, y: h2 - dh + r4 - i - o)
+            let rightBottomCornerCenter = rightBottomCorner + CGPoint(x: -r4, y: 0)
+            screenCutOutPath.addArc(withCenter: rightBottomCornerCenter, radius: r4, startAngle: 0, endAngle: -.pi/2, clockwise: false)
+            
+            let leftBottomCorner = CGPoint(x: -d2 + r4 - i, y: h2 - dh - i - o)
+            screenCutOutPath.addLine(to: leftBottomCorner)
+            let leftBottomCornerCenter = leftBottomCorner + CGPoint(x: 0, y: r4)
+            screenCutOutPath.addArc(withCenter: leftBottomCornerCenter, radius: r4, startAngle: -.pi/2, endAngle: -.pi, clockwise: false)
+            
+            let leftTopCorner = CGPoint(x: -d2 + r4 - i, y: h2 + i - o)
+            let leftTopCornerCenter = leftTopCorner + CGPoint(x: 0, y: -r4);
+            screenCutOutPath.addArc(withCenter: leftTopCornerCenter, radius: r4, startAngle: .pi, endAngle: .pi/2, clockwise: false)
+            
+            screenCutOutPath.addLine(to: topMiddle)
+            
+            screenCutOut = SKShapeNode()
+            addChild(screenCutOut)
+            screenCutOut.path = screenCutOutPath.cgPath
+            screenCutOut.zPosition = 0.9
+            screenCutOut.fillColor = .white
+            screenCutOut.glowWidth = 1
+            screenCutOut.position = CGPoint(x: 0, y: 0)
+        }
+        
         if board == nil {
             board = SKShapeNode(rect: CGRect(x: -w2 + l2, y: -h2 + l2, width: w - l, height: h - l - BAR_HEIGHT), cornerRadius: r)
             addChild(board)
@@ -154,5 +197,8 @@ class Border : SKNode {
         screen.fillTexture = screenTexture
         screen.strokeColor = color ?? .clear
         screen.lineWidth = l
+        screenCutOut?.fillTexture = screenTexture
+        screenCutOut?.strokeColor = color ?? .clear
+        screenCutOut?.lineWidth = l
     }
 }

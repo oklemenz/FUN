@@ -51,5 +51,8 @@ struct Device {
     static let IS_IPHONE_13      = IS_IPHONE && SCREEN_MAX_LENGTH == 844 && DEVICE.contains("13") && !DEVICE.contains("Max") // 13, 13 Pro
     static let IS_IPHONE_13_MAX  = IS_IPHONE && SCREEN_MAX_LENGTH == 926 && DEVICE.contains("13 Pro Max") // 13 Pro Max
     static let IS_IPHONE_13_MINI = IS_IPHONE && SCREEN_MAX_LENGTH == 812 && DEVICE.contains("13 mini") // 13 Mini
-
+    static let IS_IPHONE_14      = IS_IPHONE && SCREEN_MAX_LENGTH == 844 && DEVICE.contains("14") // 14
+    static let IS_IPHONE_14_PLUS = IS_IPHONE && SCREEN_MAX_LENGTH == 926 && DEVICE.contains("14") // 14 Plus
+    static let IS_IPHONE_14_PRO  = IS_IPHONE && SCREEN_MAX_LENGTH == 852 && DEVICE.contains("14") // 14 Pro
+    static let IS_IPHONE_14_MAX  = IS_IPHONE && SCREEN_MAX_LENGTH == 932 && DEVICE.contains("14") // 14 Pro Max    
 }
