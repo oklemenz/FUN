@@ -95,6 +95,7 @@
 		54A0E17421008E83002D629F /* DiceEye.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiceEye.swift; sourceTree = "<group>"; };
 		54A0E17621009010002D629F /* Dice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dice.swift; sourceTree = "<group>"; };
 		54A8E013210F31AD0095DF3B /* Border.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Border.swift; sourceTree = "<group>"; };
+		54D2F5682BE8BE7400410CA9 /* Abut.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Abut.entitlements; sourceTree = "<group>"; };
 		54D64737215935C90027E46D /* BlockedEffect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedEffect.swift; sourceTree = "<group>"; };
 		54F0537A20FE1D4C00FF4AA1 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		54F1F17621A857D0001FFCEB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -132,6 +133,7 @@
 		540222BB20FDEA02006F25E9 /* Abut */ = {
 			isa = PBXGroup;
 			children = (
+				54D2F5682BE8BE7400410CA9 /* Abut.entitlements */,
 				540222BC20FDEA02006F25E9 /* AppDelegate.swift */,
 				540222C420FDEA02006F25E9 /* GameViewController.swift */,
 				540222C220FDEA02006F25E9 /* GameScene.swift */,
@@ -448,6 +450,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Abut/Abut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6N277JA649;
 				INFOPLIST_FILE = Abut/Info.plist;
@@ -455,7 +458,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = de.oklemenz.fun;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -467,6 +470,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = Abut/Abut.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 6N277JA649;
 				INFOPLIST_FILE = Abut/Info.plist;
@@ -474,7 +478,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.5;
+				MARKETING_VERSION = 1.0.6;
 				PRODUCT_BUNDLE_IDENTIFIER = de.oklemenz.fun;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
