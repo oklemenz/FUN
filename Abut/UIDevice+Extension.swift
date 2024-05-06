@@ -19,6 +19,9 @@ extension UIDevice {
         } else if (Device.IS_IPHONE_12_MINI || Device.IS_IPHONE_13_MINI) {
             return 42;
         }
+        if (hasDynamicIsland) {
+            return 52
+        }
         return 46;
     }
     
@@ -71,7 +74,17 @@ extension UIDevice {
     }
     
     var hasDynamicIsland: Bool {
-        return hasNotch && (Device.IS_IPHONE_14_PRO || Device.IS_IPHONE_14_MAX)
+        if (!hasNotch) {
+            return false;
+        }
+        if (Device.IS_IPHONE_X || 
+            Device.IS_IPHONE_11 || Device.IS_IPHONE_11_MAX ||
+            Device.IS_IPHONE_12_MINI || Device.IS_IPHONE_12 || Device.IS_IPHONE_12_MAX ||
+            Device.IS_IPHONE_13 || Device.IS_IPHONE_13_MAX || Device.IS_IPHONE_13_MINI ||
+            Device.IS_IPHONE_14 || Device.IS_IPHONE_14_PLUS) {
+            return false;
+        }
+        return true;
     }
     
     var dynamicIslandWidth: CGFloat {
@@ -137,6 +150,10 @@ extension UIDevice {
             case "iPhone14,8":                                    return "iPhone 14 Plus"
             case "iPhone15,2":                                    return "iPhone 14 Pro"
             case "iPhone15,3":                                    return "iPhone 14 Pro Max"
+            case "iPhone15,4":                                    return "iPhone 15"
+            case "iPhone15,5":                                    return "iPhone 15 Plus"
+            case "iPhone16,1":                                    return "iPhone 15 Pro"
+            case "iPhone16,2":                                    return "iPhone 15 Pro Max"
             case "iPhone8,4":                                     return "iPhone SE"
             case "iPhone12,8":                                    return "iPhone SE (2nd generation)"
             case "iPhone14,6":                                    return "iPhone SE (3rd generation)"
@@ -148,6 +165,7 @@ extension UIDevice {
             case "iPad7,11", "iPad7,12":                          return "iPad (7th generation)"
             case "iPad11,6", "iPad11,7":                          return "iPad (8th generation)"
             case "iPad12,1", "iPad12,2":                          return "iPad (9th generation)"
+            case "iPad13,18", "iPad13,19":                        return "iPad (10th generation)"
             case "iPad4,1", "iPad4,2", "iPad4,3":                 return "iPad Air"
             case "iPad5,3", "iPad5,4":                            return "iPad Air 2"
             case "iPad11,3", "iPad11,4":                          return "iPad Air (3rd generation)"
@@ -164,11 +182,13 @@ extension UIDevice {
             case "iPad8,1", "iPad8,2", "iPad8,3", "iPad8,4":      return "iPad Pro (11-inch) (1st generation)"
             case "iPad8,9", "iPad8,10":                           return "iPad Pro (11-inch) (2nd generation)"
             case "iPad13,4", "iPad13,5", "iPad13,6", "iPad13,7":  return "iPad Pro (11-inch) (3rd generation)"
+            case "iPad14,3", "iPad14,4":                          return "iPad Pro (11-inch) (4th generation)"
             case "iPad6,7", "iPad6,8":                            return "iPad Pro (12.9-inch) (1st generation)"
             case "iPad7,1", "iPad7,2":                            return "iPad Pro (12.9-inch) (2nd generation)"
             case "iPad8,5", "iPad8,6", "iPad8,7", "iPad8,8":      return "iPad Pro (12.9-inch) (3rd generation)"
             case "iPad8,11", "iPad8,12":                          return "iPad Pro (12.9-inch) (4th generation)"
             case "iPad13,8", "iPad13,9", "iPad13,10", "iPad13,11":return "iPad Pro (12.9-inch) (5th generation)"
+            case "iPad14,5", "iPad14,6":                          return "iPad Pro (12.9-inch) (6th generation)"
             case "AppleTV5,3":                                    return "Apple TV"
             case "AppleTV6,2":                                    return "Apple TV 4K"
             case "AudioAccessory1,1":                             return "HomePod"
@@ -179,12 +199,18 @@ extension UIDevice {
             #elseif os(tvOS)
             switch identifier {
             case "AppleTV5,3": return "Apple TV 4"
-            case "AppleTV6,2": return "Apple TV 4K"
+            case "AppleTV6,2", "AppleTV11,1", "AppleTV14,1": return "Apple TV 4K"
             case "i386", "x86_64": return "Simulator \(mapToDevice(identifier: ProcessInfo().environment["SIMULATOR_MODEL_IDENTIFIER"] ?? "tvOS"))"
+            default: return identifier
+            }
+            #elseif os(visionOS)
+            switch identifier {
+            case "RealityDevice14,1": return "Apple Vision Pro"
             default: return identifier
             }
             #endif
         }
+
         return mapToDevice(identifier: identifier)
     }()
 }
