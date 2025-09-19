@@ -34,11 +34,10 @@ html {
 .background {
     top: 0px;
     bottom: 0px;
-	background-color: black;
-    background: #666666;
     background: -webkit-radial-gradient(#666666, #000000);
     background: -o-radial-gradient(#666666, #000000);
     background: radial-gradient(#666666, #000000);
+    background-color: #666666;
     background-repeat: no-repeat;
     -webkit-background-size: 100%; 
     -moz-background-size: 100%; 
