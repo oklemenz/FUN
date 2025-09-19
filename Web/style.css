@@ -102,7 +102,7 @@ html {
 @media (orientation: landscape) {
     .title {
         top: -7px;
-		zoom: 0.75;
+        zoom: 0.75;
     }
 }
 
