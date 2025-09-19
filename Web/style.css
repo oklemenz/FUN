@@ -101,7 +101,8 @@ html {
 
 @media (orientation: landscape) {
     .title {
-        top: -15px;
+        top: -7px;
+		zoom: 0.75;
     }
 }
 
@@ -163,7 +164,7 @@ html {
 
 @media (orientation: landscape) {
     .download {
-        bottom: 20px;
+        bottom: 15px;
     }
 }
 .download_apple {
