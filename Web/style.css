@@ -156,15 +156,15 @@ html {
 }
 
 .download {
-    position: fixed;
-    bottom: 50px;
+    position: absolute;
+    bottom: 45px;
     width: 300px;
     left: calc(50% - 150px);
 }
 
 @media (orientation: landscape) {
     .download {
-        bottom: 15px;
+        bottom: -40px;
     }
 }
 .download_apple {
